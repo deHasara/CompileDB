@@ -70,6 +70,12 @@ The system is implemented as a lightweight Python layer on top of an existing re
    ./test_file-1 run_queries <dbname>
    ```
 
+    **Example:**
+      
+      ```bash
+      ./test_file-1 run_queries test_db
+      ```
+
    This command starts an interactive shell that accepts SQL queries over the conceptual schema.
 
     Currently supported:
