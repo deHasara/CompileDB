@@ -1,0 +1,1 @@
+WORKER_ID = None#for the use of parallelizing csv templatize insert

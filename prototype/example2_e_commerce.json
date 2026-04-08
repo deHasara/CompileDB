@@ -1,0 +1,431 @@
+{
+  "create_entity_statements": [
+    "CREATE ENTITY Category (category_id INT PRIMARY KEY, category_name VARCHAR, parent INT);",
+    "CREATE ENTITY Product (product_id INT PRIMARY KEY, sku VARCHAR, product_name VARCHAR, base_price INT, is_active INT, quantity INT, mv_attributes VARCHAR[]) ;",
+    "CREATE ENTITY PhysicalProduct (dimensions VARCHAR) subclass of Product(total);",
+    "CREATE ENTITY DigitalProduct (delivery_type VARCHAR) subclass of Product(total);",
+    "CREATE ENTITY Electronics (warranty_months INT) subclass of PhysicalProduct;",
+    "CREATE ENTITY Computer (cpu VARCHAR, ram_gb INT) subclass of Electronics;",
+    "CREATE ENTITY Desktop (form_factor VARCHAR) subclass of Computer;",
+    "CREATE ENTITY Laptop (battery_wh INT) subclass of Computer;",
+    "CREATE ENTITY Tablet (screen_size_in INT) subclass of Electronics;",
+    "CREATE ENTITY Smartwatch (band_size VARCHAR) subclass of Electronics;",
+    "CREATE ENTITY Camera (sensor_mp INT) subclass of Electronics;",
+    "CREATE ENTITY Phone (carrier_lock VARCHAR) subclass of Electronics;",
+    "CREATE ENTITY Accessory (accessory_type VARCHAR) subclass of Electronics;",
+    "CREATE ENTITY Appliance (energy_rating VARCHAR) subclass of PhysicalProduct;",
+    "CREATE ENTITY KitchenAppliance (warranty_years INT) subclass of Appliance;",
+    "CREATE ENTITY Apparel (size_system VARCHAR) subclass of PhysicalProduct;",
+    "CREATE ENTITY Clothing (material VARCHAR) subclass of Apparel;",
+    "CREATE ENTITY MenClothing (fit_type_men VARCHAR) subclass of Clothing;",
+    "CREATE ENTITY WomenClothing (fit_type_women VARCHAR) subclass of Clothing;",
+    "CREATE ENTITY Footwear (sole_material VARCHAR) subclass of Apparel;",
+    "CREATE ENTITY Media (format VARCHAR) subclass of DigitalProduct;",
+    "CREATE ENTITY Software (license_type VARCHAR) subclass of DigitalProduct;",
+    "CREATE ENTITY User (user_id INT PRIMARY KEY, email VARCHAR, password_hash VARCHAR, mv_user VARCHAR[]);",
+    "CREATE ENTITY Customer (loyalty_tier VARCHAR, contact_no VARCHAR[]) subclass of User;",
+    "CREATE ENTITY PrimeCustomer (renewal_date VARCHAR, subscription_addons VARCHAR[]) subclass of Customer;",
+    "CREATE ENTITY BusinessCustomer (company_name VARCHAR) subclass of Customer;",
+    "CREATE ENTITY Employee (employee_no VARCHAR) subclass of User;",
+    "CREATE WEAK ENTITY ProductImage (image_id INT discriminator, url VARCHAR, alt_text VARCHAR, sort_order INT) DEPENDS ON Product;",
+    "CREATE WEAK ENTITY ProductVariant (variant_id INT discriminator, price_override INT, barcode VARCHAR, is_active_variant INT) DEPENDS ON Product;",
+    "CREATE WEAK ENTITY PriceHistory (price_id INT discriminator, starts_at VARCHAR, ends_at VARCHAR, price INT) DEPENDS ON Product;",
+    "CREATE ENTITY Tag (tag_id INT PRIMARY KEY, tag_name VARCHAR);",
+    "CREATE WEAK ENTITY Address (address_id INT discriminator, kind VARCHAR, line1 VARCHAR, city VARCHAR, state VARCHAR, country VARCHAR, postal_code VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY PaymentMethod (payment_method_id INT discriminator, brand VARCHAR, last4 VARCHAR, exp_month INT, exp_year INT, is_default VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY Cart (cart_id INT discriminator, updated_at VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY Wishlist (wishlist_id INT discriminator, wishlist_name VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY Review (review_id INT discriminator, rating INT, title VARCHAR, body VARCHAR, created_at VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY BrowsingSession (session_id INT discriminator, started_at VARCHAR, device VARCHAR) DEPENDS ON User;",
+    "CREATE ENTITY CustOrder (custorder_id INT PRIMARY KEY, placed_at VARCHAR, status VARCHAR);",
+    "CREATE WEAK ENTITY Shipment (shipment_id INT discriminator, carrier VARCHAR, tracking_no VARCHAR, shipped_at VARCHAR, delivered_at VARCHAR) DEPENDS ON CustOrder;",
+    "CREATE ENTITY Promotion (promo_id INT PRIMARY KEY, promo_name VARCHAR, starts_at VARCHAR, ends_at VARCHAR, discount_type VARCHAR, discount_value VARCHAR);",
+    "CREATE WEAK ENTITY Coupon (coupon_code INT discriminator, max_uses INT, per_user_limit INT) DEPENDS ON Promotion;",
+    "CREATE ENTITY Warehouse (warehouse_id INT PRIMARY KEY, warehouse_name VARCHAR, region VARCHAR);",
+    "CREATE WEAK ENTITY WarehouseBin (bin_id INT discriminator, code VARCHAR) DEPENDS ON Warehouse;",
+    "CREATE ENTITY Supplier (supplier_id INT PRIMARY KEY, supplier_name VARCHAR);",
+    "CREATE WEAK ENTITY SupplierContact (contact_id INT discriminator, email VARCHAR, phone VARCHAR) DEPENDS ON Supplier;",
+    "CREATE ENTITY PurchaseOrder (purchaseorder_id INT PRIMARY KEY, created_at VARCHAR, status VARCHAR);",
+    "CREATE ENTITY CourierPartner (courierpartner_id INT PRIMARY KEY, carrier_code VARCHAR, webhook_url VARCHAR);"
+  ],
+  "create_relationship_statements": [
+    "CREATE RELATIONSHIP category_products () between Category(one total) and Product(many total);",
+    "CREATE RELATIONSHIP product_tags () between Product(many total) and Tag(many total);",
+    "CREATE RELATIONSHIP bundle_components () between Product(product_id many total) and Product(bundle_product_id many total);",
+    "CREATE RELATIONSHIP bought_together () between Product(product_id many total) and Product(bought_together_product_id many total);",
+    "CREATE RELATIONSHIP cart_contains () between Cart(many total) and Product(many total);",
+    "CREATE RELATIONSHIP wishlist_contains () between Wishlist(many total) and Product(many total);",
+    "CREATE RELATIONSHIP reviews () between Product(one total) and Review(many total);",
+    "CREATE RELATIONSHIP customer_orders () between Customer(one total) and CustOrder(many total);",
+    "CREATE RELATIONSHIP order_items () between CustOrder(many total) and Product(many total);",
+    "CREATE RELATIONSHIP payment_order () between PaymentMethod(one total) and CustOrder(many total);",
+    "CREATE RELATIONSHIP order_returns () between CustOrder(many total) and Product(many total);",
+    "CREATE RELATIONSHIP order_coupons () between CustOrder(one total) and Coupon(many total);",
+    "CREATE RELATIONSHIP stock () between Product(many total) and WarehouseBin(many total);",
+    "CREATE RELATIONSHIP supplier_products () between Supplier(many total) and Product(many total);",
+    "CREATE RELATIONSHIP supplier_pos () between Supplier(one total) and PurchaseOrder(many total);",
+    "CREATE RELATIONSHIP po_items () between PurchaseOrder(many total) and Product(many total);",
+    "CREATE RELATIONSHIP courier_shipments () between CourierPartner(one total) and Shipment(many total);",
+    "CREATE RELATIONSHIP bundle_phones () between Phone(phone_id many total) and Phone(bundle_phone_id many total);",
+    "CREATE RELATIONSHIP bundled_phone_accessory () between Phone(many total) and Accessory(many total);",
+    "CREATE RELATIONSHIP software_downloads () between Software(many total) and Customer(many total);"
+  ],
+  "node_data": {
+    "category": {
+      "node_count": 139978
+    },
+    "product": {
+      "node_count": 61999,
+      "avg_mv_attributes": 3
+    },
+    "physicalproduct": {
+      "node_count": 85865
+    },
+    "digitalproduct": {
+      "node_count": 66709
+    },
+    "electronics": {
+      "node_count": 9004045
+    },
+    "computer": {
+      "node_count": 107190
+    },
+    "desktop": {
+      "node_count": 1877778
+    },
+    "laptop": {
+      "node_count": 139670
+    },
+    "tablet": {
+      "node_count": 100000
+    },
+    "smartwatch": {
+      "node_count": 469445
+    },
+    "camera": {
+      "node_count": 169001
+    },
+    "phone": {
+      "node_count": 676001
+    },
+    "accessory": {
+      "node_count": 144898
+    },
+    "appliance": {
+      "node_count": 60120
+    },
+    "kitchenappliance": {
+      "node_count": 264063
+    },
+    "apparel": {
+      "node_count": 364762
+    },
+    "clothing": {
+      "node_count": 297982
+    },
+    "menclothing": {
+      "node_count": 1690000
+    },
+    "womenclothing": {
+      "node_count": 117362
+    },
+    "footwear": {
+      "node_count": 28642
+    },
+    "media": {
+      "node_count": 1056250
+    },
+    "software": {
+      "node_count": 15000
+    },
+    "user": {
+      "node_count": 278555,
+      "avg_mv_user": 2
+    },
+    "customer": {
+      "node_count": 36985,
+      "avg_contact_no": 1
+    },
+    "primecustomer": {
+      "node_count": 100000,
+      "avg_subscription_addons": 2
+    },
+    "businesscustomer": {
+      "node_count": 900000
+    },
+    "employee": {
+      "node_count": 225000
+    },
+    "productimage": {
+      "node_count": 24195
+    },
+    "productvariant": {
+      "node_count": 37663
+    },
+    "pricehistory": {
+      "node_count": 11903
+    },
+    "tag": {
+      "node_count": 119157
+    },
+    "address": {
+      "node_count": 124528
+    },
+    "paymentmethod": {
+      "node_count": 138697
+    },
+    "cart": {
+      "node_count": 42493
+    },
+    "wishlist": {
+      "node_count": 46232
+    },
+    "review": {
+      "node_count": 25275
+    },
+    "browsingsession": {
+      "node_count": 32655
+    },
+    "custorder": {
+      "node_count": 80260
+    },
+    "shipment": {
+      "node_count": 24338
+    },
+    "promotion": {
+      "node_count": 149738
+    },
+    "coupon": {
+      "node_count": 40120
+    },
+    "warehouse": {
+      "node_count": 87982
+    },
+    "warehousebin": {
+      "node_count": 11408
+    },
+    "supplier": {
+      "node_count": 104549
+    },
+    "suppliercontact": {
+      "node_count": 46467
+    },
+    "purchaseorder": {
+      "node_count": 134186
+    },
+    "courierpartner": {
+      "node_count": 63107
+    },
+    "category_products": {
+      "participation_factor": 0.04
+    },
+    "product_tags": {
+      "participation_factor": 0.93,
+      "product_to_tag": 3
+    },
+    "bundle_components": {
+      "participation_factor": 0.2,
+      "product_to_product": 1
+    },
+    "bought_together": {
+      "participation_factor": 0.65,
+      "product_to_product": 2
+    },
+    "cart_contains": {
+      "participation_factor": 0.95,
+      "cart_to_product": 1
+    },
+    "wishlist_contains": {
+      "participation_factor": 0.65,
+      "wishlist_to_product": 3
+    },
+    "reviews": {
+      "participation_factor": 0.01
+    },
+    "customer_orders": {
+      "participation_factor": 0.93
+    },
+    "order_items": {
+      "participation_factor": 0.86,
+      "custorder_to_product": 2
+    },
+    "payment_order": {
+      "participation_factor": 0.88
+    },
+    "order_returns": {
+      "participation_factor": 0.15,
+      "custorder_to_product": 2
+    },
+    "order_coupons": {
+      "participation_factor": 0.16
+    },
+    "stock": {
+      "participation_factor": 0.39,
+      "product_to_warehousebin": 3
+    },
+    "supplier_products": {
+      "participation_factor": 0.37,
+      "supplier_to_product": 1
+    },
+    "supplier_pos": {
+      "participation_factor": 0.96
+    },
+    "po_items": {
+      "participation_factor": 0.76,
+      "purchaseorder_to_product": 2
+    },
+    "courier_shipments": {
+      "participation_factor": 0.43
+    },
+    "bundle_phones": {
+      "participation_factor": 0.96,
+      "phone_to_phone": 3
+    },
+    "bundled_phone_accessory": {
+      "participation_factor": 0.65,
+      "phone_to_accessory": 3
+    },
+    "software_downloads": {
+      "participation_factor": 0.95,
+      "software_to_customer": 3
+    }
+  },
+  "select_all_frequencies": {
+    "category": 49,
+    "product": 40,
+    "physicalproduct": 47,
+    "digitalproduct": 43,
+    "electronics": 46,
+    "computer": 46,
+    "desktop": 50,
+    "laptop": 42,
+    "tablet": 45,
+    "smartwatch": 48,
+    "camera": 50,
+    "phone": 45,
+    "accessory": 41,
+    "appliance": 47,
+    "kitchenappliance": 50,
+    "apparel": 48,
+    "clothing": 41,
+    "menclothing": 42,
+    "womenclothing": 48,
+    "footwear": 46,
+    "media": 45,
+    "software": 47,
+    "user": 40,
+    "customer": 47,
+    "primecustomer": 40,
+    "businesscustomer": 44,
+    "employee": 49,
+    "productimage": 5,
+    "productvariant": 5,
+    "pricehistory": 4,
+    "tag": 50,
+    "address": 2,
+    "paymentmethod": 2,
+    "cart": 5,
+    "wishlist": 2,
+    "review": 1,
+    "browsingsession": 2,
+    "custorder": 48,
+    "shipment": 5,
+    "promotion": 43,
+    "coupon": 4,
+    "warehouse": 48,
+    "warehousebin": 3,
+    "supplier": 49,
+    "suppliercontact": 3,
+    "purchaseorder": 47,
+    "courierpartner": 44,
+    "category_products": 5,
+    "product_tags": 5,
+    "bundle_components": 1,
+    "bought_together": 4,
+    "cart_contains": 5,
+    "wishlist_contains": 2,
+    "reviews": 5,
+    "customer_orders": 5,
+    "order_items": 2,
+    "payment_order": 4,
+    "order_returns": 1,
+    "order_coupons": 4,
+    "stock": 3,
+    "supplier_products": 5,
+    "supplier_pos": 5,
+    "po_items": 2,
+    "courier_shipments": 5,
+    "bundle_phones": 4,
+    "bundled_phone_accessory": 4,
+    "software_downloads": 3
+  },
+  "insert_frequencies": {
+    "reviews": 1,
+    "suppliercontact": 3,
+    "category": 8,
+    "warehousebin": 9,
+    "pricehistory": 7,
+    "shipment": 9,
+    "product": 4,
+    "cart_contains": 9,
+    "kitchenappliance": 8,
+    "coupon": 4,
+    "phone": 9,
+    "review": 1,
+    "custorder": 7,
+    "payment_order": 10,
+    "computer": 6,
+    "stock": 7,
+    "order_items": 1,
+    "clothing": 5,
+    "physicalproduct": 3,
+    "supplier": 4,
+    "electronics": 1,
+    "wishlist_contains": 5,
+    "supplier_products": 2,
+    "productvariant": 2,
+    "bundle_phones": 5,
+    "menclothing": 5,
+    "apparel": 3,
+    "warehouse": 7,
+    "laptop": 10,
+    "software_downloads": 5,
+    "user": 3,
+    "womenclothing": 1,
+    "courierpartner": 9,
+    "camera": 1,
+    "cart": 10,
+    "bundle_components": 4,
+    "address": 10,
+    "purchaseorder": 8,
+    "software": 3,
+    "tablet": 10,
+    "media": 9,
+    "browsingsession": 1,
+    "smartwatch": 7,
+    "order_coupons": 4,
+    "businesscustomer": 6,
+    "paymentmethod": 2,
+    "order_returns": 4,
+    "employee": 10,
+    "digitalproduct": 7,
+    "courier_shipments": 10,
+    "primecustomer": 4,
+    "accessory": 8,
+    "po_items": 2,
+    "desktop": 7,
+    "footwear": 5,
+    "bought_together": 9,
+    "wishlist": 8,
+    "bundled_phone_accessory": 1,
+    "category_products": 6,
+    "customer_orders": 10,
+    "productimage": 7,
+    "supplier_pos": 5,
+    "promotion": 1,
+    "tag": 3,
+    "appliance": 4,
+    "customer": 6,
+    "product_tags": 10
+  }
+}
