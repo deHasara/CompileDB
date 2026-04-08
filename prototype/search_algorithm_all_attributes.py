@@ -3416,7 +3416,7 @@ def do_step(graph, graph_components, config, cost):
     return best_config, best_cost, best_nodes_individual_cost
 
 
-def greedy_search(graph, iterations=0):
+def greedy_search(graph, iterations=1000):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3428,15 +3428,6 @@ def greedy_search(graph, iterations=0):
     config = {}
     for component in all_components:
         config[component.unique_name] = heuristic_default_option(component.node_type_for_partitioning_options)
-
-    """
-    config["address"] = "contained_in_parent"
-    config["pricehistory"] = "contained_in_parent"
-    config["productimage"] = "contained_in_parent"
-    config["productvariant"] = "contained_in_parent"
-    config["browsingsession"] = "contained_in_parent"
-    config["suppliercontact"] = "contained_in_parent"
-    """
 
 
     tables_dict = define_the_generated_physical_schema(graph, config)
