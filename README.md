@@ -69,13 +69,7 @@ The system is implemented as a lightweight Python layer on top of an existing re
    ```bash
    ./test_file-1 run_queries <dbname>
    ```
-
-    **Example:**
-      
-      ```bash
-      ./test_file-1 run_queries test_db
-      ```
-
+   
    This command starts an interactive shell that accepts SQL queries over the conceptual schema.
 
     Currently supported:
@@ -84,6 +78,13 @@ The system is implemented as a lightweight Python layer on top of an existing re
       - ```INSERT INTO <entity_or_relationship>```
 
     For more complex queries, manual translation is currently required. Such queries can be executed directly against the PostgreSQL backend using psql or another PostgreSQL client.
+
+    **Example:**
+      
+      ```bash
+      ./test_file-1 run_queries test_db
+      ```
+
     
     
    
