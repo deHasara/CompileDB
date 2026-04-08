@@ -17,9 +17,11 @@ The system is implemented as a lightweight Python layer on top of an existing re
 
 ## Requirements
 
-- Python 3.x (tested with Python 3.12) 
+
 - PostgreSQL (tested with PostgreSQL 16)  
-- Python dependencies (install via `requirements.txt` if building from sources)
+- Python dependencies (if building from sources)
+   - Python 3.x (tested with Python 3.12)
+   - install via `requirements.txt`.
 
 ---
 
