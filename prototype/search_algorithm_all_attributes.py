@@ -37,8 +37,8 @@ from itertools import product
 from math import prod
 
 from partition_rules import check_conditions_for_abstract_table
-from cost_model import insert_cost, search_cost, scan_cost, union_all_cost, sort_merge_join_cost, \
-    scan_folded_weak_entity, scan_folded_weak_entity_modified, insert_cost_for_workload_queries
+from cost_model import insert_cost, search_cost, scan_cost, union_all_cost, join_cost, \
+    scan_folded_weak_entity_modified, insert_cost_for_workload_queries
 from check_config_valid import check_config_is_valid
 from construct_create_statements1 import generate_table_mappings, initialize_keys
 
@@ -853,13 +853,13 @@ def calculate_db_initialization_insert_cost_for_folded_weak_entities_and_relatio
                     if node_cover_node.unique_name != node.parent_entity.unique_name:
                         assert node_cover_node.is_contained_all_descendants or node_cover_node.is_all_by_itself
                         node_cover_node_table_size = tables_dict.get(node_cover_node.mapped_table[1])[0]
-                        update_cost_for_all_tables += sort_merge_join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
+                        update_cost_for_all_tables += join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
                         update_cost_for_all_tables += insert_cost(temp_table_no_of_tuples, num_indexes=1)
                     else:#node.parent_entity itself
                         assert node_cover_node.unique_name == node.parent_entity.unique_name#node.parent_entity itself - node could be all/contained/partial
                         if config[node_cover_node.unique_name] == "all_by_itself" or config[node_cover_node.unique_name] == "partially_by_itself":
                             node_cover_node_table_size = tables_dict.get(node_cover_node.mapped_table[1])[0]
-                            update_cost_for_all_tables += sort_merge_join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
+                            update_cost_for_all_tables += join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
                         else:
                             assert config[node_cover_node.unique_name] == "contained_in_parent"
                             relevant_node_cover_node_tuples_in_mapped_table = node_cover_node.relation_size
@@ -869,18 +869,18 @@ def calculate_db_initialization_insert_cost_for_folded_weak_entities_and_relatio
                             #filter for node tuples - hence left size is (node.relation_size - all tuples from contained_all_descendants/all child in subtree rooted by node(not tables_dict.get(node.mapped_table[1])[0]))
                             node_mapped_table_size = tables_dict.get(node_cover_node.mapped_table[1])[0]
                             update_cost_for_all_tables += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - considered # of tuples instead of area
-                            update_cost_for_all_tables += sort_merge_join_cost(relevant_node_cover_node_tuples_in_mapped_table, temp_table_no_of_tuples)
+                            update_cost_for_all_tables += join_cost(relevant_node_cover_node_tuples_in_mapped_table, temp_table_no_of_tuples)
             elif node.parent_entity.is_subclass and config[node.parent_entity.unique_name] == "contained_in_parent":
                 assert len(node.parent_entity.node_cover) == 1 #not distributed in node cover
                 relevant_node_tuples_in_mapped_table = node.parent_entity.relation_size
                 node_mapped_table_size = tables_dict.get(node.parent_entity.mapped_table[1])[0]
                 update_cost_for_all_tables += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - considered # of tuples instead of area
-                update_cost_for_all_tables += sort_merge_join_cost(relevant_node_tuples_in_mapped_table, temp_table_no_of_tuples)
+                update_cost_for_all_tables += join_cost(relevant_node_tuples_in_mapped_table, temp_table_no_of_tuples)
             else:#regular entities or parent entity is also ABI weak entity or hierarch entities not CIP and not distributed in node cover
                 assert len(node.parent_entity.node_cover) <= 1 #not distributed in node cover
                 assert (config[node.parent_entity.unique_name] == "all_by_itself" or config[node.parent_entity.unique_name] == "partially_by_itself" or
                         config[node.parent_entity.unique_name] == "contained_all_descendants")
-                update_cost_for_all_tables += sort_merge_join_cost(node.parent_entity.relation_size, temp_table_no_of_tuples)
+                update_cost_for_all_tables += join_cost(node.parent_entity.relation_size, temp_table_no_of_tuples)
 
             update_cost_for_all_tables += insert_cost(node.relation_size, num_indexes=0)#after joins with temp table, cost to insert weak entity tuples, no indexes are updated
                                                                                         #since weak entity is a folded column
@@ -898,12 +898,12 @@ def calculate_db_initialization_insert_cost_for_folded_weak_entities_and_relatio
                     if node_cover_node.unique_name != many_side_entity.unique_name:
                         assert node_cover_node.is_contained_all_descendants or node_cover_node.is_all_by_itself
                         node_cover_node_table_size = tables_dict.get(node_cover_node.mapped_table[1])[0]
-                        update_cost_for_all_tables += sort_merge_join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
+                        update_cost_for_all_tables += join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
                     else:#many_side node itself
                         assert node_cover_node.unique_name == many_side_entity.unique_name#many side node itself - node could be all/contained/partial
                         if config[node_cover_node.unique_name] == "all_by_itself" or config[node_cover_node.unique_name] == "partially_by_itself":
                             node_cover_node_table_size = tables_dict.get(node_cover_node.mapped_table[1])[0]
-                            update_cost_for_all_tables += sort_merge_join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
+                            update_cost_for_all_tables += join_cost(node_cover_node_table_size, temp_table_no_of_tuples)
                         else:
                             assert config[node_cover_node.unique_name] == "contained_in_parent"
                             relevant_node_cover_node_tuples_in_mapped_table = node_cover_node.relation_size
@@ -913,16 +913,16 @@ def calculate_db_initialization_insert_cost_for_folded_weak_entities_and_relatio
                             #filter for node tuples - hence left size is (node.relation_size - all tuples from contained_all_descendants/all child in subtree rooted by node(not tables_dict.get(node.mapped_table[1])[0]))
                             node_mapped_table_size = tables_dict.get(node_cover_node.mapped_table[1])[0]
                             update_cost_for_all_tables += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - considered # of tuples instead of area
-                            update_cost_for_all_tables += sort_merge_join_cost(relevant_node_cover_node_tuples_in_mapped_table, temp_table_no_of_tuples)
+                            update_cost_for_all_tables += join_cost(relevant_node_cover_node_tuples_in_mapped_table, temp_table_no_of_tuples)
             elif many_side_entity.is_subclass and config[many_side_entity.unique_name] == "contained_in_parent":
                 assert len(many_side_entity.node_cover) == 1 #not distributed in node cover
                 relevant_node_tuples_in_mapped_table = many_side_entity.relation_size
                 node_mapped_table_size = tables_dict.get(many_side_entity.mapped_table[1])[0]
                 update_cost_for_all_tables += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - considered # of tuples instead of area
-                update_cost_for_all_tables += sort_merge_join_cost(relevant_node_tuples_in_mapped_table, temp_table_no_of_tuples)
+                update_cost_for_all_tables += join_cost(relevant_node_tuples_in_mapped_table, temp_table_no_of_tuples)
             else:#regular entities, or hierarch entities not CIP and not distributed in node cover
                 assert len(many_side_entity.node_cover) <= 1 #not distributed in node cover
-                update_cost_for_all_tables += sort_merge_join_cost(many_side_entity.relation_size, temp_table_no_of_tuples)
+                update_cost_for_all_tables += join_cost(many_side_entity.relation_size, temp_table_no_of_tuples)
 
             update_cost_for_all_tables += insert_cost(node.relation_size, num_indexes=0)#after joins with temp table, cost to insert relationship tuples, no indexes are updated
                                                                                         #since relationship is a folded column
@@ -935,8 +935,8 @@ def calculate_mvd_table_cost_helper(left_size, aggregated_mvd_table_size, mvd_ta
     cost = 0
     if not is_mvd_aggregated_table_built:#cost to aggregate the mvd table by pk
         cost += scan_cost(mvd_table_size)#aggregate cost for mvd
-    cost += sort_merge_join_cost(left_size, aggregated_mvd_table_size) if not parent_sorted else (
-        sort_merge_join_cost(left_size, aggregated_mvd_table_size, left_sorted=parent_sorted))#assume after first join left is sorted
+    cost += join_cost(left_size, aggregated_mvd_table_size) if not parent_sorted else (
+        join_cost(left_size, aggregated_mvd_table_size, left_sorted=parent_sorted))#assume after first join left is sorted
     return cost
 
 #calculate all relevant mvd tables join cost for node
@@ -1216,8 +1216,8 @@ def calculate_cost_for_folded_node_associated_with_node_distributed_in_node_cove
                             table_size *= table_width #for cost calculation - area = # of tuple * table width is considered
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                            total_join_cost += sort_merge_join_cost(participating_tuples_from_node_cover_node, table_size) if (no_of_joins < 1 and not node_cover_node_sorted) else \
-                                (sort_merge_join_cost(relevant_node_cover_node_tuples_in_mapped_table, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(participating_tuples_from_node_cover_node, table_size) if (no_of_joins < 1 and not node_cover_node_sorted) else \
+                                (join_cost(relevant_node_cover_node_tuples_in_mapped_table, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                             #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - contained_all_descendants/all by itself/partially by itself,
                             no_of_joins += 1
@@ -1282,8 +1282,8 @@ def calculate_cost_for_folded_node_associated_with_node_distributed_in_node_cove
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                            total_join_cost += sort_merge_join_cost(participating_tuples_from_node_cover_node, table_distinct_keys) if (no_of_joins < 1 and not node_cover_node_sorted) else \
-                                (sort_merge_join_cost(node_cover_node_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(participating_tuples_from_node_cover_node, table_distinct_keys) if (no_of_joins < 1 and not node_cover_node_sorted) else \
+                                (join_cost(node_cover_node_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             no_of_joins += 1
                             node_cover_node_table_width += (table_width - 1) #for each joined table, except for key columns are added
                 assert tables_dict.get(node_cover_node.mapped_table[1])[0] < node_cover_node.relation_size#due to contained_all_descendants or all_by_itself children
@@ -1342,8 +1342,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                             table_size *= table_width #for cost calculation - area = # of tuple * table width is considered
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                            total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                             #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - all by itself or partially by itself,
                             no_of_joins += 1
@@ -1377,8 +1377,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             no_of_joins += 1
             #all by itself already covered with in the very first condition
     else:
@@ -1428,8 +1428,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                             depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                             #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                             #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                             #after previous join with left, assume sorted
@@ -1444,8 +1444,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                             depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                             #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                             #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                             #after previous join with left, assume sorted
@@ -1476,8 +1476,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                                         no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node_table_list[i][1], 0)
                                         table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                         #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                                        total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                            (sort_merge_join_cost(left_table_size, table_size, left_sorted=True))#assume after first join left is sorted
+                                        total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                            (join_cost(left_table_size, table_size, left_sorted=True))#assume after first join left is sorted
                                         no_of_joins += 1
                         else:
                             assert config[depending_node.unique_name] == "contained_in_parent"
@@ -1490,8 +1490,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                             depending_node_table_size *= 1#depending_node_table_width
                             depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                             #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                             #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                             #after previous join with left, assume sorted
@@ -1519,8 +1519,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                                         table_size *= 1#table_width #for cost calculation - area = # of tuple * table width is considered
                                         no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node_table_list[i][1], 0)
                                         table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                                        total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                            (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                                        total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                            (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                                         #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                                         #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - all by itself or partially by itself,
                                         no_of_joins += 1
@@ -1532,8 +1532,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                     no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                     depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                     #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                    total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                        (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                    total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                        (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                     #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                     #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                     #after previous join with left, assume sorted
@@ -1549,8 +1549,8 @@ def calculate_cost_for_folded_node_associated_with_node_not_distributed_in_node_
                     no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                     depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                     #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                    total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                        (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                    total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                        (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                     #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                     #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                     #after previous join with left, assume sorted
@@ -1583,7 +1583,7 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
         no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(entity_node.mapped_table[1], 0)#defaults to 0
         entity_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
         total_join_cost = 0
-        total_join_cost += sort_merge_join_cost(left_table_size, entity_node_table_size)
+        total_join_cost += join_cost(left_table_size, entity_node_table_size)
         total_join_cost += calculate_total_mvd_table_cost_for_node(graph, tables_dict, table_widths, entity_node, left_table_size, True)
     elif entity_node.is_entity() and len(entity_node.node_cover)>0:#defined for all nodes in inheritance hierarchy
         assert len(entity_node.children)>0 or entity_node.is_subclass#root or subclass
@@ -1606,7 +1606,7 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                 total_join_cost += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - considered # of tuples instead of area
                 entity_node_table_size *= node_mapped_table_width
                 entity_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                total_join_cost += sort_merge_join_cost(left_table_size, entity_node_table_size)
+                total_join_cost += join_cost(left_table_size, entity_node_table_size)
                 #mvd joins of node - mvds(from itself or from parents) can be in separate tables even if node is contained in parent
                 total_join_cost += calculate_total_mvd_table_cost_for_node(graph,  tables_dict, table_widths, entity_node, left_table_size, node_sorted)
                 if len(table_list) > 1:
@@ -1628,8 +1628,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                             table_size *= table_width #for cost calculation - area = # of tuple * table width is considered
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                            total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                             #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - all by itself or partially by itself,
                             no_of_joins += 1
@@ -1644,7 +1644,7 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                 entity_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                 total_join_cost = 0
                 node_sorted = False#assume node is not sorted
-                total_join_cost += sort_merge_join_cost(left_table_size, entity_node_table_size)
+                total_join_cost += join_cost(left_table_size, entity_node_table_size)
                 #if node has mvds in separate tables - aggregation, pk-fk join
                 total_join_cost += calculate_total_mvd_table_cost_for_node(graph,  tables_dict, table_widths, entity_node, left_table_size, node_sorted)
                 assert len(table_list) > 1#for partially by itself node - joins are mandatory - irrespective of mvds present or not - atleast should join with 1 parent table
@@ -1669,8 +1669,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             no_of_joins += 1
             #all by itself already covered with in the very first condition
     else:
@@ -1686,7 +1686,7 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
         entity_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
         total_join_cost = 0
         node_sorted = False#assume node is not sorted
-        total_join_cost += sort_merge_join_cost(left_table_size, entity_node_table_size)
+        total_join_cost += join_cost(left_table_size, entity_node_table_size)
         #if leftmost table has mvds in separate tables - aggregation, pk-fk join
         total_join_cost += calculate_total_mvd_table_cost_for_node(graph,  tables_dict, table_widths, entity_node, left_table_size, node_sorted)
         assert len(table_list) > 1#have to join with a depending entity
@@ -1725,8 +1725,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                             depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                             #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                             #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                             #after previous join with left, assume sorted
@@ -1741,8 +1741,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                             depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                             #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                             #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                             #after previous join with left, assume sorted
@@ -1773,8 +1773,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                                         no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node_table_list[i][1], 0)
                                         table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                         #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                                        total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                            (sort_merge_join_cost(left_table_size, table_size, left_sorted=True))#assume after first join left is sorted
+                                        total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                            (join_cost(left_table_size, table_size, left_sorted=True))#assume after first join left is sorted
                                         no_of_joins += 1
                         else:
                             assert config[depending_node.unique_name] == "contained_in_parent"
@@ -1787,8 +1787,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                             depending_node_table_size *= 1#depending_node_table_width
                             depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                             #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                             #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                             #after previous join with left, assume sorted
@@ -1816,8 +1816,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                                         table_size *= 1#table_width #for cost calculation - area = # of tuple * table width is considered
                                         no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node_table_list[i][1], 0)
                                         table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                                        total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                            (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                                        total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                            (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                                         #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                                         #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - all by itself or partially by itself,
                                         no_of_joins += 1
@@ -1829,8 +1829,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                     no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                     depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                     #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                    total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                        (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                    total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                        (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                     #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                     #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                     #after previous join with left, assume sorted
@@ -1846,8 +1846,8 @@ def calculate_cost_for_relationship_associated_with_node_not_distributed_in_node
                     no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                     depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                     #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                    total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                        (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                    total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                        (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                     #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                     #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                     #after previous join with left, assume sorted
@@ -1910,7 +1910,7 @@ def calculate_cost_for_node_associated_with_node_distributed_in_node_cover_helpe
                         node_cover_node_sorted = True
             node_cover_node_table_size =  (tables_dict.get(node_cover_node.mapped_table[1])[0] *
                                            (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship))
-            total_join_cost += sort_merge_join_cost(left_table_size, node_cover_node_table_size)#left_table joins with each union table from node cover
+            total_join_cost += join_cost(left_table_size, node_cover_node_table_size)#left_table joins with each union table from node cover
             no_of_unions += 1
         else:
             assert node_cover_node.unique_name == hierarchy_node.unique_name#node itself - node could be all/contained/partial
@@ -1951,7 +1951,7 @@ def calculate_cost_for_node_associated_with_node_distributed_in_node_cover_helpe
                 node_cover_node_table_size =  tables_dict.get(node_cover_node.mapped_table[1])[0] * 1#node_cover_node_table_width
                 node_cover_node_table_size =  (tables_dict.get(node_cover_node.mapped_table[1])[0] *
                                                (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship))
-                total_join_cost += sort_merge_join_cost(left_table_size, node_cover_node_table_size)#left_table joins with each union table from node cover
+                total_join_cost += join_cost(left_table_size, node_cover_node_table_size)#left_table joins with each union table from node cover
                 no_of_unions += 1
             elif config[node_cover_node.unique_name] == "contained_in_parent":#parent of node also can be contained_all_descendants, all_by_itself, partially_by_itself, or contained_in_parent
                 #first filter for node tuples before all joins
@@ -2014,8 +2014,8 @@ def calculate_cost_for_node_associated_with_node_distributed_in_node_cover_helpe
                             table_size *= table_width #for cost calculation - area = # of tuple * table width is considered
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                            total_join_cost += sort_merge_join_cost(relevant_node_cover_node_tuples_in_mapped_table, table_size) if (no_of_joins < 1 and not node_cover_node_sorted) else \
-                                (sort_merge_join_cost(relevant_node_cover_node_tuples_in_mapped_table, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(relevant_node_cover_node_tuples_in_mapped_table, table_size) if (no_of_joins < 1 and not node_cover_node_sorted) else \
+                                (join_cost(relevant_node_cover_node_tuples_in_mapped_table, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                             #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - contained_all_descendants/all by itself/partially by itself,
                             no_of_joins += 1
@@ -2028,7 +2028,7 @@ def calculate_cost_for_node_associated_with_node_distributed_in_node_cover_helpe
                 #subtree rooted by node_cover_node from node_cover_node.relation_size
                 relevant_node_cover_node_tuples_in_mapped_table *=  1#full_table_width
                 relevant_node_cover_node_tuples_in_mapped_table *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                total_join_cost += sort_merge_join_cost(left_table_size, relevant_node_cover_node_tuples_in_mapped_table)#left_table joins with each union table from node cover
+                total_join_cost += join_cost(left_table_size, relevant_node_cover_node_tuples_in_mapped_table)#left_table joins with each union table from node cover
                 no_of_unions += 1
             else:
                 assert config[node_cover_node.unique_name] == "partially_by_itself"#parent of node also can be contained_all_descendants, all_by_itself, partially_by_itself, or contained_in_parent
@@ -2087,8 +2087,8 @@ def calculate_cost_for_node_associated_with_node_distributed_in_node_cover_helpe
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                            total_join_cost += sort_merge_join_cost(node_cover_node_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_cover_node_sorted) else \
-                                (sort_merge_join_cost(node_cover_node_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(node_cover_node_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_cover_node_sorted) else \
+                                (join_cost(node_cover_node_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             no_of_joins += 1
                             node_cover_node_table_width += (table_width - 1) #for each joined table, except for key columns are added
                 full_table_width = node_cover_node_table_width#len(node_cover_node.attribute_list)
@@ -2096,7 +2096,7 @@ def calculate_cost_for_node_associated_with_node_distributed_in_node_cover_helpe
                 #in the subtree rooted under node_cover_node
                 node_cover_node_table_size =  tables_dict.get(node_cover_node.mapped_table[1])[0] * 1#full_table_width
                 node_cover_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                total_join_cost += sort_merge_join_cost(left_table_size, node_cover_node_table_size)#left_table joins with each union table from node cover
+                total_join_cost += join_cost(left_table_size, node_cover_node_table_size)#left_table joins with each union table from node cover
                 no_of_unions += 1
     assert no_of_unions == len(hierarchy_node.node_cover)
     return total_join_cost
@@ -2299,8 +2299,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                     table_size *= table_width #for cost calculation - area = # of tuple * table width is considered
                                     no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                                     table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                                    total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_cover_node_sorted) else \
-                                        (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                                    total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_cover_node_sorted) else \
+                                        (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                                     #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                                     #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - contained_all_descendants/all by itself/partially by itself,
                                     no_of_joins += 1
@@ -2371,8 +2371,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                     no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                                     table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                     #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                                    total_join_cost += sort_merge_join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_cover_node_sorted) else \
-                                        (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                                    total_join_cost += join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_cover_node_sorted) else \
+                                        (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                                     no_of_joins += 1
                                     left_table_width += (table_width - 1) #for each joined table, except for key columns are added
                         full_table_width = left_table_width#len(node_cover_node.attribute_list)
@@ -2427,8 +2427,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                             table_size *= table_width #for cost calculation - area = # of tuple * table width is considered
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                            total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                             #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - all by itself or partially by itself,
                             no_of_joins += 1
@@ -2469,8 +2469,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(table_list[i][1], 0)
                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                             #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                            total_join_cost += sort_merge_join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_sorted) else \
-                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                            total_join_cost += join_cost(left_table_size, table_distinct_keys) if (no_of_joins < 1 and not node_sorted) else \
+                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                             no_of_joins += 1
                 cost += total_join_cost
                 node_cost[node.unique_name] = cost
@@ -2539,8 +2539,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                 no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                                 depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                 #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                                total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                                        (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                                total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                                        (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                                 #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                                 #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                                 #after previous join with left, assume sorted
@@ -2555,8 +2555,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                 no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                                 depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                 #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                                total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                    (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                                total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                    (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                                 #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                                 #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                                 #after previous join with left, assume sorted
@@ -2587,8 +2587,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node_table_list[i][1], 0)
                                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                             #if mvd joins happened for left or after first join with a node(after first join with a node in table_list) - left is sorted
-                                            total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                                (sort_merge_join_cost(left_table_size, table_size, left_sorted=True))#assume after first join left is sorted
+                                            total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                                (join_cost(left_table_size, table_size, left_sorted=True))#assume after first join left is sorted
                                             no_of_joins += 1
                             else:
                                 assert config[depending_node.unique_name] == "contained_in_parent"
@@ -2601,8 +2601,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                 depending_node_table_size *= 1#depending_node_table_width
                                 depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                                 #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                                total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                    (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                                total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                    (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                                 #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                                 #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                                 #after previous join with left, assume sorted
@@ -2630,8 +2630,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                                             table_size *= 1#table_width #for cost calculation - area = # of tuple * table width is considered
                                             no_of_folded_weak_entity_or_relationship = folded_weak_entity_relationship_count.get(depending_node_table_list[i][1], 0)
                                             table_size *= (1 + no_of_folded_weak_entity_or_relationship*per_tuple_weight_for_a_folded_weak_entity_or_relationship)
-                                            total_join_cost += sort_merge_join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
-                                                (sort_merge_join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
+                                            total_join_cost += join_cost(left_table_size, table_size) if (no_of_joins < 1 and not node_sorted) else \
+                                                (join_cost(left_table_size, table_distinct_keys, left_sorted=True))#assume after first join left is sorted
                                             #doesn't consider the increased table width after join - left_table_size assumed to be remained same - actually only # of tuples remains the same - width increases
                                             #node mapped table can be coming from a parent(may not be immediate parent since parents also can be contained in parent) - all by itself or partially by itself,
                                             no_of_joins += 1
@@ -2643,8 +2643,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                         no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                         depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                         #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                        total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                            (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                        total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                            (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                         #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                         #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                         #after previous join with left, assume sorted
@@ -2660,8 +2660,8 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                         no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(depending_node.mapped_table[1], 0)
                         depending_node_table_size *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)
                         #if mvd joins happened for left or after first join with a node in table_list - left is sorted
-                        total_join_cost += sort_merge_join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
-                            (sort_merge_join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
+                        total_join_cost += join_cost(left_table_size, depending_node_table_size) if (no_of_joins < 1 and not node_sorted) else \
+                            (join_cost(left_table_size, depending_node_table_size, left_sorted=True))#assume after first join left is sorted
                         #if joined node_table has mvds in separate tables - aggregation, pk-fk join
                         #mvd joins are done to node_table only after it is joined with left - doing joins in order of lowest selectivity
                         #after previous join with left, assume sorted
@@ -2707,30 +2707,6 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
             cost += total_join_cost
             node_cost[node.unique_name] = cost
 
-            """
-            assert config[node.unique_name] == "contained_in_parent"
-            #when weak entity node contained in parent - first calculate cost to build the full parent - parent could be a weak entity/subclass/regular entity
-            #then consider cost for expanding the folded weak entity
-            #if expansion first then build full parent considered - then pk of parent is duplicated with each expanded weak entity tuple causing more joins across tables
-            #hence first create full parent(can use already calculated cost), then do expansion for folded weak entity tuples
-            total_join_cost = 0
-            #full parent buildup
-            assert node.parent_entity.unique_name in node_cost
-            total_join_cost += node_cost[node.parent_entity.unique_name]
-            #unfolding weak entity after all joins
-            all_parent_tuples = node.parent_entity.relation_size # not tables_dict.get(node.mapped_table[1])[0] since parent in which node is contained can be distributed
-                                        #in multiple tables - hence folded weak entity can be distributed as well
-                                     #only #of tuples not width
-                                    #need to scan entire parent tuples irrespective whether each parent tuple is mapped to weak entity tuple/s or not
-            no_of_folded_weak_entity_or_relationship_in_mapped_table = folded_weak_entity_relationship_count.get(node.mapped_table[1], 0)
-            all_parent_tuples *= (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship)#add weight for parent tuples
-            contained_parent_total_table_width_after_joins = get_full_width_of_table_after_building_full_entity_node(graph, node.parent_entity)
-            #total_join_cost += scan_folded_weak_entity(contained_parent_table_size, contained_parent_total_table_width_after_joins,
-            #                                           scan_cost_for_weak_entity_col=20)#assigned a scan cost per tuple(20) higher than a regular scan(1.0)
-            total_join_cost += scan_folded_weak_entity_modified(all_parent_tuples, node.relation_size)
-            cost += total_join_cost
-            node_cost[node.unique_name] = cost
-            """
     elif node.is_relationship() and config[node.unique_name] == "all_by_itself":
         table_list = table_cover_for_nodes.get(node.unique_name).get(node.unique_name)
         table_list.sort(key=lambda x: x[0], reverse=True)
@@ -3034,95 +3010,6 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
             cost += total_join_cost
             node_cost[node.unique_name] = cost
 
-    """
-    elif node.is_relationship() and config[node.unique_name] == "all_by_itself":
-        #assume relationship a_b(with participating entities a and b) - first entities are built by joining all required tables for participating entities - a and b
-        #then joined result joined with table mapped for relationship node a_b
-        #this avoids duplicating joins(full attribute list building phase for entities) for keys in relationship node
-        table_list = table_cover_for_nodes.get(node.unique_name).get(node.unique_name)
-        table_list.sort(key=lambda x: x[0], reverse=True)
-        for i in range(len(table_list)):#node itself - table list should contain only mapped table and its own mvd tables
-            table_node = graph.get_node_by_sort_key(table_list[i][0])
-            if table_node.is_attribute() and table_node.is_multivalued:
-                assert table_node.entity.unique_name == node.unique_name
-            else:
-                assert table_node.unique_name == node.unique_name
-        left_table_size = tables_dict.get(node.mapped_table[1])[0]#start from node itself
-        left_table_width = table_widths.get(node.mapped_table[1])
-        left_table_size *= 1#left_table_width #for cost estimation - consider area as the table size
-        total_join_cost = 0
-        node_sorted = False#assume node is not sorted
-        #if node has mvds in separate tables - aggregation, pk-fk join
-        total_join_cost += calculate_total_mvd_table_cost_for_node(graph,  tables_dict, table_widths, node, left_table_size, node_sorted)
-        #full entity1 buildup
-        total_join_cost += node_cost[node.entity1.unique_name]
-        #full entity2 buildup
-        total_join_cost += node_cost[node.entity2.unique_name]
-        #full entity1 join with relationship node
-        entity1_relation_size = node.entity1.relation_size
-        entity1_full_width = get_full_width_of_table_after_building_full_entity_node(graph, node.entity1)
-        entity1_relation_size *= 1#entity1_full_width
-        total_join_cost += sort_merge_join_cost(left_table_size, entity1_relation_size, right_sorted=True) if not node_sorted else \
-            (sort_merge_join_cost(left_table_size, entity1_relation_size, left_sorted=True, right_sorted=True))#entity1 is assumed to be right - and it is sorted since it is already fully built
-        #full entity2 join with relationship node
-        entity2_relation_size = node.entity2.relation_size
-        entity2_full_width = 1#get_full_width_of_table_after_building_full_entity_node(graph, node.entity2)
-        entity2_relation_size *= entity2_full_width
-        total_join_cost += sort_merge_join_cost(left_table_size, entity2_relation_size, left_sorted=True, right_sorted=True)#Assume relationship is joined with entity1 first.
-        # Since relationship already joined with entity1, assume left(relationship) also sorted - right here is entity2
-        cost += total_join_cost
-        node_cost[node.unique_name] = cost
-    elif node.is_relationship() and config[node.unique_name] == "folded_to_many_side":
-        assert check_if_relationship_is_1_N(node)
-        if node.rel_dict['entity1']['one'] and not node.rel_dict['entity2']['one']:#Many side is entity2 - node is folded in entity2
-            assert node.mapped_table == node.entity2.mapped_table
-            left_table_size = node.relation_size#todo - whether to put node.relation_size or mapped table/view size - not node mapped table/view size since need to filter for only relationship - participation may not be total
-            left_table_width = table_widths.get(node.mapped_table[1])
-            left_table_size *= 1#left_table_width
-            total_join_cost = 0
-            node_sorted = False#assume node is not sorted
-            #if node has mvds in separate tables - aggregation, pk-fk join
-            total_join_cost += calculate_total_mvd_table_cost_for_node(graph,  tables_dict, table_widths, node, left_table_size, node_sorted)
-            node_mapped_table_size = node.entity2.relation_size#if entity2's node cover > 1 - still its relation_size gives the all tuples in union view
-            node_mapped_table_width = table_widths.get(node.mapped_table[1])
-            total_join_cost = 0
-            total_join_cost += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - only put # of tuples - didn't consider table_width
-            #full entity1 buildup
-            total_join_cost += node_cost[node.entity1.unique_name]
-            #full entity2 buildup
-            total_join_cost += node_cost[node.entity2.unique_name]
-            #entity1 join
-            entity1_relation_size = node.entity1.relation_size
-            entity1_full_width = get_full_width_of_table_after_building_full_entity_node(graph, node.entity1)
-            entity1_relation_size *= 1#entity1_full_width
-            total_join_cost += sort_merge_join_cost(left_table_size, entity1_relation_size, left_sorted=True, right_sorted=True)#left(relationship node mapped table which is entity2 table) is sorted, right(entity1) also sorted during full buildup
-            cost += total_join_cost
-            node_cost[node.unique_name] = cost
-        elif not node.rel_dict['entity1']['one'] and node.rel_dict['entity2']['one']:#Many side is entity1 - node is folded in entity1
-            assert node.mapped_table == node.entity1.mapped_table
-            left_table_size = node.relation_size#todo - whether to put node.relation_size or mapped table/view size - not node mapped table/view size since need to filter for only relationship - participation may not be total
-            left_table_width = table_widths.get(node.mapped_table[1])
-            left_table_size *= 1#left_table_width
-            total_join_cost = 0
-            node_sorted = False#assume node is not sorted
-            #if node has mvds in separate tables - aggregation, pk-fk join
-            total_join_cost += calculate_total_mvd_table_cost_for_node(graph,  tables_dict, table_widths, node, left_table_size, node_sorted)
-            node_mapped_table_size = node.entity1.relation_size#if entity1's node cover > 1 - still its relation_size gives the all tuples in union view
-            node_mapped_table_width = table_widths.get(node.mapped_table[1])
-            total_join_cost = 0
-            total_join_cost += scan_cost(node_mapped_table_size)#scan cost to filter for node tuples - only put # of tuples - didn't consider table_width
-            #full entity1 buildup
-            total_join_cost += node_cost[node.entity1.unique_name]
-            #full entity2 buildup
-            total_join_cost += node_cost[node.entity2.unique_name]
-            #entity2 join
-            entity2_relation_size = node.entity2.relation_size
-            entity2_full_width = get_full_width_of_table_after_building_full_entity_node(graph, node.entity2)
-            entity2_relation_size *= 1#entity2_full_width
-            total_join_cost += sort_merge_join_cost(left_table_size, entity2_relation_size, left_sorted=True, right_sorted=True)#left(relationship node mapped table which is entity1 table) is sorted, right(entity2) also sorted during full buildup
-            cost += total_join_cost
-            node_cost[node.unique_name] = cost
-    """
     return cost
 
 
@@ -3161,7 +3048,7 @@ def calculate_total_workload_insert_cost_for_folded_weak_entity_or_relationship(
             pass#mvd tables already handled separately
         else:
             table_size = tables_dict.get(table_name)[0]
-            insert_cost_for_relevant_node_tables += sort_merge_join_cost(workload_insert_frequency_for_node, table_size)#extra cost incurred for folded entity/relationship inserts
+            insert_cost_for_relevant_node_tables += join_cost(workload_insert_frequency_for_node, table_size)#extra cost incurred for folded entity/relationship inserts
 
     insert_cost_for_relevant_node_tables += insert_cost_for_workload_queries(workload_insert_frequency_for_node)#cost to do actual row inserts - actual row inserts are equal to
                                                                                                 #workload_insert_frequency of the node,
@@ -3208,14 +3095,8 @@ def calculate_total_workload_insert_cost_for_single_entity_or_relationship_helpe
     return insert_cost_for_relevant_node_tables
 
 def calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict, table_widths,
-                                        folded_weak_entity_relationship_count, include_db_initialization_cost):  #select, insert - workload queries have single entity or relationship
+                                        folded_weak_entity_relationship_count):  #select, insert - workload queries have single entity or relationship
     cost = 0
-
-    #db initialization insert cost
-    if include_db_initialization_cost:
-        cost += calculate_db_initialization_insert_cost_for_tables(tables_dict)
-        cost += calculate_db_initialization_insert_cost_for_folded_weak_entities_and_relationships(graph, config, tables_dict, table_widths)#the temp tables that
-                                                                                        #need to be created for updating tables - e.g. for folded weak entities or folded 1:N relationships
 
     #workload select * queries - select cost
     for node in graph.nodes:
@@ -3458,7 +3339,7 @@ def get_nodes_cost():
     return node_cost.copy()
 
 #cost is defined for complete config - config is complete
-def exhaustive_search(graph, include_db_initialization_cost):
+def exhaustive_search(graph):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3485,7 +3366,7 @@ def exhaustive_search(graph, include_db_initialization_cost):
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                                            table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)#cost for workload
+                                                            table_widths, folded_weak_entity_relationship_count)#cost for workload
             #print("config cost:", config)
             #print("cost:", cost,"\n")
             if cost < best_cost:
@@ -3506,7 +3387,7 @@ def exhaustive_search(graph, include_db_initialization_cost):
 
 #move is defined as only single node change from original config - config
 #since move is defined as a single node change - finds the best node to change and its best partitioning option
-def do_step(graph, graph_components, config, cost, include_db_initialization_cost):
+def do_step(graph, graph_components, config, cost):
     best_config = config.copy()
     best_cost = cost
     best_nodes_individual_cost = None
@@ -3526,7 +3407,7 @@ def do_step(graph, graph_components, config, cost, include_db_initialization_cos
                 #table_widths not required, replaced to consider only tuple counts
                 #when weak entity/relationship folded, weight of the tuples are multiplied by a constant factor per folded weak entity/relationship
                 new_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, new_config, tables_dict,
-                                                                                     table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                                                                     table_widths, folded_weak_entity_relationship_count)
                 new_nodes_individual_cost = get_nodes_cost()
                 if new_cost < best_cost:
                     best_config = new_config.copy()
@@ -3535,7 +3416,7 @@ def do_step(graph, graph_components, config, cost, include_db_initialization_cos
     return best_config, best_cost, best_nodes_individual_cost
 
 
-def greedy_search(graph, include_db_initialization_cost, iterations=0):
+def greedy_search(graph, iterations=0):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3564,7 +3445,7 @@ def greedy_search(graph, include_db_initialization_cost, iterations=0):
     folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
     initialize_table_cover_for_nodes(graph, config)
     cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict, table_widths,
-                                                                folded_weak_entity_relationship_count, include_db_initialization_cost)#cost of the workload for the chosen config
+                                                                folded_weak_entity_relationship_count)#cost of the workload for the chosen config
     nodes_individual_cost = get_nodes_cost()
     print("default cost:", cost)
 
@@ -3578,7 +3459,7 @@ def greedy_search(graph, include_db_initialization_cost, iterations=0):
 
 
     for iteration in range(iterations):#do a step at each iteration
-        new_config, new_cost, new_nodes_individual_cost = do_step(graph, all_components_except_mvd_attrs, best_config, best_cost, include_db_initialization_cost)
+        new_config, new_cost, new_nodes_individual_cost = do_step(graph, all_components_except_mvd_attrs, best_config, best_cost)
         if new_cost < best_cost:
             best_config = new_config.copy()
             best_cost = new_cost
@@ -3600,7 +3481,7 @@ def greedy_search(graph, include_db_initialization_cost, iterations=0):
     print("best cost-greedy:", best_cost, "\n")
     return best_config, best_cost
 
-def greedy_search_with_random_starts(graph, include_db_initialization_cost, iterations=1000, random_starts=10):
+def greedy_search_with_random_starts(graph, iterations=1000, random_starts=10):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3626,7 +3507,7 @@ def greedy_search_with_random_starts(graph, include_db_initialization_cost, iter
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                                                table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                                                table_widths, folded_weak_entity_relationship_count)
             best_local_config = config.copy()
             best_nodes_individual_local_cost = get_nodes_cost()
 
@@ -3650,7 +3531,7 @@ def greedy_search_with_random_starts(graph, include_db_initialization_cost, iter
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                                                table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                                                table_widths, folded_weak_entity_relationship_count)
             best_local_config = config.copy()
             best_nodes_individual_local_cost = get_nodes_cost()
 
@@ -3659,7 +3540,7 @@ def greedy_search_with_random_starts(graph, include_db_initialization_cost, iter
                                            graph_node.is_entity() or graph_node.is_relationship()]
 
         for iteration in range(iterations):#do a step at each iteration
-            new_config, new_cost, new_nodes_individual_cost = do_step(graph, all_components_except_mvd_attrs, best_local_config, best_local_cost, include_db_initialization_cost)
+            new_config, new_cost, new_nodes_individual_cost = do_step(graph, all_components_except_mvd_attrs, best_local_config, best_local_cost)
             if new_cost < best_local_cost:
                 best_local_config = new_config.copy()
                 best_local_cost = new_cost
@@ -3692,7 +3573,7 @@ def greedy_search_with_random_starts(graph, include_db_initialization_cost, iter
     return best_global_config, best_global_cost
 
 
-def stochastic_greedy_search(graph, include_db_initialization_cost, iterations=0):
+def stochastic_greedy_search(graph, iterations=0):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3778,7 +3659,7 @@ def stochastic_greedy_search(graph, include_db_initialization_cost, iterations=0
     folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
     initialize_table_cover_for_nodes(graph, config)
     best_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict, table_widths,
-                                                            folded_weak_entity_relationship_count, include_db_initialization_cost)#cost of the workload for the chosen config
+                                                            folded_weak_entity_relationship_count)#cost of the workload for the chosen config
     best_nodes_individual_cost = get_nodes_cost()
     print("default best cost:", best_cost)
 
@@ -3798,7 +3679,7 @@ def stochastic_greedy_search(graph, include_db_initialization_cost, iterations=0
             #table_widths not required, replaced to consider only tuple counts
             #when weak entity/relationship folded, weight of the tuples are multiplied by a constant factor per folded weak entity/relationship
             cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, new_config, tables_dict,
-                                                                                 table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                                                                 table_widths, folded_weak_entity_relationship_count)
             if cost < best_cost:
                 config = new_config
                 best_cost = cost
@@ -3818,7 +3699,7 @@ def stochastic_greedy_search(graph, include_db_initialization_cost, iterations=0
     return config, best_cost
 
 
-def stochastic_greedy_search_with_random_starts(graph, include_db_initialization_cost, iterations=5000, random_starts=10):
+def stochastic_greedy_search_with_random_starts(graph, iterations=5000, random_starts=10):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3842,7 +3723,7 @@ def stochastic_greedy_search_with_random_starts(graph, include_db_initialization
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                            table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                            table_widths, folded_weak_entity_relationship_count)
             best_nodes_individual_local_cost = get_nodes_cost()
 
         else:  #next random starts randomly chosen
@@ -3876,7 +3757,7 @@ def stochastic_greedy_search_with_random_starts(graph, include_db_initialization
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                table_widths, folded_weak_entity_relationship_count)
             best_nodes_individual_local_cost = get_nodes_cost()
 
         for iteration in range(iterations):
@@ -3894,7 +3775,7 @@ def stochastic_greedy_search_with_random_starts(graph, include_db_initialization
                 folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, new_config, table_mappings)
                 initialize_table_cover_for_nodes(graph, new_config)
                 cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, new_config, tables_dict,
-                                    table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                    table_widths, folded_weak_entity_relationship_count)
                 if cost < best_local_cost:
                     config = new_config
                     best_local_cost = cost
@@ -3926,7 +3807,7 @@ def stochastic_greedy_search_with_random_starts(graph, include_db_initialization
 #execute the greedy search for defined no of runs- each run search for a solution using defined no of iterations
 #purpose is to see if the solution gets better as no of runs increases
 #if solution doesn't improve over the runs, we can assume that we almost reach the optimal solution
-def progressive_stochastic_greedy_search(graph, run, include_db_initialization_cost, iterations=0):
+def progressive_stochastic_greedy_search(graph, run, iterations=0):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -3953,7 +3834,7 @@ def progressive_stochastic_greedy_search(graph, run, include_db_initialization_c
     folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
     initialize_table_cover_for_nodes(graph, config)
     best_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict, table_widths,
-                                                        folded_weak_entity_relationship_count, include_db_initialization_cost)#cost of the workload for the chosen config
+                                                        folded_weak_entity_relationship_count)#cost of the workload for the chosen config
     best_nodes_individual_cost = get_nodes_cost()
     print("default best cost:", best_cost)
 
@@ -3973,7 +3854,7 @@ def progressive_stochastic_greedy_search(graph, run, include_db_initialization_c
             #table_widths not required, replaced to consider only tuple counts
             #when weak entity/relationship folded, weight of the tuples are multiplied by a constant factor per folded weak entity/relationship
             cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, new_config, tables_dict,
-                                table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                table_widths, folded_weak_entity_relationship_count)
             if cost < best_cost:
                 config = new_config
                 best_cost = cost
@@ -3995,7 +3876,7 @@ def progressive_stochastic_greedy_search(graph, run, include_db_initialization_c
 #execute the greedy search with random starts for defined no of runs- each run search for a solution using defined no of iterations
 #purpose is to see if the solution gets better as no of runs increases
 #if solution doesn't improve over the runs, we can assume that we almost reach the optimal solution
-def progressive_stochastic_greedy_search_with_random_starts(graph, run, include_db_initialization_cost, iterations=0, random_starts=10):
+def progressive_stochastic_greedy_search_with_random_starts(graph, run, iterations=0, random_starts=10):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -4024,7 +3905,7 @@ def progressive_stochastic_greedy_search_with_random_starts(graph, run, include_
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                    table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                    table_widths, folded_weak_entity_relationship_count)
             best_nodes_individual_local_cost = get_nodes_cost()
 
         elif run != 0 and i == 0: #for progressive greedy, for next runs, first random start based on previously found config
@@ -4035,7 +3916,7 @@ def progressive_stochastic_greedy_search_with_random_starts(graph, run, include_
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                table_widths, folded_weak_entity_relationship_count)
             best_nodes_individual_local_cost = get_nodes_cost()
             assert best_local_cost == cost_for_previous_run
 
@@ -4062,7 +3943,7 @@ def progressive_stochastic_greedy_search_with_random_starts(graph, run, include_
             folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
             initialize_table_cover_for_nodes(graph, config)
             best_local_cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict,
-                                table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                table_widths, folded_weak_entity_relationship_count)
             best_nodes_individual_local_cost = get_nodes_cost()
 
         #for mvds it is obvious keeping them CIP is the best, so disregard mvds from the components to which options randomly assigned
@@ -4084,7 +3965,7 @@ def progressive_stochastic_greedy_search_with_random_starts(graph, run, include_
                 folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, new_config, table_mappings)
                 initialize_table_cover_for_nodes(graph, new_config)
                 cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, new_config, tables_dict,
-                                    table_widths, folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                    table_widths, folded_weak_entity_relationship_count)
                 if cost < best_local_cost:
                     config = new_config
                     best_local_cost = cost

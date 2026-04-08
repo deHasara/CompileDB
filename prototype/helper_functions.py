@@ -47,7 +47,6 @@ from search_algorithm_all_attributes import (exhaustive_search, greedy_search,
                                              greedy_search_with_random_starts,
                                              greedy_search_with_random_starts_for_obj_of_optimizing_for_normalized_costs)
 from check_config_valid import check_config_is_valid
-from check_config_valid import uct_search
 from workload_generator import generate_test_data
 
 #methods for db initialization inserts
@@ -338,7 +337,7 @@ def load_select_all_queries(db_name, workload_file):
     return select_all_nodes, query_times, select_all_queries_total_time
 
 #for example2_synthetic.json workload - assume workload consists of only select * queries
-def load_workload_queries_node_costs_only(db_name, load_file, include_db_initialization_cost=False):
+def load_workload_queries_node_costs_only(db_name, load_file):
 
     def write_output_to_csv_node_costs_only(config, cost, individual_node_cost, select_all_nodes):
         with open('output.csv', 'a') as f:
@@ -347,17 +346,6 @@ def load_workload_queries_node_costs_only(db_name, load_file, include_db_initial
             #individual_node_cost_line = ','.join(f'{k}:{v}' for k, v in individual_node_cost.items())
             #f.write(f'individual nodes cost: {individual_node_cost_line}\n')
 
-            #extract estimated costs for db initialization for selected schema
-            db_initialization_keys = ["db_initialization_insert_cost", "db_initialization_folded_weak_entity_relationship_insert_cost"]#first print these 2 in the line of output.csv
-            db_initialization_costs = [
-                (k, individual_node_cost[k])
-                for k in db_initialization_keys
-                if k in individual_node_cost
-            ]
-            if db_initialization_costs:
-                db_initialization_costs_line = ', '.join(f"{k}:{v}" for k, v in db_initialization_costs)
-                f.write(f'{db_initialization_costs_line}\n')
-
             #extract estimated cost for entire insert query workload for selected schema
             insert_query_workload_key = "workload_insert_cost"
             insert_query_workload_cost = individual_node_cost.get(insert_query_workload_key)
@@ -365,7 +353,7 @@ def load_workload_queries_node_costs_only(db_name, load_file, include_db_initial
                 f.write(f'total insert query workload cost: {insert_query_workload_cost}\n')
 
             #extract estimated cost for a single select * query for each entity/relationship for selected schema
-            non_select_all_query_costs_keys = db_initialization_keys + [insert_query_workload_key]
+            non_select_all_query_costs_keys =  [insert_query_workload_key]
             node_costs = [
                 (k, v)
                 for k, v in individual_node_cost.items()
@@ -406,13 +394,8 @@ def load_workload_queries_node_costs_only(db_name, load_file, include_db_initial
     write_output_to_csv_node_costs_only(graph.config, graph.cost, graph.nodes_cost, select_all_nodes)
 
 
-def load_workload_queries(db_name, workload_file, include_db_initialization_cost=False):
+def load_workload_queries(db_name, workload_file):
     total_time = 0
-
-    if include_db_initialization_cost:
-        insert_time_ms, folded_weak_entity_relationship_insert_time_ms = get_db_initialization_exec_times()
-        total_time += insert_time_ms
-        total_time += folded_weak_entity_relationship_insert_time_ms
 
     #select * query workload
     logging.debug(f"--------------running select * queries")
@@ -426,7 +409,7 @@ def load_workload_queries(db_name, workload_file, include_db_initialization_cost
 
     _, _, _, graph = load_data(db_name)
 
-    write_output_to_csv(graph.config, graph.cost, graph.nodes_cost, select_all_nodes, query_times, insert_queries_total_time, total_time, include_db_initialization_cost)
+    write_output_to_csv(graph.config, graph.cost, graph.nodes_cost, select_all_nodes, query_times, insert_queries_total_time, total_time)
 
     #_, _, _ = load_select_all_queries(db_name, workload_file)#run select_all queries after insert queries to assert relation size
                                                                             #are correctly modified after insert workload
@@ -1089,20 +1072,20 @@ def sort_tables_to_adhere_to_pk_fk_constraints(graph, table_mapping):
     return sorted_table_names
 
 
-def start_search_for_schema(graph, load_file, include_db_initialization_cost=False):
+def start_search_for_schema(graph, load_file):
     analyze_insert_queries(graph, load_file)
     analyze_select_queries(graph, load_file)
     propagate_cardinality_for_inheritance_hierarchy(graph)
-    exhaustive_search(graph, include_db_initialization_cost)
-    greedy_search(graph, include_db_initialization_cost)
-    greedy_search_with_random_starts(graph, include_db_initialization_cost)
+    exhaustive_search(graph)
+    greedy_search(graph)
+    greedy_search_with_random_starts(graph)
     greedy_search_with_random_starts_for_obj_of_optimizing_for_normalized_costs(graph)
     #uct_search(graph)
 
-def start_search_for_schema_for_generated_workload(graph, include_db_initialization_cost=False):
-    #exhaustive_search(graph, include_db_initialization_cost)
-    greedy_search(graph, include_db_initialization_cost)
-    #greedy_search_with_random_starts(graph, include_db_initialization_cost)
+def start_search_for_schema_for_generated_workload(graph):
+    #exhaustive_search(graph)
+    greedy_search(graph)
+    #greedy_search_with_random_starts(graph)
     #greedy_search_with_random_starts_for_obj_of_optimizing_for_normalized_costs(graph)
 
 def write_output_to_csv_for_cost_model_validation_for_configs(cost, total_time):
@@ -1124,7 +1107,7 @@ def init_csv_for_greedy_algorithm_with_progreesively_increasing_iterations():
         writer = csv.writer(f)
         writer.writerow(['iter count', 'est cost', 'exec time'])  # header
 
-def execute_config(db_name, load_file, workload_file, graph, iteration, include_db_initialization_cost=False):
+def execute_config(db_name, load_file, workload_file, graph, iteration):
     if iteration != 0:#after initial run, for each config, need to delete db and recreate for new physical configuration
         create_database_if_not_exists(db_name)#need to create new db since new config will change the layout of the physical tables
 
@@ -1155,12 +1138,12 @@ def execute_config(db_name, load_file, workload_file, graph, iteration, include_
     #insert_data_in_batches_parallelized(db_name, workload_file, table_mappings) #in-memory parallelized batch insert
     logging.debug(f"--------------running queries")
     #total_time = load_select_all_queries(db_name, workload_file)#inside the function, deserialize the serialized graph and reconstruct
-    total_time = load_workload_queries(db_name, workload_file, include_db_initialization_cost)#inside the function, deserialize the serialized graph and reconstruct
+    total_time = load_workload_queries(db_name, workload_file)#inside the function, deserialize the serialized graph and reconstruct
     write_output_to_csv_for_cost_model_validation_for_configs(graph.cost, total_time)
     return
 
 #execute random valid configs for number of iterations
-def execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file, graph, include_db_initialization_cost, iterations=10000):
+def execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file, graph, iterations=10000):
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
@@ -1186,7 +1169,7 @@ def execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file
     folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, config, table_mappings)
     initialize_table_cover_for_nodes(graph, config)
     cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, config, tables_dict, table_widths,
-                                                    folded_weak_entity_relationship_count, include_db_initialization_cost)#cost for workload - node cost * node frequency for all nodes
+                                                    folded_weak_entity_relationship_count)#cost for workload - node cost * node frequency for all nodes
     update_immediate_parent_with_all_by_itself_for_partially_by_itself_nodes(graph, config)
     graph.config = config
     graph.cost = cost
@@ -1196,7 +1179,7 @@ def execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file
         if iteration==0:#initial default config
             logging.debug(f"--------------running a config")
             print("iteration# config:", iteration, config)
-            execute_config(db_name, load_file, workload_file, graph, iteration, include_db_initialization_cost)#get execution time for config
+            execute_config(db_name, load_file, workload_file, graph, iteration)#get execution time for config
             key = frozenset(config.items())   # hashable snapshot
             configs_executed.add(key)
         else:
@@ -1216,19 +1199,19 @@ def execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file
                     folded_weak_entity_relationship_count = get_folded_relationship_weak_entity_count_for_tables(graph, new_config, table_mappings)
                     initialize_table_cover_for_nodes(graph, new_config)
                     cost = calculate_insert_select_cost_for_entity_relationship_workload(graph, new_config, tables_dict, table_widths,
-                                                                folded_weak_entity_relationship_count, include_db_initialization_cost)
+                                                                folded_weak_entity_relationship_count)
                     update_immediate_parent_with_all_by_itself_for_partially_by_itself_nodes(graph, new_config)
                     graph.config = new_config
                     graph.cost = cost
                     graph.nodes_cost = get_nodes_cost()
                     logging.debug(f"--------------running a config")
                     print("iteration# config:", iteration, new_config)
-                    execute_config(db_name, load_file, workload_file, graph, iteration, include_db_initialization_cost)
+                    execute_config(db_name, load_file, workload_file, graph, iteration)
                     configs_executed.add(key)
                     config = new_config
 
-def run_different_configurations(db_name, load_file, workload_file, graph, include_db_initialization_cost):
-    execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file, graph, include_db_initialization_cost)
+def run_different_configurations(db_name, load_file, workload_file, graph):
+    execute_valid_configs_for_no_of_iterations(db_name, load_file, workload_file, graph)
 
 
 def execute_config_for_progressive_greedy(db_name, load_file, workload_file, graph, run, no_of_search_iterations):
@@ -1266,7 +1249,7 @@ def execute_config_for_progressive_greedy(db_name, load_file, workload_file, gra
     return
 
 #can get the execution time, estimated cost for each config found by running greedy algorithm for increasing no of iterations for no_of_rounds
-def run_greedy_algorithm_for_increasing_no_of_iterations(db_name, load_file, workload_file, graph, include_db_initialization_cost):
+def run_greedy_algorithm_for_increasing_no_of_iterations(db_name, load_file, workload_file, graph):
     init_csv_for_greedy_algorithm_with_progreesively_increasing_iterations()
 
     incremental_step = 1000
