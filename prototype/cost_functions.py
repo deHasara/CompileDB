@@ -14,10 +14,9 @@ def insert_cost(num_tuples, num_indexes=0):
 
 def insert_cost_for_workload_queries(num_tuples, table_size=0, num_indexes=0):
     base_insert_cost = 9.0  # insert to table
-    index_update_cost = 0.0 * num_indexes
     #extra cost incurred for non-folded entity/relationship inserts - since for folded entity/relationships no index update cost
     index_update_cost_for_table = search_cost(table_size) * num_indexes
-    total_per_tuple = base_insert_cost + index_update_cost + index_update_cost_for_table
+    total_per_tuple = base_insert_cost + index_update_cost_for_table
     return num_tuples * total_per_tuple
 
 def search_cost(num_tuples):
