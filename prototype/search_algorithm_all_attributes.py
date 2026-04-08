@@ -1,4 +1,3 @@
-##second definition of select * - to include all attributes - explained in readme file
 #for strong entity(which doesn't belong to a hierarchy) - its pk + its own attributes
 #for strong subclass - its pk + all attributes inherited from parent/s in hierarchy + its own attributes
 #for relationship - select * attributes include all atttributes from node itself and two participating entites
@@ -797,7 +796,6 @@ def initialize_table_cover_for_nodes_helper(graph, config, entity_or_relationshi
         return set()
 
 
-#second definition of select * - to include all attributes - in readme file
 #for strong entity(or subclass with node cover == 1) - table cover is just its mapped table and own mvd tables
 #for root or subclass with node_cover - table cover is the table view generated for node from mapped_table and mvd tables of nodes in its node_cover(node_cover
 #includes node itself to consider coverage from its own mapped_table and mvd tables, and all contained_all_descendants/all_by_itself child nodes in the subtree rooted by the node)

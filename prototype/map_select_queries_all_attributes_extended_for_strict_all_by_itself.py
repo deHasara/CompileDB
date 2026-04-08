@@ -189,7 +189,6 @@ def initialize_select_nodes_for_single_entity_or_relationship_helper(graph, enti
         return depending_entities
 
 
-#second definition of select * - to include all attributes - in readme file
 #initialize physical tables required to answer a select * entity/relationship
 #strong entity - all its attributes
 #strong subclass entity - all attributes inherited from parent/s and its own attributes
