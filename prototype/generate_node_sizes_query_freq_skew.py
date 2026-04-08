@@ -270,11 +270,11 @@ def generate_select_all_query_frequencies(graph):
         if node in selected:
             if node.is_entity():
                 if not node.is_weak_entity:
-                    query_frequencies[node.unique_name] = random.randint(40, 50)#(20,30)
+                    query_frequencies[node.unique_name] = random.randint(1, 1)#(20,30)
                 else:
-                    query_frequencies[node.unique_name] = random.randint(1, 5)#(1,10)
+                    query_frequencies[node.unique_name] = random.randint(1, 1)#(1,10)
             elif node.is_relationship():
-                query_frequencies[node.unique_name] = random.randint(1, 5)#(1,5)
+                query_frequencies[node.unique_name] = random.randint(1, 1)#(1,5)
     return query_frequencies
 
 #insert frequencies in workload
@@ -290,11 +290,11 @@ def generate_insert_query_frequencies(graph):
     for node in selected:
         if node.is_entity():
             if not node.is_weak_entity:
-                query_frequencies[node.unique_name] = random.randint(1, 10)#(1,20)
+                query_frequencies[node.unique_name] = random.randint(1, 1)#(1,20)
             else:
-                query_frequencies[node.unique_name] = random.randint(1, 10)#(1,20)
+                query_frequencies[node.unique_name] = random.randint(1, 1)#(1,20)
         elif node.is_relationship():
-            query_frequencies[node.unique_name] = random.randint(1, 10)#(1,20)
+            query_frequencies[node.unique_name] = random.randint(1, 1)#(1,20)
     return query_frequencies
 
 
@@ -329,7 +329,7 @@ def init_node_sizes_and_query_frequencies(load_file):
         graph.add_relationship(result)
         logging.debug(f"Parsed: {statement}")
         logging.debug(f"Result: {result}")
-    """
+
     logging.debug(f"--------------generating db initializing node sizes")
     logging.debug(f"--------------generating hierarchical entity node sizes skew")
     hierarchies = extract_inheritance_hierarchies(graph)
@@ -349,7 +349,6 @@ def init_node_sizes_and_query_frequencies(load_file):
     node_data = generate_node_data(graph)
     logging.debug(f"--------------writing node data to load file")
     write_node_data_to_load_file(load_file, node_data)
-    """
     logging.debug(f"--------------generating query frequencies")
     logging.debug(f"--------------generating select * query frequencies")
     query_frequencies = generate_select_all_query_frequencies(graph)
@@ -361,5 +360,5 @@ def init_node_sizes_and_query_frequencies(load_file):
     write_query_frequencies_to_load_file(load_file, query_frequencies, queries_type="insert_frequencies")
 
 
-load_file = "example2_e_commerce.json"  #"example2_synthetic.json"##"example2_er_model.json"#
+load_file = "example2_e_com_small.json"#"example2_e_commerce.json"  #"example2_synthetic.json"#
 init_node_sizes_and_query_frequencies(load_file)

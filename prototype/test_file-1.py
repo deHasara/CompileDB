@@ -1,5 +1,6 @@
 from helper_functions import *
 from helper_functions_extended import *
+from dbshell import DBCmdLine
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -193,9 +194,14 @@ def run_progressively_increasing_iterative_greedy_algorithm(db_name, load_file):
     logging.debug(f"--------------running greedy algorithm progressively increasing iterations")
     run_greedy_algorithm_for_increasing_no_of_iterations(db_name, load_file, workload_file, graph)
 
+def run_queries(db_name):
+    sorted_by_dependencies_tables, tables, types, graph = load_data(db_name)
+    shell = DBCmdLine(db_name, tables, types, graph)
+    shell.cmdloop()
+
 def main():
     parser = argparse.ArgumentParser(description="ER Shell")
-    parser.add_argument("command", choices=["init", "shell", "insert", "test_config", "run_different_configs", "prog_greedy"], help="Command to execute")
+    parser.add_argument("command", choices=["init", "shell", "insert", "test_config", "run_different_configs", "prog_greedy", "run_queries"], help="Command to execute")
     parser.add_argument("db_name", help="Database name")
     parser.add_argument("load_file", nargs="?", help="CREATE file for initialization as JSON")
 
@@ -217,6 +223,8 @@ def main():
             insert_data(args.db_name, args.load_file)
             #insert_data(args.db_name, args.load_file)
         print(f"Database {args.db_name} initialized with data from {args.load_file}")
+    elif args.command == "run_queries":
+        run_queries(args.db_name)
 
 if __name__ == "__main__":
     main()
