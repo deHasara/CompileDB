@@ -37,7 +37,7 @@ from itertools import product
 from math import prod
 
 from partition_rules import check_conditions_for_abstract_table
-from cost_functions import insert_cost, search_cost, scan_cost, union_all_cost, join_cost, \
+from helper_methods import insert_cost, search_cost, scan_cost, union_all_cost, join_cost, \
     scan_folded_weak_entity_modified, insert_cost_for_workload_queries
 from check_config_valid import check_config_is_valid
 from construct_create_statements1 import generate_table_mappings, initialize_keys
