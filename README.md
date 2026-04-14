@@ -77,7 +77,7 @@ The system is implemented as a lightweight Python layer on top of an existing re
       - ```SELECT * FROM <entity_or_relationship>```
       - ```INSERT INTO <entity_or_relationship>```
 
-    For more complex queries, manual translation is currently required. Such queries can be executed directly against the PostgreSQL backend using psql or another PostgreSQL client.
+    For more complex queries, manual translation is currently required. These queries can then be executed directly on the PostgreSQL backend using psql or any compatible PostgreSQL client.
 
     **Example:**
       
