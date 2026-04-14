@@ -32,7 +32,7 @@ def search_cost(num_tuples):
 def scan_folded_weak_entity_modified(parent_tuples_with_non_zero_length_for_weak_entity_array, weak_entity_tuples, unfolding_cost_per_weak_entity_tuple=25):
     return (parent_tuples_with_non_zero_length_for_weak_entity_array + weak_entity_tuples * unfolding_cost_per_weak_entity_tuple)
 
-def scan_cost(num_tuples, selectivity=1.0, scan_cost_per_tuple=0.1):#scan_cost_per_tuple=1
+def scan_cost(num_tuples, selectivity=1.0, scan_cost_per_tuple=0.1):
     return num_tuples * selectivity * scan_cost_per_tuple
 
 def union_all_cost(tuple_counts_in_list):#when parent entity is abstract table - union of all children

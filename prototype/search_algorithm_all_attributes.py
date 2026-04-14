@@ -2196,7 +2196,7 @@ def calculate_select_cost_for_single_entity_or_relationship_for_single_query(gra
                     node_cover_node_table_size =  tables_dict.get(node_cover_node.mapped_table[1])[0] * node_cover_node_table_width
                     node_cover_node_table_size =  (tables_dict.get(node_cover_node.mapped_table[1])[0] *
                                                    (1 + no_of_folded_weak_entity_or_relationship_in_mapped_table * per_tuple_weight_for_a_folded_weak_entity_or_relationship))
-                    total_join_cost += scan_cost(node_cover_node_table_size, scan_cost_per_tuple=0.11)#1.1#1.2#to union each node_cover_node - need to scan built table for node_cover_node
+                    total_join_cost += scan_cost(node_cover_node_table_size, scan_cost_per_tuple=0.11)#to union each node_cover_node - need to scan built table for node_cover_node
                     no_of_unions += 1
                 else:
                     assert node_cover_node.unique_name == node.unique_name#node itself - node could be all/contained/partial
