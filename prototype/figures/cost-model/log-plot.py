@@ -57,7 +57,7 @@ logy_fit_sorted = logy_fit[sort_idx]
 # Plot
 # ==============================
 plt.figure(figsize=(6,4))
-# 🔽 smaller points (default ~36, try 8–15 for papers)
+# smaller points (default ~36, try 8–15 for papers)
 plt.scatter(logx, logy, s=10, alpha=0.7)
 plt.plot(logx_sorted, logy_fit_sorted, color='red')
 plt.xlabel("log10(est cost)")
