@@ -337,7 +337,7 @@ def init_node_sizes_and_query_frequencies(load_file):
         hierarchy_root = graph.get_node_by_name(hierarchy[0])
         #generate_zipf_distribution_for_hierarchy_method_1(hierarchy_root)
         generate_zipf_distribution_for_hierarchy_method_2(hierarchy_root)
-
+    
     print(node_sizes)
     logging.debug(f"--------------generating non-hierarchical entity node sizes")
     generate_node_sizes_for_non_hierarchical_entity_nodes(graph)
@@ -360,5 +360,5 @@ def init_node_sizes_and_query_frequencies(load_file):
     write_query_frequencies_to_load_file(load_file, query_frequencies, queries_type="insert_frequencies")
 
 
-load_file = "example2_e_com_small.json"#"example2_e_commerce.json"  #"example2_synthetic.json"#
+load_file = "example2_e_com_small.json"
 init_node_sizes_and_query_frequencies(load_file)
