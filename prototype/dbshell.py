@@ -121,7 +121,6 @@ class DBCmdLine(cmd.Cmd):
             insert_data = execute_templatized_insert(self.graph, entity_or_relationship_node, values_as_dict,
                                                      table_index_mappings[entity_or_relationship_node.unique_name], node_index_to_attribute_mapping, relevant_tables)
         if insert_data:
-            print(entity_or_relationship_node.unique_name)
             if (entity_or_relationship_node.is_entity() and entity_or_relationship_node.is_weak_entity and entity_or_relationship_node.is_contained_in_parent and
                     len(entity_or_relationship_node.parent_entity.node_cover)>1):
                 #no mvd inserts since any mvd attribute of folded weak entity is also CIP
