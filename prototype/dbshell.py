@@ -121,68 +121,22 @@ class DBCmdLine(cmd.Cmd):
             insert_data = execute_templatized_insert(self.graph, entity_or_relationship_node, values_as_dict,
                                                      table_index_mappings[entity_or_relationship_node.unique_name], node_index_to_attribute_mapping, relevant_tables)
         if insert_data:
-            if (entity_or_relationship_node.is_entity() and entity_or_relationship_node.is_weak_entity and entity_or_relationship_node.is_contained_in_parent and
-                    len(entity_or_relationship_node.parent_entity.node_cover)>1):
-                #no mvd inserts since any mvd attribute of folded weak entity is also CIP
-                #does an insert to each table in which parent is distributed - but only one insert should go through corresponding to table
-                #in which parent tuple exists out of all tables in node cover
-                row_counts = 0
-                for statement, values in insert_data:
-                    print("---- Running query on database:")
-                    #logging.debug(f"Inserting statement: {statement}, values: {values}")
-                    formatted_statement = format_sql_statement(statement, values)
-                    #logging.debug(f"Inserting Formatted Statement: {formatted_statement}")
-                    print(formatted_statement)
-                    explain_sql = f"EXPLAIN (ANALYZE, FORMAT JSON) {formatted_statement}"
-                    cursor.execute(explain_sql)
-                    conn.commit()
-                    plan = cursor.fetchone()[0][0]   # JSON structure
-                    plan_root = plan["Plan"]
-                    rows_affected = plan_root["Plans"][0]["Actual Rows"]
-                    execution_time = plan["Execution Time"]
-                    print(f"Rows affected: {rows_affected}")
-                    print(f"Execution Time: {execution_time} ms")
-                    print("-------")
-            elif (entity_or_relationship_node.is_relationship()
-                  and self.graph.config[entity_or_relationship_node.unique_name] == "folded_to_many_side"
-                  and len(get_many_side(entity_or_relationship_node).node_cover) > 1
-                  and not check_relationship_has_mvd_attr_in_separate_table(entity_or_relationship_node)):#no mvd inserts since no mvd in separate table
-                #does an insert to each table in which many side is distributed - but only one insert should go through corresponding to table
-                #in which relevant many side tuple exists out of all tables in many side's node cover
-                row_counts = 0
-                for statement, values in insert_data:
-                    print("---- Running query on database:")
-                    #logging.debug(f"Inserting statement: {statement}, values: {values}")
-                    formatted_statement = format_sql_statement(statement, values)
-                    #logging.debug(f"Inserting Formatted Statement: {formatted_statement}")
-                    print(formatted_statement)
-                    explain_sql = f"EXPLAIN (ANALYZE, FORMAT JSON) {formatted_statement}"
-                    cursor.execute(explain_sql)
-                    conn.commit()
-                    plan = cursor.fetchone()[0][0]   # JSON structure
-                    plan_root = plan["Plan"]
-                    rows_affected = plan_root["Plans"][0]["Actual Rows"]
-                    execution_time = plan["Execution Time"]
-                    print(f"Rows affected: {rows_affected}")
-                    print(f"Execution Time: {execution_time} ms")
-                    print("-------")
-            else:
-                for statement, values in insert_data:
-                    print("---- Running query on database:")
-                    #logging.debug(f"Inserting statement: {statement}, values: {values}")
-                    formatted_statement = format_sql_statement(statement, values)
-                    #logging.debug(f"Inserting Formatted Statement: {formatted_statement}")
-                    print(formatted_statement)
-                    explain_sql = f"EXPLAIN (ANALYZE, FORMAT JSON) {formatted_statement}"
-                    cursor.execute(explain_sql)
-                    conn.commit()
-                    plan = cursor.fetchone()[0][0]   # JSON structure
-                    plan_root = plan["Plan"]
-                    rows_affected = plan_root["Plans"][0]["Actual Rows"]
-                    execution_time = plan["Execution Time"]
-                    print(f"Rows affected: {rows_affected}")
-                    print(f"Execution Time: {execution_time} ms")
-                    print("-------")
+            for statement, values in insert_data:
+                print("---- Running query on database:")
+                #logging.debug(f"Inserting statement: {statement}, values: {values}")
+                formatted_statement = format_sql_statement(statement, values)
+                #logging.debug(f"Inserting Formatted Statement: {formatted_statement}")
+                print(formatted_statement)
+                explain_sql = f"EXPLAIN (ANALYZE, FORMAT JSON) {formatted_statement}"
+                cursor.execute(explain_sql)
+                conn.commit()
+                plan = cursor.fetchone()[0][0]   # JSON structure
+                plan_root = plan["Plan"]
+                rows_affected = plan_root["Plans"][0]["Actual Rows"]
+                execution_time = plan["Execution Time"]
+                print(f"Rows affected: {rows_affected}")
+                print(f"Execution Time: {execution_time} ms")
+                print("-------")
 
         update_nodes_relation_size_for_workload_insert_queries(self.graph)
         # Serialize the graph object to JSON after update
