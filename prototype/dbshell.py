@@ -28,7 +28,7 @@ class DBCmdLine(cmd.Cmd):
         self.graph = graph
 
     def default(self, arg):#arg is query
-        if "select" == arg[:6] or "insert" == arg[:6]:
+        if arg.lower().startswith(("select", "insert")):
             self.do_query(arg)
         else:
             return self.do_exit(arg)
@@ -40,9 +40,10 @@ class DBCmdLine(cmd.Cmd):
 
     def do_query(self, query):#select query
         """Execute a query"""
-        if "select" == query[:6]:
+        q = query.lstrip().lower()
+        if q.startswith("select"):
             self.do_select_query(query)
-        elif "insert" == query[:6]:
+        elif q.startswith("insert"):
             self.do_insert_query(query)
         return
 
