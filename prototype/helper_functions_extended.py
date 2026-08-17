@@ -20,7 +20,7 @@ from er_graph import deserialize_graph
 import worker_state #for the use of parallelizing csv templatize insert
 
 #for templatizing insert - for both csv(generated files in prototype-2/data folder) and in-memory csv
-
+"""
 def match_to_schema_helper(values, attribute_list):
     ret = {}
     index_mapping = {}
@@ -42,6 +42,63 @@ def match_to_schema_helper(values, attribute_list):
             else:
                 ret[y_name] = x
                 index_mapping[y_name] = i
+    return ret, index_mapping
+"""
+
+def match_to_schema_helper(values, attribute_list):
+    if len(values) != len(attribute_list):
+        raise ValueError(
+            f"Value count {len(values)} does not match "
+            f"attribute count {len(attribute_list)}"
+        )
+
+    ret = {}
+    index_mapping = {}
+
+    for i, (value, attribute) in enumerate(
+            zip(values, attribute_list)
+    ):
+        attribute_name = attribute[
+            "pk_ER_name" if "pk_name" in attribute else "name"
+        ]
+
+        # Record the source position regardless of whether the value is NULL.
+        index_mapping[attribute_name] = i
+
+        if value is None:
+            ret[attribute_name] = None
+            continue
+
+        attribute_type = attribute.get(
+            "pk_type" if "pk_name" in attribute else "type"
+        )
+
+        if attribute.get("is_multivalued", False):
+            if not isinstance(value, list):
+                raise ValueError(
+                    f"Expected a list for {attribute_name}, "
+                    f"received {type(value).__name__}"
+                )
+
+            ret[attribute_name] = [
+                None
+                if entry is None
+                else int(entry)
+                if attribute_type in {"INT", "INTEGER"}
+                else entry
+                for entry in value
+            ]
+
+        elif attribute_type == "COMPOSITE":
+            # Keep the tuple structure for to_pg_composite().
+            ret[attribute_name] = value
+
+        elif attribute_type in {"INT", "INTEGER"}:
+            ret[attribute_name] = int(value)
+
+        else:
+            ret[attribute_name] = value
+
     return ret, index_mapping
 
 
@@ -104,12 +161,12 @@ def check_if_table_exists(db, table_name):
 
 
     cursor_1.execute("""
-        SELECT EXISTS (
-            SELECT FROM information_schema.tables 
-            WHERE table_schema = 'public' 
-            AND table_name = %s
-        );
-    """, (table_name,))
+                     SELECT EXISTS (
+                         SELECT FROM information_schema.tables
+                         WHERE table_schema = 'public'
+                           AND table_name = %s
+                     );
+                     """, (table_name,))
 
     exists = cursor_1.fetchone()[0]
 
@@ -591,7 +648,7 @@ def insert_data_in_batches_with_csv_with_templatization_parallelized(db_name, lo
                             columns = attribute_names
                             column_clause = f"({', '.join(columns)})"
                             with open(file_name, 'r') as f:
-                                copy_sql = f"COPY {aggregated_temp_table_name} {column_clause} FROM STDIN WITH (FORMAT CSV)"
+                                copy_sql = f"COPY {aggregated_temp_table_name} {column_clause} FROM STDIN WITH (FORMAT CSV, NULL 'null')"
                                 start = time.perf_counter()
                                 cursor.copy_expert(copy_sql, f)#batch insert to temp table
                                 conn.commit() # commit both CREATE + COPY
@@ -700,7 +757,7 @@ def insert_data_in_batches_with_csv_with_templatization_parallelized(db_name, lo
                             cursor.execute(create_temp_table_sql)#create temp table
                             column_clause = f"({', '.join(columns)})"
                             with open(file_name, 'r') as f:
-                                copy_sql = f"COPY {temp_table_name} {column_clause} FROM STDIN WITH (FORMAT CSV)"
+                                copy_sql = f"COPY {temp_table_name} {column_clause} FROM STDIN WITH (FORMAT CSV, NULL 'null')"
                                 start = time.perf_counter()
                                 cursor.copy_expert(copy_sql, f)#batch insert to temp table
                                 conn.commit() # commit both CREATE + COPY

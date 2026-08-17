@@ -1,11 +1,27 @@
 import copy
-import csv
 import json
 from collections import defaultdict
 from typing import List, Tuple, Dict, Any
-import psycopg2
-from er_graph import Graph, serialize_graph, Node
+from er_graph import Graph, Node
 import re
+
+
+CSV_NULL = "null"
+
+
+def append_to_in_memory_csv(in_memory_csvs, table_name, values):
+    """Append one row using the same null representation as write_to_csv().
+
+    The consumers serialize these rows with ``csv.writer`` and load them with
+    PostgreSQL ``COPY ... FORMAT CSV, NULL 'null'``.  Python's csv writer emits
+    ``None`` as an empty field, so leaving None in an in-memory row does not
+    match the file-backed CSV implementation.
+    """
+    normalized_values = [
+        CSV_NULL if value is None else value
+        for value in values
+    ]
+    in_memory_csvs.setdefault(table_name, []).append(normalized_values)
 
 def escape_pg_composite_element(value):
     if not isinstance(value, str):
@@ -55,7 +71,8 @@ def check_if_the_table_for_insert_parent_mvd(graph:Graph, node:Node, table_name)
                 if attribute.get("entity_unique_name") != node.unique_name and attribute.get("mapped_table")[1] == table_name:#mvd came from parent node not from node itself
                     attribute_entity = graph.get_node_by_name(attribute.get("entity_unique_name"))
                     assert attribute_entity is not None
-                    assert attribute_entity.mapped_table is not None
+                    # The parent itself may have no table while its MVD is
+                    # still mapped to a separate table.
                     assert attribute.get("mapped_table")[1] == table_name
                     return True
     return False
@@ -112,7 +129,7 @@ def map_values_from_ER_names_to_physical_schema_keys(graph:Graph, node:Node, val
 
 #UPDATE table_name SET attr_name = 30 WHERE pk = 2; -> {table_name:, {attr_name:val,..}, pk:{pk1:, pk2:}}
 def generate_insert_statements_in_batch(entity_or_relationship_node:Node, values, index_mapping, tables: List[Tuple[str, List[Tuple[str, str, str]]]], custom_types: Dict[str, List[Tuple[str, str]]],
-                                        graph:Graph, insert_table_attribute_names:Dict, in_memory_csvs:List, table_index_mapping_for_node) -> List[str]:
+                                        graph:Graph, insert_table_attribute_names:Dict, in_memory_csvs:Dict, table_index_mapping_for_node) -> List[str]:
 
 
     #if an insert happens to Instructor, if there is a Person table, that insert should reflect in Person table as well
@@ -245,7 +262,7 @@ def generate_insert_statements_in_batch(entity_or_relationship_node:Node, values
 
 
 #Batch insert - insert to in-memory csv for batch insert
-def generate_insert_statement_for_one_table(in_memory_csvs:List, values, index_mapping, table_name, primary_keys, attributes: List[Tuple[str, str]], custom_types: Dict[str, List[Tuple[str, str]]],
+def generate_insert_statement_for_one_table(in_memory_csvs:Dict, values, index_mapping, table_name, primary_keys, attributes: List[Tuple[str, str]], custom_types: Dict[str, List[Tuple[str, str]]],
                                             entity_name=None, graph=None)-> List[str]:
     temp_values = []
     attribute_names = []
@@ -291,17 +308,13 @@ def generate_insert_statement_for_one_table(in_memory_csvs:List, values, index_m
     assert temp_values
 
     if temp_values:
-        if table_name in in_memory_csvs:
-            in_memory_csvs[table_name].append(temp_values)
-        else:
-            in_memory_csvs[table_name] = []
-            in_memory_csvs[table_name].append(temp_values)
+        append_to_in_memory_csv(in_memory_csvs, table_name, temp_values)
         return attribute_names, table_index_mapping
 
     else:
         return None
 
-def generate_insert_statement_for_mvd_table(in_memory_csvs:List, values, table_name, primary_keys, attributes: List[Tuple[str, str]], custom_types: Dict[str, List[Tuple[str, str]]],
+def generate_insert_statement_for_mvd_table(in_memory_csvs:Dict, values, table_name, primary_keys, attributes: List[Tuple[str, str]], custom_types: Dict[str, List[Tuple[str, str]]],
                                             entity_name=None, graph=None)-> List[str]:
     temp_values = []
     attribute_names = []
@@ -332,11 +345,7 @@ def generate_insert_statement_for_mvd_table(in_memory_csvs:List, values, table_n
     assert temp_values
 
     if temp_values:
-        if table_name in in_memory_csvs:
-            in_memory_csvs[table_name].append(temp_values)
-        else:
-            in_memory_csvs[table_name] = []
-            in_memory_csvs[table_name].append(temp_values)
+        append_to_in_memory_csv(in_memory_csvs, table_name, temp_values)
         return attribute_names
 
     else:
@@ -383,11 +392,7 @@ def generate_update_statement(in_memory_csvs, entity_or_relationship_node, value
 
     if temp_values:
         temp_table_name = "temp_" + table_name + "_" + entity_or_relationship_node.unique_name#multiple relationships can be folded in table - different attribute sets - need to identify by folded relationship node
-        if temp_table_name in in_memory_csvs:#insert to batch csv for temp table
-            in_memory_csvs[temp_table_name].append(temp_values)
-        else:
-            in_memory_csvs[temp_table_name] = []
-            in_memory_csvs[temp_table_name].append(temp_values)
+        append_to_in_memory_csv(in_memory_csvs, temp_table_name, temp_values)
 
         return temp_table_name, attribute_names, table_index_mapping
     else:
@@ -433,11 +438,7 @@ def generate_update_statement_for_folded_weak_entity(in_memory_csvs, values, ind
     assert temp_values and attribute_names
     if temp_values:
         temp_table_name = weak_entity.unique_name
-        if temp_table_name in in_memory_csvs:#insert to batch csv for temp table
-            in_memory_csvs[temp_table_name].append(temp_values)
-        else:
-            in_memory_csvs[temp_table_name] = []
-            in_memory_csvs[temp_table_name].append(temp_values)
+        append_to_in_memory_csv(in_memory_csvs, temp_table_name, temp_values)
         return temp_table_name, attribute_names, table_index_mapping
     else:
         return None
@@ -458,7 +459,7 @@ def execute_templatized_insert(in_memory_csvs, entity_or_relationship_node:Node,
                         temp_values.append(value)
                 else:#role, null
                     temp_values.append(index_value)
-            in_memory_csvs[table_name].append(temp_values)
+            append_to_in_memory_csv(in_memory_csvs, table_name, temp_values)
         else:
             mvd_index = table_indices_list[-1]#last attribute
             mvd_list_size = len(values.get(node_index_to_attribute_mapping.get(mvd_index)))
@@ -468,7 +469,7 @@ def execute_templatized_insert(in_memory_csvs, entity_or_relationship_node:Node,
                     for index_value in table_indices_list[:-1]:#pks - except mvd
                         temp_values.append(values.get(node_index_to_attribute_mapping.get(index_value)))
                     temp_values.append(values.get(node_index_to_attribute_mapping.get(mvd_index))[i])
-                    in_memory_csvs[table_name].append(temp_values)
+                    append_to_in_memory_csv(in_memory_csvs, table_name, temp_values)
 
 
 
@@ -481,23 +482,23 @@ def aggregate_folded_weak_entity_by_table_pk(in_memory_csvs, unaggregated_data, 
     for row in weak_entity_data:
         row_dict = dict(zip(weak_entity_attributes, row))
         key = tuple(row_dict[primary_key] for primary_key in table_primary_keys)  # group by first column (e.g., person_id)
-        grouped[key].append(
-            {k: v for k, v in row_dict.items() if k not in table_primary_keys})
+        grouped[key].append({
+            attribute_name: (
+                None if value == CSV_NULL else value
+            )
+            for attribute_name, value in row_dict.items()
+            if attribute_name not in table_primary_keys
+        })
+
+    temp_table_name = "temp_aggregated_" + weak_entity_unique_name
+    in_memory_csvs.setdefault(temp_table_name, [])
     for keys in grouped.keys():
         single_tuple = []
         for key in keys:
             single_tuple.append(key)
         single_tuple.append(json.dumps(grouped[keys]))
-        temp_table_name = "temp_aggregated_" + weak_entity_unique_name
-        if temp_table_name in in_memory_csvs:#insert to batch csv for temp table
-            in_memory_csvs[temp_table_name].append(single_tuple)
-        else:
-            in_memory_csvs[temp_table_name] = []
-            in_memory_csvs[temp_table_name].append(single_tuple)
+        append_to_in_memory_csv(in_memory_csvs, temp_table_name, single_tuple)
     return temp_table_name, attribute_names
-
-
-
 
 
 

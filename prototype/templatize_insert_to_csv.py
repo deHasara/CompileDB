@@ -113,7 +113,7 @@ def map_values_from_ER_names_to_physical_schema_keys(graph:Graph, node:Node, val
 
 #UPDATE table_name SET attr_name = 30 WHERE pk = 2; -> {table_name:, {attr_name:val,..}, pk:{pk1:, pk2:}}
 def generate_insert_statements_in_batch_csv(entity_or_relationship_node:Node, values, index_mapping, tables: List[Tuple[str, List[Tuple[str, str, str]]]], custom_types: Dict[str, List[Tuple[str, str]]],
-                                        graph:Graph, insert_table_attribute_names:Dict, table_index_mapping_for_node) -> List[str]:
+                                            graph:Graph, insert_table_attribute_names:Dict, table_index_mapping_for_node) -> List[str]:
 
 
     #if an insert happens to Instructor, if there is a Person table, that insert should reflect in Person table as well
@@ -222,7 +222,7 @@ def generate_insert_statements_in_batch_csv(entity_or_relationship_node:Node, va
                 index_mapping_updated_to_match_table_columns_copy.pop(attr_name_in_values)
                 index_mapping_updated_to_match_table_columns_copy[attr_name_table] = index_mapping_updated_to_match_table_columns[attr_name_in_values]
                 inserted_attribute_names, table_index_list = generate_insert_statement_for_one_table(values_copy, index_mapping_updated_to_match_table_columns_copy,
-                                                                                table_name, primary_keys, attributes, custom_types, entity_or_relationship_node.unique_name)
+                                                                                                     table_name, primary_keys, attributes, custom_types, entity_or_relationship_node.unique_name)
                 if table_name not in insert_table_attribute_names:
                     insert_table_attribute_names[table_name] = inserted_attribute_names
                 if table_name not in table_index_mapping_for_node:
@@ -238,7 +238,7 @@ def generate_insert_statements_in_batch_csv(entity_or_relationship_node:Node, va
 
             else:
                 inserted_attribute_names, table_index_list = generate_insert_statement_for_one_table(values_updated_to_match_table_columns, index_mapping_updated_to_match_table_columns,
-                                                                                table_name, primary_keys, attributes, custom_types, entity_or_relationship_node.unique_name, graph)
+                                                                                                     table_name, primary_keys, attributes, custom_types, entity_or_relationship_node.unique_name, graph)
                 if table_name not in insert_table_attribute_names:
                     insert_table_attribute_names[table_name] = inserted_attribute_names
                 if table_name not in table_index_mapping_for_node:
@@ -428,7 +428,7 @@ def generate_update_statement_for_folded_weak_entity(values, index_mapping, tabl
 
 
 def execute_templatized_insert_to_csv(entity_or_relationship_node:Node, values, tables_insert_index_mapping, node_index_to_attribute_mapping,
-                               tables: List[Tuple[str, List[Tuple[str, str, str]]]]):
+                                      tables: List[Tuple[str, List[Tuple[str, str, str]]]]):
     for table_name, (table_indices_list, is_mvd_table) in tables_insert_index_mapping.items():
         temp_values = []
         if not is_mvd_table:
@@ -455,6 +455,7 @@ def execute_templatized_insert_to_csv(entity_or_relationship_node:Node, values, 
                     temp_values.append(values.get(node_index_to_attribute_mapping.get(mvd_index))[i])
                     write_to_csv(table_name, temp_values)
 
+"""
 def write_to_csv(table_name, values):
     wid = worker_state.WORKER_ID
     if wid is None:#worker id not initialized - no parallelization
@@ -471,8 +472,28 @@ def write_to_csv(table_name, values):
     #    writer = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
     #    writer.writerow(values)
     return
+"""
 
+CSV_NULL = "null"
 
+def write_to_csv(table_name, values):
+    values = [
+        CSV_NULL if value is None else value
+        for value in values
+    ]
+
+    wid = worker_state.WORKER_ID
+
+    if wid is None:#worker id not initialized - no parallelization
+        file_name = f"data/{table_name}.csv"
+    else:#for parallelized csv writing - each worker writing to own local csv - these local csvs will be merged to single global csv per relation/folded relationship or weak entity
+        file_name = f"data/{table_name}_{wid}.csv"
+
+    with open(file_name, "a", newline="") as file:
+        writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(values)
+
+"""
 def aggregate_folded_weak_entity_by_table_pk_csv(file_name, weak_entity_attributes, table_name, table_primary_keys, weak_entity_unique_name):
     attribute_names = []
     attribute_names.extend(table_primary_keys)
@@ -494,7 +515,49 @@ def aggregate_folded_weak_entity_by_table_pk_csv(file_name, weak_entity_attribut
         temp_table_name = "temp_" + weak_entity_unique_name
         write_to_csv(temp_table_name, single_tuple)#insert to batch csv for temp table
     return temp_table_name, attribute_names
+"""
 
+def aggregate_folded_weak_entity_by_table_pk_csv(
+        file_name,
+        weak_entity_attributes,
+        table_name,
+        table_primary_keys,
+        weak_entity_unique_name):
+
+    attribute_names = list(table_primary_keys)
+    attribute_names.append(weak_entity_unique_name)
+
+    grouped = defaultdict(list)
+
+    with open(file_name, "r", newline="") as file:
+        reader = csv.reader(file)
+
+        for row in reader:
+            row_dict = dict(zip(weak_entity_attributes, row))
+
+            key = tuple(
+                row_dict[primary_key]
+                for primary_key in table_primary_keys
+            )
+
+            weak_entity_value = {
+                attribute_name: (
+                    None if value == CSV_NULL else value
+                )
+                for attribute_name, value in row_dict.items()
+                if attribute_name not in table_primary_keys
+            }
+
+            grouped[key].append(weak_entity_value)
+
+    temp_table_name = "temp_" + weak_entity_unique_name
+
+    for key, weak_entity_values in grouped.items():
+        output_row = list(key)
+        output_row.append(json.dumps(weak_entity_values))
+        write_to_csv(temp_table_name, output_row)
+
+    return temp_table_name, attribute_names
 
 
 #attribute list and keys list based on mapped table in mapped table lists
