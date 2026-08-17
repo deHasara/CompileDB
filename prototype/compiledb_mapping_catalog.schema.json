@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://compiledb.example/schema/compiledb_mapping_catalog.schema.json",
+  "title": "CompileDB conceptual-to-relational mapping catalog",
+  "description": "Mapping-specific metadata consumed by the CompileDB arbitrary E/R query compiler.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format_version",
+    "mapping_id",
+    "conceptual_schema_fingerprint",
+    "dialect",
+    "conceptual_objects",
+    "physical_schema",
+    "object_mappings"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "format_version": {"const": 1},
+    "mapping_id": {"type": "string", "minLength": 1},
+    "conceptual_schema_fingerprint": {"type": "string", "minLength": 1},
+    "dialect": {"const": "postgresql"},
+    "conceptual_objects": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/conceptualObject"}
+    },
+    "physical_schema": {"$ref": "#/$defs/physicalSchema"},
+    "object_mappings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/objectMapping"}
+    }
+  },
+  "$defs": {
+    "nullableBoolean": {
+      "type": ["boolean", "null"]
+    },
+    "mappedTable": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {"type": ["integer", "number", "string", "null"]},
+            {"type": "string"}
+          ]
+        }
+      ]
+    },
+    "conceptualAttribute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attribute_id",
+        "name",
+        "type",
+        "nullable",
+        "primary_key",
+        "discriminator",
+        "multivalued",
+        "composite",
+        "flattened",
+        "separate_table",
+        "parent_attribute_id",
+        "declaring_object_id",
+        "mapped_table",
+        "children"
+      ],
+      "properties": {
+        "attribute_id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "nullable": {"$ref": "#/$defs/nullableBoolean"},
+        "primary_key": {"type": "boolean"},
+        "discriminator": {"type": "boolean"},
+        "multivalued": {"type": "boolean"},
+        "composite": {"type": "boolean"},
+        "flattened": {"$ref": "#/$defs/nullableBoolean"},
+        "separate_table": {"$ref": "#/$defs/nullableBoolean"},
+        "parent_attribute_id": {"type": ["string", "null"]},
+        "declaring_object_id": {"type": ["string", "null"]},
+        "mapped_table": {"$ref": "#/$defs/mappedTable"},
+        "children": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "identityComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "group",
+        "position",
+        "physical_column",
+        "physical_type",
+        "conceptual_component",
+        "er_name"
+      ],
+      "properties": {
+        "group": {"type": "integer", "minimum": 0},
+        "position": {"type": "integer", "minimum": 0},
+        "physical_column": {"type": "string", "minLength": 1},
+        "physical_type": {"type": "string", "minLength": 1},
+        "conceptual_component": {"type": "string"},
+        "er_name": {"type": "string"}
+      }
+    },
+    "relationshipEndpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role_id",
+        "declaration_position",
+        "physical_key_group",
+        "target_object_id",
+        "target_reference_type",
+        "cardinality",
+        "total_participation"
+      ],
+      "properties": {
+        "role_id": {"type": "string", "minLength": 1},
+        "declaration_position": {"type": "integer", "minimum": 0},
+        "physical_key_group": {"type": "integer", "minimum": 0},
+        "target_object_id": {"type": "string", "minLength": 1},
+        "target_reference_type": {"type": "string", "minLength": 1},
+        "cardinality": {"enum": ["one", "many"]},
+        "total_participation": {"type": "boolean"}
+      }
+    },
+    "keyLayout": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "table_key",
+            "reference_key",
+            "reference_table",
+            "reference_node_unique_name",
+            "table_key_entities"
+          ],
+          "properties": {
+            "table_key": {},
+            "reference_key": {},
+            "reference_table": {},
+            "reference_node_unique_name": {},
+            "table_key_entities": {}
+          }
+        }
+      ]
+    },
+    "mappingState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configuration_option",
+        "mapped_table",
+        "mapped_tables_list",
+        "node_cover",
+        "select_all_tables",
+        "select_all_nodes"
+      ],
+      "properties": {
+        "configuration_option": {},
+        "mapped_table": {"$ref": "#/$defs/mappedTable"},
+        "mapped_tables_list": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mappedTable"}
+        },
+        "mapped_table_set": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mappedTable"}
+        },
+        "node_cover": {"type": "array", "items": {"type": "string"}},
+        "select_all_tables": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mappedTable"}
+        },
+        "select_all_nodes": {"type": "array", "items": {"type": "string"}},
+        "is_no_table": {"type": "boolean"},
+        "is_parent_in_table": {"type": "boolean"},
+        "is_immediate_parent_in_a_different_table": {"type": "boolean"},
+        "is_contained_in_parent": {"type": "boolean"},
+        "is_partially_by_itself": {"type": "boolean"},
+        "is_all_by_itself": {"type": "boolean"},
+        "is_contained_all_descendants": {"type": "boolean"}
+      }
+    },
+    "conceptualObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_id",
+        "name",
+        "kind",
+        "parent_object_id",
+        "owner_object_id",
+        "reference_type",
+        "owner_reference_type",
+        "polymorphic",
+        "declared_attributes",
+        "queryable_attributes",
+        "identity_components",
+        "key_layout",
+        "relationship_endpoints",
+        "mapping_state"
+      ],
+      "properties": {
+        "object_id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["entity", "weak_entity", "relationship"]},
+        "parent_object_id": {"type": ["string", "null"]},
+        "owner_object_id": {"type": ["string", "null"]},
+        "reference_type": {"type": ["string", "null"]},
+        "owner_reference_type": {"type": ["string", "null"]},
+        "polymorphic": {"type": "boolean"},
+        "declared_attributes": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "queryable_attributes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/conceptualAttribute"}
+        },
+        "identity_components": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/identityComponent"}
+        },
+        "key_layout": {"$ref": "#/$defs/keyLayout"},
+        "relationship_endpoints": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/relationshipEndpoint"}
+        },
+        "mapping_state": {"$ref": "#/$defs/mappingState"}
+      }
+    },
+    "physicalColumn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "position",
+        "name",
+        "physical_type",
+        "nullable",
+        "conceptual_id",
+        "source_object_id"
+      ],
+      "properties": {
+        "position": {"type": "integer", "minimum": 0},
+        "name": {"type": "string", "minLength": 1},
+        "physical_type": {"type": "string", "minLength": 1},
+        "nullable": {"$ref": "#/$defs/nullableBoolean"},
+        "conceptual_id": {"type": "string"},
+        "source_object_id": {"type": "string"}
+      }
+    },
+    "physicalTable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "table_name",
+        "columns",
+        "primary_key",
+        "contains_entity_and_relationship"
+      ],
+      "properties": {
+        "table_name": {"type": "string", "minLength": 1},
+        "columns": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/physicalColumn"}
+        },
+        "primary_key": {"type": "array", "items": {"type": "string"}},
+        "contains_entity_and_relationship": {"type": "boolean"}
+      }
+    },
+    "physicalSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tables",
+        "composite_types",
+        "foreign_key_statements",
+        "foreign_keys_complete"
+      ],
+      "properties": {
+        "tables": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/physicalTable"}
+        },
+        "composite_types": {},
+        "foreign_key_statements": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "foreign_keys_complete": {"type": "boolean"}
+      }
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "enum": ["attribute", "reference", "owner_reference", "endpoint"]
+        },
+        "id": {"type": "string", "minLength": 1}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "sql", "physical_type", "nullable"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "sql": {"type": "string", "minLength": 1},
+        "physical_type": {"type": ["string", "null"]},
+        "nullable": {"$ref": "#/$defs/nullableBoolean"}
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot", "outputs", "required_fragments"],
+      "properties": {
+        "slot": {"$ref": "#/$defs/slot"},
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/output"}
+        },
+        "required_fragments": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "fragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sql", "dependencies"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "sql": {"type": "string", "minLength": 1},
+        "dependencies": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "branch_id",
+        "from_sql",
+        "providers",
+        "fragments",
+        "predicates"
+      ],
+      "properties": {
+        "branch_id": {"type": "string", "minLength": 1},
+        "from_sql": {"type": "string", "minLength": 1},
+        "providers": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/provider"}
+        },
+        "fragments": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/fragment"}
+        },
+        "predicates": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "objectMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "object_id",
+        "output_unit",
+        "duplicate_free",
+        "branches_disjoint",
+        "source_mode",
+        "branches"
+      ],
+      "properties": {
+        "kind": {"enum": ["entity", "weak_entity", "relationship"]},
+        "object_id": {"type": "string", "minLength": 1},
+        "output_unit": {
+          "enum": [
+            "one_row_per_entity",
+            "one_row_per_weak_entity",
+            "one_row_per_relationship"
+          ]
+        },
+        "duplicate_free": {"type": "boolean"},
+        "branches_disjoint": {"type": "boolean"},
+        "source_mode": {"enum": ["compatibility_extent", "direct_physical"]},
+        "branches": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/branch"}
+        }
+      }
+    }
+  }
+}

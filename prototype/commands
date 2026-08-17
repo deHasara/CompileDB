@@ -1,0 +1,15 @@
+python3 -m unittest -v test_compiledb_query_adapter.py
+python3 er_query_rewriter.py --self-test
+
+#Generate the catalog after CompileDB selects a mapping:
+#Or generate it from a CompileDB database containing erdb_objects:
+python3 compiledb_mapping_catalog.py database_name mapping_catalog.json
+#All 10 tests pass, including extraction → JSON serialization → catalog loading → arbitrary query compilation.
+python3 -m unittest -v \
+    test_compiledb_query_adapter.py \
+    test_compiledb_mapping_catalog.py
+python3 -m unittest -v test_compiledb_query_adapter
+
+COMPILEDB_TEST_DB=your_database_name \
+python3 -m unittest -v test_compiledb_real_mapping
+
