@@ -103,9 +103,9 @@ def test_config(db_name, load_file):
     #insert_data_in_batches(db_name, workload_file, table_mappings) #-in-memory batch insert
     #insert_data_in_batches_with_csv(db_name, workload_file, table_mappings)#csv batch insert
     #insert_data_in_batches_with_csv_with_templatization(db_name, workload_file, table_mappings)#csv batch insert with templatization
-    insert_data_in_batches_with_csv_with_templatization_parallelized(db_name, workload_file, table_mappings)#csv batch insert with templatization parallelized
+    #insert_data_in_batches_with_csv_with_templatization_parallelized(db_name, workload_file, table_mappings)#csv batch insert with templatization parallelized
     #insert_data_in_batches_with_templatization(db_name, workload_file, table_mappings) #-in-memory batch insert with templatization
-    #insert_data_in_batches_with_templatization_parallelized(db_name, workload_file, table_mappings) #-in-memory batch insert with templatization parallelized
+    insert_data_in_batches_with_templatization_parallelized(db_name, workload_file, table_mappings) #-in-memory batch insert with templatization parallelized
     #insert_data_in_batches_parallelized(db_name, workload_file, table_mappings) #in-memory parallelized batch insert
     logging.debug(f"--------------running queries")
     load_workload_queries(db_name, workload_file)
