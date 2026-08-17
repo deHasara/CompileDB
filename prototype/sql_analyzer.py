@@ -160,6 +160,7 @@ def parse_and_analyze(s):
         assert False
 
 #added new parse for insert stmt
+"""
 def new_parse(stmt):
     match = re.match(r"INSERT\s+INTO\s+(\w+)\s+VALUES\s*\((.*)\)", stmt)
     if match:
@@ -172,4 +173,105 @@ def new_parse(stmt):
             'table_name': relation,
             'values': values
         }
+"""
+
+
+
+INSERT_PATTERN = re.compile(
+    r"^\s*INSERT\s+INTO\s+([A-Za-z_][A-Za-z0-9_]*)\s+"
+    r"VALUES\s*\((.*)\)\s*;?\s*$",
+    re.IGNORECASE | re.DOTALL,
+    )
+
+SQL_CONSTANT_PATTERN = re.compile(
+    r"\b(NULL|TRUE|FALSE)\b",
+    re.IGNORECASE,
+)
+
+
+def _translate_sql_constants(text):
+    replacements = {
+        "NULL": "None",
+        "TRUE": "True",
+        "FALSE": "False",
+    }
+
+    return SQL_CONSTANT_PATTERN.sub(
+        lambda match: replacements[match.group(1).upper()],
+        text,
+    )
+
+
+def _sql_values_to_python(value_sql):
+    """Translate generated SQL values into safe Python literals."""
+
+    translated = []
+    outside_string = []
+    position = 0
+
+    while position < len(value_sql):
+        if value_sql[position] != "'":
+            outside_string.append(value_sql[position])
+            position += 1
+            continue
+
+        translated.append(
+            _translate_sql_constants("".join(outside_string))
+        )
+        outside_string.clear()
+
+        position += 1
+        string_value = []
+
+        while position < len(value_sql):
+            character = value_sql[position]
+
+            if character != "'":
+                string_value.append(character)
+                position += 1
+            elif (
+                    position + 1 < len(value_sql)
+                    and value_sql[position + 1] == "'"
+            ):
+                # SQL escape: O''Brien -> O'Brien
+                string_value.append("'")
+                position += 2
+            else:
+                position += 1
+                break
+        else:
+            raise ValueError("unterminated SQL string literal")
+
+        translated.append(repr("".join(string_value)))
+
+    translated.append(
+        _translate_sql_constants("".join(outside_string))
+    )
+
+    python_values = "".join(translated)
+
+    try:
+        # The trailing comma makes the outer value collection a tuple,
+        # including INSERT statements containing only one value.
+        parsed = ast.literal_eval(f"({python_values},)")
+    except (SyntaxError, ValueError) as error:
+        raise ValueError(
+            f"could not parse INSERT values: {value_sql!r}"
+        ) from error
+
+    return list(parsed)
+
+
+def new_parse(stmt):
+    match = INSERT_PATTERN.match(stmt)
+
+    if not match:
+        raise ValueError(
+            f"unsupported INSERT statement: {stmt[:160]!r}"
+        )
+
+    return {
+        "table_name": match.group(1),
+        "values": _sql_values_to_python(match.group(2)),
+    }
 

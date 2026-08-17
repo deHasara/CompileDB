@@ -6,14 +6,17 @@ import json
 import logging
 import random
 from faker import Faker
+from attribute_distributions import resolve_attribute_distribution, sample_distribution
 from er_graph import Graph, Node
 from analyze_query_workload import propagate_cardinality_for_inheritance_hierarchy
 
 random.seed(1)
+Faker.seed(1)
 
 #insert queries
 
-fake = Faker()
+fake = Faker("en_US")
+fake.seed_instance(1)
 
 # Mapping of variable names to Faker methods
 variable_to_faker = {
@@ -41,6 +44,16 @@ def generate_fake_data_for(variable_name):
         return variable_to_faker[variable_name]()
     else:
         return fake.word()#fake.catch_phrase()
+
+def get_attribute_domain(data, node_data, attribute, name):
+    return resolve_attribute_distribution(data, node_data, attribute, name)
+
+def generate_attribute_value(attribute_domain, attribute_type, fallback_name):
+    if attribute_domain is not None:
+        return sample_distribution(attribute_domain, attribute_type, rng=random, faker=fake)
+    if attribute_type in ("INTEGER", "INT"):
+        return random.randint(1, 1000)
+    return generate_fake_data_for(fallback_name)
 
 def check_if_relationship_is_1_N(node):
     if node.rel_dict['entity1']['one'] and not node.rel_dict['entity2']['one']:
@@ -70,8 +83,10 @@ def stringify_as_tuple(data):
             inner = ', '.join(helper(item) for item in d)
             return f'({inner})'
         else:
-            # Quote strings
-            return f"'{d}'" if isinstance(d, str) else str(d)
+            if d is None:
+                return "NULL"
+            # Quote and SQL-escape strings.
+            return f"'{d.replace(chr(39), chr(39) * 2)}'" if isinstance(d, str) else str(d)
 
     # Regardless of original structure, wrap final result in ( )
     if isinstance(data, (list, tuple)):
@@ -110,7 +125,7 @@ def generate_insert_query_workload_data_entity(graph, node, load_file, workload_
         tuple_values= []
         for attribute in node.attribute_list:
             name = attribute["pk_name" if "pk_name" in attribute else "name"]
-            attribute_domain = node_data.get("attribute_domains").get(name) if (node_data and node_data.get("attribute_domains")) else None
+            attribute_domain = get_attribute_domain(data, node_data, attribute, name)
             if "pk_name" in attribute:
                 tuple_info[name] = i#strong entity, single pk
             else:
@@ -118,15 +133,9 @@ def generate_insert_query_workload_data_entity(graph, node, load_file, workload_
                     attribute_value = []
                     tuple_info[name] = convert_to_tuple(create_composite_type(attribute, attribute_value))
                 elif attribute.get("type")=="INTEGER" or attribute.get("type")=="INT":
-                    if attribute_domain:
-                        tuple_info[name] = random.randint(attribute_domain[0],attribute_domain[1])
-                    else:
-                        tuple_info[name] = random.randint(1,1000)
+                    tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), name)
                 elif attribute.get("type")=="VARCHAR" and not attribute.get("is_multivalued"):
-                    if attribute_domain:
-                        tuple_info[name] = random.choice(attribute_domain)
-                    else:
-                        tuple_info[name] = generate_fake_data_for(attribute["name"])
+                    tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                 elif attribute.get("type")=="VARCHAR" and attribute.get("is_multivalued"):
                     attribute_data = data.get("node_data").get(attribute.get("entity_unique_name"))#when mvd comes from parent, require this - for subclasses
                     avg_count = attribute_data.get("avg_"+name)
@@ -135,13 +144,13 @@ def generate_insert_query_workload_data_entity(graph, node, load_file, workload_
                     count = random.randint(1,avg_count * 2)
                     inserted_count = 0
                     while inserted_count < count:
-                        value = generate_fake_data_for(attribute["name"])
+                        value = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                         if value not in tuple_info[name]:
                             tuple_info[name].append(value)
                             inserted_count += 1
                     attribute_node = graph.get_node_by_name(attribute["unique_name"])
                     attribute_node.workload_insert_frequency += len(tuple_info[name])#if attribute_node belongs to a parent subclass, each child subclass may increase attribute's
-                                                                                    #workload_insert_frequency
+                    #workload_insert_frequency
             tuple_values.append(tuple_info[name])
         #tuple_with_pks_only = {k: tuple_info[k] for k in pks}
         #node_generated_data_list.append(tuple_with_pks_only)
@@ -155,7 +164,7 @@ def generate_insert_query_workload_data_entity(graph, node, load_file, workload_
 #these insert tuples are not inserted at db initialization - after db initialization and later when executing workload
 #new tuples generated shouldn't be in existing tuple set generated for weak entity for db initialization
 def generate_insert_query_workload_data_weak_entity(graph, node, load_file, parent_generated_data_list, weak_entity_existing_tuples_pks_for_db_initialization,
-                              workload_insert_frequency, workload_insert_file):
+                                                    workload_insert_frequency, workload_insert_file):
     with open(load_file, "r") as f:
         data = json.load(f)
     node_name = node.unique_name
@@ -182,7 +191,7 @@ def generate_insert_query_workload_data_weak_entity(graph, node, load_file, pare
             random_parent_tuple = random.choice(parent_generated_data_list)
             for attribute in node.attribute_list:
                 name = attribute["pk_name" if "pk_name" in attribute else "name"]
-                attribute_domain = node_data.get("attribute_domains").get(name) if (node_data and  node_data.get("attribute_domains")) else None
+                attribute_domain = get_attribute_domain(data, node_data, attribute, name)
                 if "pk_name" in attribute:
                     #pks.add(name)
                     pk_entity_name = attribute.get("pk_entity_name")
@@ -196,37 +205,23 @@ def generate_insert_query_workload_data_weak_entity(graph, node, load_file, pare
                         else:#tuple from the parent itself - this is when parent entity of weak entity doesn't belong to any inheritance hierarchy
                             tuple_info[name] = random_parent_tuple[name]
                     elif pk_entity_name == node_name:#discriminator attributes from node
-                        if attribute.get("pk_type")=="INTEGER":
-                            if attribute_domain:
-                                tuple_info[name] = random.randint(attribute_domain[0],attribute_domain[1])
-                            else:
-                                tuple_info[name] = random.randint(1,100000)
-                        elif attribute.get("pk_type")=="VARCHAR":
-                            if attribute_domain:
-                                tuple_info[name] = random.choice(attribute_domain)
-                            else:
-                                tuple_info[name] = generate_fake_data_for(attribute["pk_name"])
+                        if attribute.get("pk_type") in ("INTEGER", "INT", "VARCHAR"):
+                            tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("pk_type"), attribute["pk_name"])
                 else:
                     if attribute.get("type")=="COMPOSITE":
                         attribute_value = []
                         tuple_info[name] = convert_to_tuple(create_composite_type(attribute, attribute_value))
                     elif attribute.get("type")=="INTEGER" or attribute.get("type")=="INT":
-                        if attribute_domain:
-                            tuple_info[name] = random.randint(attribute_domain[0],attribute_domain[1])
-                        else:
-                            tuple_info[name] = random.randint(1,1000)
+                        tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), name)
                     elif attribute.get("type")=="VARCHAR" and not attribute.get("is_multivalued"):
-                        if attribute_domain:
-                            tuple_info[name] = random.choice(attribute_domain)
-                        else:
-                            tuple_info[name] = generate_fake_data_for(attribute["name"])
+                        tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                     elif attribute.get("type")=="VARCHAR" and attribute.get("is_multivalued"):
                         avg_count = node_data.get("avg_"+name)
                         tuple_info[name] = []
                         count = random.randint(1,avg_count * 2)
                         inserted_count = 0
                         while inserted_count < count:
-                            value = generate_fake_data_for(attribute["name"])
+                            value = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                             if value not in tuple_info[name]:
                                 tuple_info[name].append(value)
                                 inserted_count += 1
@@ -241,7 +236,7 @@ def generate_insert_query_workload_data_weak_entity(graph, node, load_file, pare
                 for mvd_attribute_unique_name, mvd_attribute_name in mvd_attrs:
                     attribute_node = graph.get_node_by_name(mvd_attribute_unique_name)
                     attribute_node.workload_insert_frequency += len(tuple_info[mvd_attribute_name])#mvd workload_insert_frequency should be updated only if new tuple doesn't exist in already generated
-                                                                                      #and gets added
+                    #and gets added
                 values_str = stringify_as_tuple(tuple_values)
                 sql_statement = f"INSERT INTO {node_name.capitalize()} VALUES {values_str};"
                 workload_insert_file.write(sql_statement + "\n")
@@ -298,7 +293,7 @@ def generate_insert_query_workload_data_relationship(graph, node, load_file, sid
 
         for attribute in node.attribute_list:
             name = attribute["pk_reference_key_name" if "pk_reference_key_name" in attribute else "name"]
-            attribute_domain = node_data.get("attribute_domains").get(name) if (node_data and  node_data.get("attribute_domains")) else None
+            attribute_domain = get_attribute_domain(data, node_data, attribute, name)
             if "pk_reference_key_name" in attribute:
                 pk_entity_name = attribute.get("pk_entity_name")
                 assert pk_entity_name is not None
@@ -348,22 +343,16 @@ def generate_insert_query_workload_data_relationship(graph, node, load_file, sid
                     attribute_value = []
                     tuple_info[name] = convert_to_tuple(create_composite_type(attribute, attribute_value))
                 elif attribute.get("type")=="INTEGER" or attribute.get("type")=="INT":
-                    if attribute_domain:
-                        tuple_info[name] = random.randint(attribute_domain[0],attribute_domain[1])
-                    else:
-                        tuple_info[name] = random.randint(1,1000)
+                    tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), name)
                 elif attribute.get("type")=="VARCHAR" and not attribute.get("is_multivalued"):
-                    if attribute_domain:
-                        tuple_info[name] = random.choice(attribute_domain)
-                    else:
-                        tuple_info[name] = generate_fake_data_for(attribute["name"])
+                    tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                 elif attribute.get("type")=="VARCHAR" and attribute.get("is_multivalued"):
                     avg_count = node_data.get("avg_"+name)
                     tuple_info[name] = []
                     count = random.randint(1,avg_count * 2)
                     inserted_count = 0
                     while inserted_count < count:
-                        value = generate_fake_data_for(attribute["name"])
+                        value = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                         if value not in tuple_info[name]:
                             tuple_info[name].append(value)
                             inserted_count += 1
@@ -377,8 +366,8 @@ def generate_insert_query_workload_data_relationship(graph, node, load_file, sid
     #return node_generated_data_list
 
 def generate_insert_query_workload_data_relationship_M_N(graph, node, load_file, entity1_unique_name, entity1_generated_data_list, entity2_unique_name, entity2_generated_data_list,
-                                   tuple_pks_generated_for_relationship_for_db_initialization,
-                                   workload_insert_frequency, workload_insert_file):
+                                                         tuple_pks_generated_for_relationship_for_db_initialization,
+                                                         workload_insert_frequency, workload_insert_file):
 
     with open(load_file, "r") as f:
         data = json.load(f)
@@ -418,7 +407,7 @@ def generate_insert_query_workload_data_relationship_M_N(graph, node, load_file,
 
             for attribute in node.attribute_list:
                 name = attribute["pk_reference_key_name" if "pk_reference_key_name" in attribute else "name"]
-                attribute_domain = node_data.get("attribute_domains").get(name) if (node_data and  node_data.get("attribute_domains")) else None
+                attribute_domain = get_attribute_domain(data, node_data, attribute, name)
                 if "pk_reference_key_name" in attribute:
                     pk_entity_name = attribute.get("pk_entity_name")
                     assert pk_entity_name is not None
@@ -468,22 +457,16 @@ def generate_insert_query_workload_data_relationship_M_N(graph, node, load_file,
                         attribute_value = []
                         tuple_info[name] = convert_to_tuple(create_composite_type(attribute, attribute_value))
                     elif attribute.get("type")=="INTEGER" or attribute.get("type")=="INT":
-                        if attribute_domain:
-                            tuple_info[name] = random.randint(attribute_domain[0],attribute_domain[1])
-                        else:
-                            tuple_info[name] = random.randint(1,1000)
+                        tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), name)
                     elif attribute.get("type")=="VARCHAR" and not attribute.get("is_multivalued"):
-                        if attribute_domain:
-                            tuple_info[name] = random.choice(attribute_domain)
-                        else:
-                            tuple_info[name] = generate_fake_data_for(attribute["name"])
+                        tuple_info[name] = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                     elif attribute.get("type")=="VARCHAR" and attribute.get("is_multivalued"):
                         avg_count = node_data.get("avg_"+name)
                         tuple_info[name] = []
                         count = random.randint(1,avg_count * 2)
                         inserted_count = 0
                         while inserted_count < count:
-                            value = generate_fake_data_for(attribute["name"])
+                            value = generate_attribute_value(attribute_domain, attribute.get("type"), attribute["name"])
                             if value not in tuple_info[name]:
                                 tuple_info[name].append(value)
                                 inserted_count += 1
@@ -496,11 +479,8 @@ def generate_insert_query_workload_data_relationship_M_N(graph, node, load_file,
                 for mvd_attribute_unique_name, mvd_attribute_name in mvd_attrs:
                     attribute_node = graph.get_node_by_name(mvd_attribute_unique_name)
                     attribute_node.workload_insert_frequency += len(tuple_info[mvd_attribute_name])#mvd workload_insert_frequency should be updated only if new tuple doesn't exist in already generated
-                                                                                       #and gets added
+                    #and gets added
                 values_str = stringify_as_tuple(tuple_values)
                 sql_statement = f"INSERT INTO {node_name.capitalize()} VALUES {values_str};"
                 workload_insert_file.write(sql_statement + "\n")
                 break
-
-
-
