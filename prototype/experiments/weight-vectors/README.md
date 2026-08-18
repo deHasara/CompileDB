@@ -20,9 +20,6 @@
 | `normalized_exec_time_results.csv` | Average normalized execution times used in Table 3. |
 | `raw_exec_time_sums.csv` | Total PostgreSQL execution times used in Table 4. |
 
-The commands below use the canonical repository filenames. Downloaded copies
-may contain timestamp or numeric suffixes; rename them before running the
-experiment.
 
 ## Evaluated configurations
 
@@ -37,8 +34,6 @@ For this experiment, the selected-set size must instead be:
 ```python
 fraction = 1 / 6
 ```
-
-Use one subset for both weight vectors.
 Set `fraction = 1 / 6` in `generate_select_all_query_frequencies` and `generate_insert_query_frequencies`. Generate 12 distinct workloads, each with a separate configuration file. 
 
 
