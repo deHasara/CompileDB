@@ -1,25 +1,7 @@
-# Experiment 3: Complex E/R Query Workloads
-
-This directory contains the procedure for evaluating fixed and
-workload-aware conceptual-to-relational mappings on the synthetic e-commerce
-dataset.
-
-## Paper correspondence
-
-This experiment corresponds most closely to **Section 7.2, Experiment 3** and
-**Table 5** of *From E/R Database Abstraction to Workload-Aware Relational
-Realization*.
-
-The paper evaluates complex workloads containing selection, projection, join,
-and aggregation queries over the E/R schema. Each select workload contains 100
-queries with predicate selectivities ranging from 0.1 to 0.9. Insert queries
-target entity or relationship sets. The access and insertion frequencies
-derived from these queries are used by the mapping optimizer.
+# Experiment 1: Robustness
 
 This procedure runs six configurations: four fixed mappings and the two greedy
-optimization objectives. Table 5 reports only one `Greedy` column. When
-producing the paper result, document explicitly whether that column uses the
-`Greedy-1` or `Greedy-2` output.
+optimization objectives.
 
 ## Dataset
 
@@ -39,8 +21,6 @@ The schema definition used by the commands below is
 
 - PostgreSQL 16;
 - a Python environment containing the CompileDB dependencies;
-- an empty PostgreSQL database named `test_db` for the first run; and
-- the generated E/R query and insert workloads required by this experiment.
 
 Run all commands from the directory containing `test_file-1.py`,
 `helper_functions.py`, `search_algorithm_all_attributes.py`, and
@@ -56,7 +36,7 @@ loading functions:
 - Environment with sufficient memory:
   `insert_data_in_batches_with_templatization_parallelized`
 
-Only the first run should initialize and populate `test_db`. Later runs use
+Only the first run should initialize with `init`. Later runs use
 `test_config`; CompileDB restructures the existing relational schema for the
 new mapping and reloads the data accordingly.
 
@@ -213,28 +193,3 @@ results/
 `-- greedy_2.csv
 ```
 
-Before publishing the results, verify that every output records:
-
-- the workload identifier;
-- the selected relational mapping;
-- the random seed and random-restart count;
-- the PostgreSQL execution time for each query;
-- the total execution time in milliseconds; and
-- whether the reported time is a single measurement or the median of five
-  executions.
-
-For the Table 5 result, aggregate the total PostgreSQL execution time for each
-of the ten workloads and export columns in the following order:
-
-```text
-workload,ABI+FIE,ABI,CIP+FIE,CIP,Greedy
-```
-
-## Reproducibility notes
-
-- Record the Git commit, PostgreSQL configuration, hardware, and random seed.
-- Do not regenerate the initialization data between mapping runs.
-- Run the configurations on the same database contents and query workloads.
-- Preserve raw `output.csv` files before running the next configuration.
-- Confirm that fixed-mapping runs use zero search iterations.
-- State which greedy objective supplies the paper's `Greedy` result.
