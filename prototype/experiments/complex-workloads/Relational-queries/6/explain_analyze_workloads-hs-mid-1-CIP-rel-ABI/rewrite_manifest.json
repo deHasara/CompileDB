@@ -1,0 +1,947 @@
+{
+  "format_version": 1,
+  "database": "university_9",
+  "workload_count": 1,
+  "mapping_id": "f015fd00db116d7c19ae94a5f40a6e34250534220293ca53b7b6086b1499e981",
+  "emits_explain_analyze": true,
+  "explain_format": "text",
+  "workloads": [
+    {
+      "mapping_id": "f015fd00db116d7c19ae94a5f40a6e34250534220293ca53b7b6086b1499e981",
+      "statement_count": 100,
+      "category_counts": {
+        "aggregation": 15,
+        "complex_multi_join": 15,
+        "relationship_join": 20,
+        "selection_projection": 30,
+        "weak_owner": 20
+      },
+      "compiled_template_count": 100,
+      "queries": [
+        {
+          "id": "Q001",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c318e46a71a5595658c1ccc5f7696e29851c893f217fcdfd3ffc80c737e76943",
+          "arguments": {
+            "p0": "Object-based responsive policy"
+          }
+        },
+        {
+          "id": "Q002",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "07f1d7a5a35ac371705da5df567ee6d11092c0826b7c402bc6db1c05e61096a7",
+          "arguments": {
+            "p0": "7f77e1d72ca05f11515ce34eb13029810461de5058fa890e4a72e479fef250d6"
+          }
+        },
+        {
+          "id": "Q003",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "4f010702702dc7525ab870ebfc0074fe2c45e77d276d54618b65a3ae9678bd30",
+          "arguments": {
+            "p0": 10516,
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q004",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "f589b00bcc4858c9c46fd3a324c901639f9e9967fa46cf30de801f79da824c49",
+          "arguments": {
+            "p0": "http://horn.com/",
+            "p1": 4
+          }
+        },
+        {
+          "id": "Q005",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "fe031edb664f92961f2deb693efdd804d13c2094c3ab259d21173f81af29d861",
+          "arguments": {
+            "p0": "2023-05-03",
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q006",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "4e3995210bca0cc25ee7e2473c48be619df2eb4a425eec9f2a196b1c4147d1e3",
+          "arguments": {
+            "p0": "cd94b32f6ece0a42e85bf394c7927439ba8e207a59c3a2f039d1af18522b09b0"
+          }
+        },
+        {
+          "id": "Q007",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "7122206053eef95b61fcb5dc909a68ca0fdf5b97b7f551367dc690aceedaeaf6",
+          "arguments": {
+            "p0": "SKU-klfZ-12422029"
+          }
+        },
+        {
+          "id": "Q008",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "00652f6a10c93266c3aee84e4d6999fd4c065ff919ff187fec6ea0b426ee814c",
+          "arguments": {
+            "p0": 8432208,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q009",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "9f77d4a22e63bc7e24189ada80f316182828341b4c6dd72c51e3e39029930d89",
+          "arguments": {
+            "p0": "SKU-KWpp-43251915"
+          }
+        },
+        {
+          "id": "Q010",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "259ad87c1dfc2a609bfa71953630fab43eb8d1bc15c9da872a628f98c456bcf9",
+          "arguments": {
+            "p0": 8
+          }
+        },
+        {
+          "id": "Q011",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "c6c7987914526173d794572525427e5aa661b33652cff3f611ab3ee59d683293",
+          "arguments": {
+            "p0": "pending"
+          }
+        },
+        {
+          "id": "Q012",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "6e6308b10b446036733fffc19ba8faf49c66eeb2eb169592271ac462d4e4d315",
+          "arguments": {
+            "p0": "cancelled"
+          }
+        },
+        {
+          "id": "Q013",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "7541f94a4fab8efdf2d3355d200cd956f7d5cc3256f88bc64647e842c66ff103",
+          "arguments": {
+            "p0": "Pittman, Wagner and Kelly"
+          }
+        },
+        {
+          "id": "Q014",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "1a3b7ac34c960e95115b3db1e1c8779470720dab6be39cf7770f283aa219af10",
+          "arguments": {
+            "p0": "our",
+            "p1": 4
+          }
+        },
+        {
+          "id": "Q015",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "4fb0477fdbd6e0149c3ef09a173a8454c17d274bc765c17407537da276ee6d5d",
+          "arguments": {
+            "p0": 55,
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q016",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "28b96532313a9f6f61ffdd0b0f81fa8ebb203b664dfb72e7e299186c65b1e26a",
+          "arguments": {
+            "p0": "2027-10-14"
+          }
+        },
+        {
+          "id": "Q017",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "b3f2415a941f74e82d191ca8619e25facd294b38fd1f8c7a9ba110d6d1cae6c0",
+          "arguments": {
+            "p0": "jeffreybentley@example.org"
+          }
+        },
+        {
+          "id": "Q018",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "62086c0c1d1636ec3048b9c3890784f78b0770753e643a72b724b345933f6829",
+          "arguments": {
+            "p0": 6628845
+          }
+        },
+        {
+          "id": "Q019",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "2a5ceb1bc62e47be65c2a6aca7d3194cd6e04872d14a6c6d0e04ab79f8f6cd82",
+          "arguments": {
+            "p0": "SKU-PTjD-46248744",
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q020",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5fc0f600a5b58e2aa19eb73f9596574923bfe6c907434e527cb9329e1ba1caf3",
+          "arguments": {
+            "p0": "perezrodney@example.com"
+          }
+        },
+        {
+          "id": "Q021",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6b5418ac0033f73b0145f88e127212d2baa4e4bedc7675338af57fd413743970",
+          "arguments": {
+            "p0": 24
+          }
+        },
+        {
+          "id": "Q022",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "09061e79e4e11c8ca69bb552bb6cbcbaa81542c1744c154c97fc1e94ec8480dd",
+          "arguments": {
+            "p0": "holiday"
+          }
+        },
+        {
+          "id": "Q023",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "65273379752cd97306aa8a2cf30d31b856982e8de6a37b8db104059ee361871b",
+          "arguments": {
+            "p0": 4,
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q024",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "183276976b6cf3d93faf10a493cc1743e6589ed6ea3e89e2fcdcd4a69618da82",
+          "arguments": {
+            "p0": 358
+          }
+        },
+        {
+          "id": "Q025",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "34ad1ef44a2e9dcdfad3eab840725b0ef4e9c7acfca4d0382a076ade8d58db9f",
+          "arguments": {
+            "p0": 23
+          }
+        },
+        {
+          "id": "Q026",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "43a7cf5d12efe946be8df1583c453c029ebf4b6dabb998e72a87081a9a5b3402",
+          "arguments": {
+            "p0": "KT0862261685"
+          }
+        },
+        {
+          "id": "Q027",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "14027f4d80018978497298b925c571d5b3259ab82d9ce3bf4370b3cf5e427847",
+          "arguments": {
+            "p0": "1954c55d5d08b48e85e9b1d50237be6a53a0dfbbd25cbe55d26a823a4e7a31e9",
+            "p1": 4
+          }
+        },
+        {
+          "id": "Q028",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "615b25594ae3ef18020f9b0b23d9f732d2aac82e151b503a324d43b3ad434af3",
+          "arguments": {
+            "p0": "2025-03-18"
+          }
+        },
+        {
+          "id": "Q029",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f7bd1b38946564bc3a3d6c788bcb0e71a107dcc547f6c9ff56e359c4e60eea9b",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q030",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "4c42d91bcbe12ab28bba6f78065c868325001068b54139239431be30b64adeb7",
+          "arguments": {
+            "p0": 2749696
+          }
+        },
+        {
+          "id": "Q031",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "84997cf41ce31284cb7017b4607d9b50a28c6194825682ccc2674500aa4e08ee",
+          "arguments": {
+            "p0": 23
+          }
+        },
+        {
+          "id": "Q032",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "f33e550ed3958199ab8f755b894a5f57ca446981b62ba7114655ae5c49f4c7c5",
+          "arguments": {
+            "p0": 4986645
+          }
+        },
+        {
+          "id": "Q033",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1fbbd0a8b2600cf90670eba4d01ee3031e9f356bcea44989bb07fc498b3a4848",
+          "arguments": {
+            "p0": "Midwest"
+          }
+        },
+        {
+          "id": "Q034",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ca850e6eb3e2023d445b8775f2d7e371473675c15e4bad05304225f2befac986",
+          "arguments": {
+            "p0": "download"
+          }
+        },
+        {
+          "id": "Q035",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "0fc25235ac4467ec5c819a8d6049f9a3ff9abec620d03f1c297e3d15d953785a",
+          "arguments": {
+            "p0": 18,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q036",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "13137902a4fe04241fc58f962422b3447905466835b9e41746fc8a1fa8964eb0",
+          "arguments": {
+            "p0": "SKU-PpUx-53765904"
+          }
+        },
+        {
+          "id": "Q037",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "dcb7c9482843065c4b1c37b8af8cc852be4f41bd6b67c96a46a1f93db61da6eb",
+          "arguments": {
+            "p0": "paid"
+          }
+        },
+        {
+          "id": "Q038",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "30bace6ba9740010606679db833e413f42fad85b3d650cd9bb39a9a095836535",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q039",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "aac8ab2ff5b948a758127448c6bbb5d61214d9c05ca17ecd28b5b58c201c7290",
+          "arguments": {
+            "p0": "2024-04-12",
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q040",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "cd82fa18905b5e2869744ad9e5d04f7f0540d8d1a46c4102005c9f9265696fca",
+          "arguments": {
+            "p0": 10
+          }
+        },
+        {
+          "id": "Q041",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c2121c224bf59f419392afff9ed089cb50f27648eab2c3387632a5ad70bbb339",
+          "arguments": {
+            "p0": "b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4"
+          }
+        },
+        {
+          "id": "Q042",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "2ec9aadec169fc52b518e1afe61882c086dfc1e0f84b936bf4b4b14a8dbba5c0",
+          "arguments": {
+            "p0": "bronze"
+          }
+        },
+        {
+          "id": "Q043",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "b6c151965a8c8ee591f32da722620c67985e202f702abab1597ffebec56d8117",
+          "arguments": {
+            "p0": "Front-line client-driven middleware"
+          }
+        },
+        {
+          "id": "Q044",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "f305e3ec5750f53a4695588501451057a096d4fbf125e176c4dc4a0aa73e64eb",
+          "arguments": {
+            "p0": "2026-02-02"
+          }
+        },
+        {
+          "id": "Q045",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "253234237382c4b5c2dc7146beec951f9e95c0e7bf460345fd67d3b521206029",
+          "arguments": {
+            "p0": "bronze"
+          }
+        },
+        {
+          "id": "Q046",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "c0454212599c505fced274500d20675f78592c91c2e56de281dd96497edfb28c",
+          "arguments": {
+            "p0": 5297
+          }
+        },
+        {
+          "id": "Q047",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "e6377426d84ffb5af5265f06ea1fbc1bfcbd8b665de269d1a6ba849546f74654",
+          "arguments": {
+            "p0": "draft"
+          }
+        },
+        {
+          "id": "Q048",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "5cd9a2d29bd4fb7008eb7e48b9eeaafb856954606c2f27b86ec6a482d3c011cd",
+          "arguments": {
+            "p0": "2025-01-11"
+          }
+        },
+        {
+          "id": "Q049",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "f3e46f300fb3a426062dd181d3c79282ef933abf6299efef3ab4d810f5c790f6",
+          "arguments": {
+            "p0": "Re-contextualized asymmetric implementation"
+          }
+        },
+        {
+          "id": "Q050",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "2580f4df156ce868d83fe1bfa2b4145f5de9c20071eafd8d7644c65906dc7f71",
+          "arguments": {
+            "p0": "https://www.cummings.com/"
+          }
+        },
+        {
+          "id": "Q051",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "214f2a70166e7196f01924dda7032498f5648258ed32067bad398eb378207239",
+          "arguments": {
+            "p0": "Southwest"
+          }
+        },
+        {
+          "id": "Q052",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "cf3f547d930e8cb24272a31b276be8b72c6ee21caab71b7f667875d734b6168d",
+          "arguments": {
+            "p0": 106964
+          }
+        },
+        {
+          "id": "Q053",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "f3c6f52d5155bba874f8774687a777a77f42b2b3c9329f01bb68f7cc89d504f0",
+          "arguments": {
+            "p0": "Front-line bi-directional system engine",
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q054",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "0da5f8962eb31cc8902f5168559627b0366794eb429c23bfa102a8979b50b366",
+          "arguments": {
+            "p0": "SKU-klfZ-12422029",
+            "p1": 5
+          }
+        },
+        {
+          "id": "Q055",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "2517e23fa78cc01eb7161ba7b14dc4c1a9190cbf819538b962ad9a4183880309",
+          "arguments": {
+            "p0": "Intuitive asynchronous task-force",
+            "p1": 4
+          }
+        },
+        {
+          "id": "Q056",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a279b82530c47fb7d6019c797ce3c69cd96bc5021ec06bb2b70d12c16fbf1b34",
+          "arguments": {
+            "p0": "platinum"
+          }
+        },
+        {
+          "id": "Q057",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "35c412fe480c900a257cc1045d8d2193413f748298ddeaab63b7b767cf2f4812",
+          "arguments": {
+            "p0": "returned"
+          }
+        },
+        {
+          "id": "Q058",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "0aabc08281abaaffdf7e3379560c429e1b8f6c6dd8cc4648d0b5e83c5f7db98f",
+          "arguments": {
+            "p0": "uhunt@example.org"
+          }
+        },
+        {
+          "id": "Q059",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "42d830b057741da4456e148b07765dd25e9b1ff216693a35f4d6b489b5e06fc6",
+          "arguments": {
+            "p0": "SKU-vFdW-79279946"
+          }
+        },
+        {
+          "id": "Q060",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1f5a6c654a5852d676f7d9ff816e550c7f7587d541b61966445e8c5b871fea6e",
+          "arguments": {
+            "p0": "2024-04-21"
+          }
+        },
+        {
+          "id": "Q061",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "1fd2dad5ae894a8e785289504ad00b6bf845b97e8918c88609a3d67262cde8b4",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q062",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "4d6717c9a0aa827ddb42fabfb56ce64b0b3c17fbcea2aa91883bd3678fb7b135",
+          "arguments": {
+            "p0": "default"
+          }
+        },
+        {
+          "id": "Q063",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "2d03b20a578284ee2a939a9ae5c5221fe908d2f72f3673f0d6f61c8d8a6249be",
+          "arguments": {
+            "p0": "paid"
+          }
+        },
+        {
+          "id": "Q064",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "766e92792d8f2c2748a2c8e9e85ab16996961ae79e436aa281eb77203cec0672",
+          "arguments": {
+            "p0": 15719843
+          }
+        },
+        {
+          "id": "Q065",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "b2ff89dd44715c67d1d4d0fcd99672f977d6ab0487fac794da5b3ecc24f206f0",
+          "arguments": {
+            "p0": 30
+          }
+        },
+        {
+          "id": "Q066",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6ae8bf42cb25c390a45cd72bd294c688f724d9c59cdc8876bad32e25a54c4f7f",
+          "arguments": {
+            "p0": "athletic"
+          }
+        },
+        {
+          "id": "Q067",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "53867dc90ff609db19546de819b29589da557fe026c38bc38c46493e4c74fa28",
+          "arguments": {
+            "p0": 30,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q068",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "b28886c13ed5158668ea467f466e54e0c5d9f8ca85579e352f0c6cd2b844f2de",
+          "arguments": {
+            "p0": 1111339
+          }
+        },
+        {
+          "id": "Q069",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "d5b5bfadba9722556f8a26afb914769390155a9e4b5e181c3d04f0f42c80e0be",
+          "arguments": {
+            "p0": 5998881
+          }
+        },
+        {
+          "id": "Q070",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "fac7a58bc22a777299740d555a402e6da747d9870eca2436c6169f5c742df621",
+          "arguments": {
+            "p0": 245,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q071",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "83527ed31f069663bd6d92e8d99b47c0c0c285e3e82a408c4d57777909bc4f43",
+          "arguments": {
+            "p0": 5974866
+          }
+        },
+        {
+          "id": "Q072",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "c686254722f56f67811a65e8b47b87a405633ee1610a34d9356feb022c295d08",
+          "arguments": {
+            "p0": "false"
+          }
+        },
+        {
+          "id": "Q073",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1bf70071f7855e904b2f1093d46185eefe23613be67c4e0ca9a5f89861035c27",
+          "arguments": {
+            "p0": "sale"
+          }
+        },
+        {
+          "id": "Q074",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "2b6535ae5b9ab8e55a6b96fb21192afed04d707fe12ce69de9b5b0c9e71e863b",
+          "arguments": {
+            "p0": "bronze"
+          }
+        },
+        {
+          "id": "Q075",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "09841d5cba94e129b33cd699f88edb018157570d5f8e35fe44012a3050f3c5a0",
+          "arguments": {
+            "p0": 106773,
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q076",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "5a804e76e1a6047f294a8f233f1cf4c8f45ca4002b515834033fd0b18df3a4e7",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q077",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f75d8fc5729f6254ddca3804ad5908ec2b126c574160a5ff8a332aa17766cd52",
+          "arguments": {
+            "p0": 120363
+          }
+        },
+        {
+          "id": "Q078",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "af16dc9c15a04e6ec858bfc83c4458c30aa6e0180fab967c9298ede54951c762",
+          "arguments": {
+            "p0": "Object-based 3rdgeneration instruction set"
+          }
+        },
+        {
+          "id": "Q079",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "1084b025d321615388b0b78511ec84cb135b303f92237e4b0c2fd2fc9234567f",
+          "arguments": {
+            "p0": "2022-07-08"
+          }
+        },
+        {
+          "id": "Q080",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "434dc75d08b45a704a94f868e26f95556f6419bc2145c0ab84d12cff86461dbf",
+          "arguments": {
+            "p0": 22
+          }
+        },
+        {
+          "id": "Q081",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "ea7429830cbe71dff399e81f3b679fb56c2c6e523c5af26e4920902ce03349fb",
+          "arguments": {
+            "p0": 41
+          }
+        },
+        {
+          "id": "Q082",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "116e3010f6a446ef6fe0087253e2e14c95ff7447d01db4956f3166b8b5e0c1e3",
+          "arguments": {
+            "p0": "video"
+          }
+        },
+        {
+          "id": "Q083",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "dec99e89707c95096604abb5a2b75543d7d3294a70d493f1a53d5ba09e2715dd",
+          "arguments": {
+            "p0": "Lewis-Hartman"
+          }
+        },
+        {
+          "id": "Q084",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "1c8ddb744e840d17d96c06494d0bf86b46e43bcf3c46654f8d7b340574ff3d23",
+          "arguments": {
+            "p0": "jeffreybryant@example.com"
+          }
+        },
+        {
+          "id": "Q085",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "dc79298951e60c7907761e43022a367b53e2bafad4b1aaa328c6de9a0c8122ad",
+          "arguments": {
+            "p0": 10098074
+          }
+        },
+        {
+          "id": "Q086",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "cc13fe102e7b8d98b35fec20117b552453fd1442e02109c101d2763501dac380",
+          "arguments": {
+            "p0": 10269581
+          }
+        },
+        {
+          "id": "Q087",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b6e9de3cd9b95e61a1bd1acc8507e9701b38833de69d83960246dc9be0cb53fd",
+          "arguments": {
+            "p0": 13097966
+          }
+        },
+        {
+          "id": "Q088",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "a3a1c91f2160f091922495f41ea14c39b9d1a7bb074a44e30094e7787967291c",
+          "arguments": {
+            "p0": 26870
+          }
+        },
+        {
+          "id": "Q089",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "4a7d09566a63496a610887927ec0cec77f6fda74052f7390925611215b883130",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q090",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "756b3169123b3a2e72920e13bea61f4e50af9ea87bcd06f2c6314968d8b54695",
+          "arguments": {
+            "p0": 3392411
+          }
+        },
+        {
+          "id": "Q091",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "c7a267858ab0d9b0370e61f41db862d8441a25cef751ed8ee343cf4b2cdca0f5",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q092",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "f912789a392b146684c2f1a881059bbd2130f323496a021024dfbd36dcdbfcf6",
+          "arguments": {
+            "p0": 12
+          }
+        },
+        {
+          "id": "Q093",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "45aba3fecb651593bda8ee74817c96b9afd6141ddacb4b95ab8eefeb17f6228b",
+          "arguments": {
+            "p0": 3997278,
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q094",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "4ec3ac679b94747a63d04fd451add68fc3bede80d00169894505fee73c0dbf3b",
+          "arguments": {
+            "p0": "2023-05-03"
+          }
+        },
+        {
+          "id": "Q095",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "cde50efac5f25c504a95269fdf7730605fc392a0c65dd161b042fd51fad7f523",
+          "arguments": {
+            "p0": "EMP-09774576"
+          }
+        },
+        {
+          "id": "Q096",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "86e6303f556cf3ff4ce0903bc27f3c7c5e97d339f78b9aa6edf43a3ce7af4d16",
+          "arguments": {
+            "p0": 4994665,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q097",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "e4102c7a04c672573679f41b67504f0919bed7e882a40f0ef045d4dddb0e3c20",
+          "arguments": {
+            "p0": 4985556
+          }
+        },
+        {
+          "id": "Q098",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "38510d96233ff968153cea8c1cea24bf49139bba00609f7a6c85dd399db875bd",
+          "arguments": {
+            "p0": "663fbac28ef983d2a9a257a1fdfe87d570db7cf21f735454baaba71abfbbe744"
+          }
+        },
+        {
+          "id": "Q099",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "0fd1ce7e133e40a2723b04d4b0826dae773005d3f334bc7ca2fb04d320d1f16a",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q100",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "584eb64c8df5840715435ac64a5d32bf03c87df8aee62c314b99474f0a701515",
+          "arguments": {
+            "p0": "Pl-104-pP"
+          }
+        }
+      ],
+      "input_workload": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/er_query_workloads-hs-mid-1/er_query_workload_100_09.json",
+      "input_sha256": "1b56b1a21bc2882429bac0aeb209919909161d8f72e81c6ad2b2a04aba7fd917",
+      "output_sql": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/explain_analyze_workloads-hs-mid-1-CIP-rel-ABI/rewritten_er_query_workload_100_09.sql",
+      "output_sha256": "d4557473b4a49e31f4cb096c7916e86c369ab69858f17f15995661d372c53055"
+    }
+  ]
+}

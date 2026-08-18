@@ -1,0 +1,904 @@
+{
+  "format_version": 1,
+  "database": "university_9",
+  "workload_count": 1,
+  "mapping_id": "831b5e142cc90cb46c7ae5dc04870c05c92ea3e93a22453984d317af7f0e01aa",
+  "emits_explain_analyze": true,
+  "explain_format": "text",
+  "workloads": [
+    {
+      "mapping_id": "831b5e142cc90cb46c7ae5dc04870c05c92ea3e93a22453984d317af7f0e01aa",
+      "statement_count": 100,
+      "category_counts": {
+        "aggregation": 15,
+        "complex_multi_join": 15,
+        "relationship_join": 20,
+        "selection_projection": 30,
+        "weak_owner": 20
+      },
+      "compiled_template_count": 100,
+      "queries": [
+        {
+          "id": "Q001",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9f17309f101b15aae0815880fcb181572ac197bd3a6a2bd368c87e4176a52b9e",
+          "arguments": {
+            "p0": 89,
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q002",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "7ccf2d6d3ffcbb6595aac1f6233faa1d68eb93407768165893b7a1f15b6c260b",
+          "arguments": {
+            "p0": 13
+          }
+        },
+        {
+          "id": "Q003",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "706257e172b97d0ce58c7aee453295f15a2228ab6160d1978df7903482b6e449",
+          "arguments": {
+            "p0": 42,
+            "p1": 57,
+            "p2": 58
+          }
+        },
+        {
+          "id": "Q004",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "4a57376cff918fb997af6177c1bbc103e1582519033619484d712aa51c01e88a",
+          "arguments": {
+            "p0": 243
+          }
+        },
+        {
+          "id": "Q005",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "07bf7bdec9734e9d4cdcc5287d85b0a32b08e29d3ff7ac2d46d0b3cc8feb4b05",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q006",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "40cf1ba70213f8c50d9cfa4d0a237019bb9fca639510c56cfff27851f26e679f",
+          "arguments": {
+            "p0": 24,
+            "p1": 182
+          }
+        },
+        {
+          "id": "Q007",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "00ad3fd38b026c0522a1fdd94ded03485dbdc9d1f29f4a9b9f5889db13aed857",
+          "arguments": {
+            "p0": 32
+          }
+        },
+        {
+          "id": "Q008",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f5be62f12f2b0d4a5c221f5fea15d9531b383acc11011ca17a7dff802be345e7",
+          "arguments": {
+            "p0": 119
+          }
+        },
+        {
+          "id": "Q009",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b7cb14a0b5b12e27a7bf704a1c8688e258711949e21095ab8b7b0622705b215a",
+          "arguments": {
+            "p0": 85
+          }
+        },
+        {
+          "id": "Q010",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "974bc18dc07e89951442ab1e3ee6f7438779ba51145ffd358db1cb46380b8778",
+          "arguments": {
+            "p0": 10,
+            "p1": 13,
+            "p2": 8
+          }
+        },
+        {
+          "id": "Q011",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a469c991139592d38457e97570bb5fb0428885315568ee187fe306ef8054fac4",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q012",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a84a862d4896aca4b95c25ec91f313d8624dba3ee53a087dff46db275547d4fb",
+          "arguments": {
+            "p0": 48
+          }
+        },
+        {
+          "id": "Q013",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f59eb57f9046aed0484611eeb0de4bfff313eb98ea8f93432245edd7ecd9735a",
+          "arguments": {
+            "p0": "locked"
+          }
+        },
+        {
+          "id": "Q014",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "7e506c259309ee21e14afa5712fb69eb01343a45ab1d24ad2cdede75c115b3b9",
+          "arguments": {
+            "p0": 361
+          }
+        },
+        {
+          "id": "Q015",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "16e08008c6cc9882ba7f205e61590fef1dd67e95ab344cee35b91c586e4cb650",
+          "arguments": {
+            "p0": "C",
+            "p1": "A++"
+          }
+        },
+        {
+          "id": "Q016",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "447a5785342b486c8491e3e4c83e69f6636aad49b083b24c72d145fa120a2bcc",
+          "arguments": {
+            "p0": 5
+          }
+        },
+        {
+          "id": "Q017",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "02a96e3ccdb4a33afe46fc432846b215d8872b9836933dc9da4439c1f479c2ed",
+          "arguments": {
+            "p0": 54
+          }
+        },
+        {
+          "id": "Q018",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "30eb46f2d100992c332bcad3b08e63ce44f1885733f043034af93a6163deee45",
+          "arguments": {
+            "p0": "polyester"
+          }
+        },
+        {
+          "id": "Q019",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3bb66c9420757bb2943b005690f92ba688c157136d275253be17d264b3b5397d",
+          "arguments": {
+            "p0": 41
+          }
+        },
+        {
+          "id": "Q020",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3e09c14b6141c180f121e10177dbb0e8ef9aaf75b0b9ed790c31173d9234fe88",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q021",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ea9bea64ed432c8d67d4d82ef6bcf9dfca909064170a4fcc5638bb65a2069ac7",
+          "arguments": {
+            "p0": 23
+          }
+        },
+        {
+          "id": "Q022",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a551b45e5021dcb5ac179bfa12f07279a1e8d1d89bb64b9098ba0357ba34b669",
+          "arguments": {
+            "p0": "music",
+            "p1": "printable"
+          }
+        },
+        {
+          "id": "Q023",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "00aee114838696e9c1b7771669ddeb5995bbf465a253e442ff9be78d10f12f1d",
+          "arguments": {
+            "p0": 58
+          }
+        },
+        {
+          "id": "Q024",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6779de1ef873955870292333e7209be3d3e54606031740098f98ffa413e35691",
+          "arguments": {}
+        },
+        {
+          "id": "Q025",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a088898580ebdaf81c058a48ec4056c3dd42960950cdc15728048ce727bd3c58",
+          "arguments": {
+            "p0": "bronze"
+          }
+        },
+        {
+          "id": "Q026",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "769eab7f259440461be1748333b40ac83063174dc8416a1a230ba7f3a0563773",
+          "arguments": {}
+        },
+        {
+          "id": "Q027",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "23df46e2683a32285cb2501fcdeb870aec1e9cf586e13c68aca65906fafa35ff",
+          "arguments": {}
+        },
+        {
+          "id": "Q028",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "cfa96126a94ad2e18dce69417070901af91e1d9744803c30b9a1770c59cd4a5b",
+          "arguments": {}
+        },
+        {
+          "id": "Q029",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5fa8be10e06aebc4a7227a5958eff12793e441183acb57918f871c6baef034f4",
+          "arguments": {}
+        },
+        {
+          "id": "Q030",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "979aee66fc2c6fb2dcc72d53d9e0631ef409303c9ab4a0d4a1645c11d03ecac9",
+          "arguments": {
+            "p0": "delivered",
+            "p1": "pending"
+          }
+        },
+        {
+          "id": "Q031",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "63d357eb720042e7f2541b0cc4f2fa4951c20fdebccf6507b08d833e290faa74",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q032",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "d152f18f0498efc62c95baf9f7e34a0ce6cf4ca535468b31a5cb45f0ffecea1e",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q033",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "3ea407706075961671532408a946cb2cd70846ea3469425fe4852d4c9209b6e3",
+          "arguments": {}
+        },
+        {
+          "id": "Q034",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "25e2d90720926cec5ea5028dd3397adf66e71b7f6e1df0b9acab1196bc0e3844",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q035",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "2b62418c149a18b1003d0d561e3773d3f7ecf7b02d3aaa8b6fbd87564e3ecaf3",
+          "arguments": {
+            "p0": 328
+          }
+        },
+        {
+          "id": "Q036",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "24138ada4c11d0cc038ad6f7f20b1d4f31d29ecb6b89fb0707a883822175bb95",
+          "arguments": {}
+        },
+        {
+          "id": "Q037",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "57c2946516e6b8d57cd043b425e7fd9f3ff029e92bcf7faf2c668d5c4c4cae5c",
+          "arguments": {
+            "p0": "GB"
+          }
+        },
+        {
+          "id": "Q038",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "8434241301e2aaefee46889130a9964444780fbbbc02d7479f522111e9e2bb4e",
+          "arguments": {
+            "p0": "VA"
+          }
+        },
+        {
+          "id": "Q039",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "768483a14f6eebc900567a6423965cf359f16d5ec7ec8f7da0af80fd0cf57616",
+          "arguments": {
+            "p0": "false"
+          }
+        },
+        {
+          "id": "Q040",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "cb8febe5eca6ad9419e0d7d6441b33984d7b432c3e9465da4136978030dc07d2",
+          "arguments": {
+            "p0": 2031
+          }
+        },
+        {
+          "id": "Q041",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "aea7625db2a56232fe4db4bf08eee4d4e28a1269bf699f80ca34ead58b591c5e",
+          "arguments": {}
+        },
+        {
+          "id": "Q042",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "83a559392bbc3e09981f4747b81b9dee13d0e0276a5527650e94321d0231d78e",
+          "arguments": {}
+        },
+        {
+          "id": "Q043",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "260c9fca714e7eb900444f12b2ca63aafb66c520dadaa54ad45f4291b16a9e8a",
+          "arguments": {
+            "p0": 5
+          }
+        },
+        {
+          "id": "Q044",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "c0663ac2dc4fa521d86951da4151f8fa6265e0d42523ef1577ecd3d9c14078d7",
+          "arguments": {
+            "p0": 2
+          }
+        },
+        {
+          "id": "Q045",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "65058edbd1eb8046be4b498dc9f9ad9fe910e61ac410ff41e7615399d9cf3a82",
+          "arguments": {
+            "p0": "desktop",
+            "p1": "other"
+          }
+        },
+        {
+          "id": "Q046",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "eae217fbb349e1436bf67ad9c943668eab07997e3bd8617aff6cadf6fcd339a8",
+          "arguments": {}
+        },
+        {
+          "id": "Q047",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "3008fd203e40cc998a9ebc81c56eb974e853dece0e69117a383faf0c9055ae8a",
+          "arguments": {}
+        },
+        {
+          "id": "Q048",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "739be3869e8ef032d415ef692704207d8d0e9c67886f2e95b9eb42fcf2f5644d",
+          "arguments": {
+            "p0": 879
+          }
+        },
+        {
+          "id": "Q049",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "79f7e8692541d5a951e38db5b6686272193d893a1a29b40738e0240919c53dba",
+          "arguments": {
+            "p0": "Midwest"
+          }
+        },
+        {
+          "id": "Q050",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "7d42184703f464893fb8c9e77db0e90a5f9b02385812b9f7b016330ac2186a4a",
+          "arguments": {}
+        },
+        {
+          "id": "Q051",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "31f5bda9fb75f81378bbf20f04473436523c7c3e0fdd7459ec2c1b8b75c00b0c",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q052",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "1547d28dd75ecb92bdf592bfb437d5babc8bc3255a3492e9c677278ad4bc8143",
+          "arguments": {
+            "p0": 244
+          }
+        },
+        {
+          "id": "Q053",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "e2bdcf7e6b67a4cb44b4cfcc30cb4a17a25c7fdfe5dbe4b462a815a44c456a1b",
+          "arguments": {}
+        },
+        {
+          "id": "Q054",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "21898b4c46d0306f773ea987bc635102c38c3b425348c4f89fea9f1086e4b956",
+          "arguments": {
+            "p0": 0,
+            "p1": 0
+          }
+        },
+        {
+          "id": "Q055",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "1bf351f2730d6f1d1ce9a2c1c145f997221e81d969548f2e79f6fd84b06201b1",
+          "arguments": {
+            "p0": 29
+          }
+        },
+        {
+          "id": "Q056",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "f6177f73a5318cb4501f1e3a0aa5a0d6c66e26e49d140ec090ddeb1c20bc6b0e",
+          "arguments": {
+            "p0": 97
+          }
+        },
+        {
+          "id": "Q057",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "fce85b45402000dade7752c9899e813f9239e72c44025df4473e652341a31e80",
+          "arguments": {
+            "p0": 5
+          }
+        },
+        {
+          "id": "Q058",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "8143042570741e3778920e35936b830c6e2b64f9008ed7ea06edd053692cb342",
+          "arguments": {
+            "p0": "delivered"
+          }
+        },
+        {
+          "id": "Q059",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "6ad6703ead1ac9ea31524c29e029a79decce2e94b8b6acf790c3e63eeb8681f4",
+          "arguments": {
+            "p0": 29
+          }
+        },
+        {
+          "id": "Q060",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "a0e83b93228a1c48e6465efc457414ec5bb137dd43641f02b9fb4bf3b2bf0993",
+          "arguments": {
+            "p0": "true"
+          }
+        },
+        {
+          "id": "Q061",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "c0a466b5e7332bec2075d5de3e0becdea90c92d969f6a6faacc2fbb11c813567",
+          "arguments": {
+            "p0": "shipped"
+          }
+        },
+        {
+          "id": "Q062",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "c64e09c053fefa3600f2c2c1f58df1a68657f4efc6eedc03438a301991e5182a",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q063",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "d2cdf83dcf9d6e6f25b6a42e7fad37e7cc845c2b805cc3fc60d9f95e32975be0",
+          "arguments": {
+            "p0": 4
+          }
+        },
+        {
+          "id": "Q064",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "9ea0157072031f541bcee7364729867250c6c4601cf7db699dcfdae3b0bd96fa",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q065",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "89d3c5018f5198974c10a428cd69baaea6f42ab7744bac03af4e025dc729c81a",
+          "arguments": {
+            "p0": "received"
+          }
+        },
+        {
+          "id": "Q066",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "8f5a49da343e7f3b4c078621edd41c58d014dddcfbf9f26a72032442109f8288",
+          "arguments": {
+            "p0": 149
+          }
+        },
+        {
+          "id": "Q067",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "8a9c4946cab701b4067e42d24cd029cdb1a25b79776b1001332da723df449a74",
+          "arguments": {}
+        },
+        {
+          "id": "Q068",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "003d8a19a2bf69c883b16a6451793e271de2841c0a82575ca2bedb2456484f7a",
+          "arguments": {
+            "p0": "locked"
+          }
+        },
+        {
+          "id": "Q069",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "30997362cfaffd1ff46753e8c7d4fc05d47f7890bbc4baea5ed3e64220246d83",
+          "arguments": {
+            "p0": 78
+          }
+        },
+        {
+          "id": "Q070",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "58ff5daff15a4511bbff1ab71d57f6776faa1aa3d2d5767d61b2b29bd27db0dd",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q071",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "c494c253c2bb9da86db7a0b9ad00852450027c4533b80488c479c1a66cc9db11",
+          "arguments": {
+            "p0": 2
+          }
+        },
+        {
+          "id": "Q072",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "73b400cd5d99ac61d7afc5a8922e8f7c5a1719a8c11fcaa9a924dedf027206fa",
+          "arguments": {
+            "p0": 5
+          }
+        },
+        {
+          "id": "Q073",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "4e9211c78bda63f80f25c7d85785bbf7964e0a94eeb94b4703e40aa41b60cdaf",
+          "arguments": {
+            "p0": 0,
+            "p1": 50
+          }
+        },
+        {
+          "id": "Q074",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "93f93a3b9e16166d34ce29dfcd430b184e8d09ae902972ac46c8ba5b822f53b9",
+          "arguments": {
+            "p0": 3
+          }
+        },
+        {
+          "id": "Q075",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "47f5db2a9699bd976ad610be7718bdecaac6dfe172cbda285059f7724f1888cf",
+          "arguments": {
+            "p0": 10
+          }
+        },
+        {
+          "id": "Q076",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "cbfaec7de341f586cdf87b16d84c7bf223cd44f55dd24ca044b727fca83d4535",
+          "arguments": {
+            "p0": 2
+          }
+        },
+        {
+          "id": "Q077",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "17e761ba47376a9f5b80ec0291afd06f30b72799ce61cf5ab2c6ad9eb96f40bb",
+          "arguments": {
+            "p0": 200
+          }
+        },
+        {
+          "id": "Q078",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "60e065b7de613afb133ba5a3b972756d1311e7301c784a9f7e03e92970f168b0",
+          "arguments": {
+            "p0": 3
+          }
+        },
+        {
+          "id": "Q079",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "7754bfb89af4241171510df4c9397f5227d574aae8365f479cddd5d1ab25a32f",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q080",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "c8060a327cacced9dc55fe9f675034d1d8eee6f04a34195a309eac83e03285bb",
+          "arguments": {
+            "p0": 2
+          }
+        },
+        {
+          "id": "Q081",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "5ba172930f5572c2a3f25b7c821e17b61d09aea55864d6bd0ecf11b31b94a136",
+          "arguments": {
+            "p0": 10
+          }
+        },
+        {
+          "id": "Q082",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "14d054d36d101d5fe00b65e872beacb81ef047b2ed7a8f861db7d3b7b3ab4c3f",
+          "arguments": {}
+        },
+        {
+          "id": "Q083",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "36b56bc74564b76b217b3e92b249d9909c1ca98f9342f074e61265d75d17fc4c",
+          "arguments": {
+            "p0": 2
+          }
+        },
+        {
+          "id": "Q084",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "63d72b2a3b416480663d018ecbc83e0a5c7569c2998f217de26573d6d5cb9847",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q085",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "b302da8f8cb93f2d483eecc7114c79d6903c974f192a9f46e20b26990f2ed440",
+          "arguments": {
+            "p0": 5
+          }
+        },
+        {
+          "id": "Q086",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "03eb9eccebd950a67030f532173f716f369c9b001388bdd5c9327df4bc294035",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q087",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "2643ef2c2cc7298f975cf4a2d3e2666655779110a7a2f747b55ae5ad5227c095",
+          "arguments": {
+            "p0": 187
+          }
+        },
+        {
+          "id": "Q088",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "b74c1dc0483da1224f2a8861492bcc7b425ab08787ef1cc923cf02325e14a66e",
+          "arguments": {
+            "p0": 5
+          }
+        },
+        {
+          "id": "Q089",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "bcedcc2351362fcf9ecc943aae4d6cd8d0b0c5598c0d990f1baef32b0af75f00",
+          "arguments": {
+            "p0": "shipped"
+          }
+        },
+        {
+          "id": "Q090",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "05b46115a73961d38a3bcd5aab18a947f9c3eed0d45fe7a517cbcb3adcdb8ff1",
+          "arguments": {
+            "p0": "true"
+          }
+        },
+        {
+          "id": "Q091",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "272c624c500e9ef1fbcb3eaddf61774f202cb24493f7e1ae37c1b6fdaf6f5a02",
+          "arguments": {}
+        },
+        {
+          "id": "Q092",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "12f717e7a171b94c3543ad75b853c894859d5b83c9000c0e723cfbe00b8cda5c",
+          "arguments": {
+            "p0": "Southwest"
+          }
+        },
+        {
+          "id": "Q093",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "733819c71156847d70924dc1467343f6927b23ff62a8ba71283278d966b7e39a",
+          "arguments": {
+            "p0": "approved"
+          }
+        },
+        {
+          "id": "Q094",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "91cbcaece2941a211c5831b43ca04fe3d415295bfc12d024ce82f11e3c90d26d",
+          "arguments": {}
+        },
+        {
+          "id": "Q095",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "c2dc984e2e8535fd60d28db7281a292448f9dba1dd424daff43c4e7edcab28bc",
+          "arguments": {}
+        },
+        {
+          "id": "Q096",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "066b206043f223a03b832831efbd07d534894062d7a87f71092a57ffec527007",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q097",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "cbb9347b5e1f85b64d5a7f1121fd4a6c1c726d7cc3b02c42cfaf85b7a3fef0fa",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q098",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "4048d18f5f02f5b8153ff2ef90a76647cb172a8ddcabb965a7cdf32daea980c3",
+          "arguments": {}
+        },
+        {
+          "id": "Q099",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "0dd0a0c77367a943e5cc5cb45c3abfda4372d79bf75b66af888fd3a9bf9100a3",
+          "arguments": {
+            "p0": 38
+          }
+        },
+        {
+          "id": "Q100",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "482c807b29fb02fb1e05e2f03424b8ca621d246ff0e150d5550b3d8f42879c73",
+          "arguments": {
+            "p0": "delivered",
+            "p1": 2,
+            "p2": 50
+          }
+        }
+      ],
+      "input_workload": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/er_query_workloads-hs-mid/er_query_workload_100_01.json",
+      "input_sha256": "d334e7514379361ba70cd98d2fe14ddec048831c8c54fb43cb0e21e1b3f840b7",
+      "output_sql": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/explain_analyze_workloads-hs-mid-greedy-1/rewritten_er_query_workload_100_01.sql",
+      "output_sha256": "5a7ad7dd48a20b57fd8e06cc98a927e97d8a3744a0ce0302866ffe8daafae063"
+    }
+  ]
+}

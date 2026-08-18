@@ -1,0 +1,3547 @@
+\set ON_ERROR_STOP on
+\pset pager off
+Pager usage is off.
+-- CompileDB mapping-aware relational workload
+-- Conceptual workload: example2_schema_driven_selectivity_100_w01
+-- Mapping ID: fa68ce77642be474c0e91514ccfa5d29b037566d0f2e42ffd246fae48a9fc668
+-- Query shapes: 100
+-- Executed statements: 100
+BEGIN TRANSACTION READ ONLY;
+BEGIN
+-- Q001 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.dimensions FROM Laptop e WHERE e.product_name >= 'Intuitive client-server service-desk';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('laptop'))
+)
+SELECT DISTINCT 
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."product_name" >= 'Intuitive client-server service-desk');
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=419270.01..419270.02 rows=1 width=516) (actual rows=4 loops=1)
+   Buffers: shared hit=35 read=419238
+   ->  Sort  (cost=419270.01..419270.02 rows=1 width=516) (actual rows=83366 loops=1)
+         Sort Key: source.dimensions
+         Sort Method: quicksort  Memory: 4408kB
+         Buffers: shared hit=35 read=419238
+         ->  Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=516) (actual rows=83366 loops=1)
+               Filter: (((product_name)::text >= 'Intuitive client-server service-desk'::text) AND ((role)::text = 'laptop'::text))
+               Rows Removed by Filter: 16713416
+               Buffers: shared hit=32 read=419238
+ Planning:
+   Buffers: shared hit=137
+ Planning Time: 0.356 ms
+ JIT:
+   Functions: 5
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1792.666 ms
+(17 rows)
+
+-- Q002 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.size_system, e.is_active FROM Footwear e WHERE e.base_price >= 41;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('footwear'))
+)
+SELECT DISTINCT 
+    "b0"."size_system" AS "size_system",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."base_price" >= 41);
+                                                   QUERY PLAN                                                   
+----------------------------------------------------------------------------------------------------------------
+ Unique  (cost=419270.01..419270.02 rows=1 width=520) (actual rows=8 loops=1)
+   Buffers: shared hit=67 read=419206
+   ->  Sort  (cost=419270.01..419270.02 rows=1 width=520) (actual rows=25826 loops=1)
+         Sort Key: source.size_system, source.is_active
+         Sort Method: quicksort  Memory: 1621kB
+         Buffers: shared hit=67 read=419206
+         ->  Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=520) (actual rows=25826 loops=1)
+               Filter: ((base_price >= 41) AND ((role)::text = 'footwear'::text))
+               Rows Removed by Filter: 16770956
+               Buffers: shared hit=64 read=419206
+ Planning:
+   Buffers: shared hit=4
+ Planning Time: 0.083 ms
+ JIT:
+   Functions: 5
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1228.957 ms
+(17 rows)
+
+-- Q003 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price FROM WomenClothing e WHERE e.dimensions < 'small';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('womenclothing'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."dimensions" < 'small');
+                                            QUERY PLAN                                            
+--------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=4) (actual rows=89220 loops=1)
+   Filter: (((dimensions)::text < 'small'::text) AND ((role)::text = 'womenclothing'::text))
+   Rows Removed by Filter: 16707562
+   Buffers: shared hit=96 read=419174
+ Planning Time: 0.050 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1702.761 ms
+(9 rows)
+
+-- Q004 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.company_name FROM BusinessCustomer e WHERE e.password_hash < 'b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."company_name" AS "company_name",
+        "source"."password_hash" AS "password_hash"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT DISTINCT 
+    "b0"."company_name" AS "company_name"
+FROM "b0"
+WHERE ("b0"."password_hash" < 'b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4');
+                                                                                   QUERY PLAN                                                                                   
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=71970.68..72532.24 rows=56156 width=17) (actual rows=358327 loops=1)
+   Group Key: source.company_name
+   Batches: 1  Memory Usage: 36881kB
+   Buffers: shared read=48608
+   ->  Gather  (cost=59897.14..71689.90 rows=112312 width=17) (actual rows=358327 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared read=48608
+         ->  HashAggregate  (cost=58897.14..59458.70 rows=56156 width=17) (actual rows=358327 loops=1)
+               Group Key: source.company_name
+               Batches: 1  Memory Usage: 36881kB
+               Buffers: shared read=48608
+               ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=264520 width=17) (actual rows=634444 loops=1)
+                     Filter: (((password_hash)::text < 'b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4'::text) AND ((role)::text = 'businesscustomer'::text))
+                     Rows Removed by Filter: 906096
+                     Buffers: shared read=48608
+ Planning:
+   Buffers: shared hit=58
+ Planning Time: 0.177 ms
+ Execution Time: 775.746 ms
+(20 rows)
+
+-- Q005 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.loyalty_tier, e.email, e.user_id, e.company_name FROM BusinessCustomer e WHERE e.email >= 'davidhuff@example.com';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."company_name" AS "company_name",
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."email" AS "email",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT 
+    "b0"."loyalty_tier" AS "loyalty_tier",
+    "b0"."email" AS "email",
+    "b0"."user_id" AS "user_id",
+    "b0"."company_name" AS "company_name"
+FROM "b0"
+WHERE ("b0"."email" >= 'davidhuff@example.com');
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=722123 width=49) (actual rows=716435 loops=1)
+   Filter: (((email)::text >= 'davidhuff@example.com'::text) AND ((role)::text = 'businesscustomer'::text))
+   Rows Removed by Filter: 824105
+   Buffers: shared hit=33 read=48575
+ Planning:
+   Buffers: shared hit=12
+ Planning Time: 0.080 ms
+ Execution Time: 187.702 ms
+(8 rows)
+
+-- Q006 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.loyalty_tier FROM PrimeCustomer e WHERE e.user_id < 375517;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('primecustomer'))
+)
+SELECT 
+    "b0"."loyalty_tier" AS "loyalty_tier"
+FROM "b0"
+WHERE ("b0"."user_id" < 375517);
+                                                     QUERY PLAN                                                     
+--------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..61696.84 rows=24610 width=6) (actual rows=59976 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=65 read=48543
+   ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=10254 width=6) (actual rows=59976 loops=1)
+         Filter: ((user_id < 375517) AND ((role)::text = 'primecustomer'::text))
+         Rows Removed by Filter: 1480564
+         Buffers: shared hit=65 read=48543
+ Planning Time: 0.052 ms
+ Execution Time: 114.144 ms
+(10 rows)
+
+-- Q007 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku, e.product_id, e.is_active, e.product_name FROM Media e WHERE e.quantity >= 22;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('media'))
+)
+SELECT 
+    "b0"."sku" AS "sku",
+    "b0"."product_id" AS "product_id",
+    "b0"."is_active" AS "is_active",
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."quantity" >= 22);
+                                              QUERY PLAN                                              
+------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=1040) (actual rows=544001 loops=1)
+   Filter: ((quantity >= 22) AND ((role)::text = 'media'::text))
+   Rows Removed by Filter: 16252781
+   Buffers: shared hit=128 read=419142
+ Planning Time: 0.044 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1234.305 ms
+(9 rows)
+
+-- Q008 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price FROM WomenClothing e WHERE e.product_name >= 'Focused content-based focus group';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('womenclothing'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."product_name" >= 'Focused content-based focus group');
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=4) (actual rows=82794 loops=1)
+   Filter: (((product_name)::text >= 'Focused content-based focus group'::text) AND ((role)::text = 'womenclothing'::text))
+   Rows Removed by Filter: 16713988
+   Buffers: shared hit=167 read=419103
+ Planning Time: 0.048 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1810.473 ms
+(9 rows)
+
+-- Q009 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.product_name, e.sole_material FROM Footwear e WHERE e.quantity < 85;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sole_material" AS "sole_material",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('footwear'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."product_name" AS "product_name",
+    "b0"."sole_material" AS "sole_material"
+FROM "b0"
+WHERE ("b0"."quantity" < 85);
+                                             QUERY PLAN                                              
+-----------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=1036) (actual rows=25769 loops=1)
+   Filter: ((quantity < 85) AND ((role)::text = 'footwear'::text))
+   Rows Removed by Filter: 16771013
+   Buffers: shared hit=199 read=419071
+ Planning Time: 0.044 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1236.650 ms
+(9 rows)
+
+-- Q010 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.sku, e.quantity, e.license_type FROM Software e WHERE e.product_name >= 'Object-based 24/7 artificial intelligence';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku",
+        "source"."license_type" AS "license_type"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."sku" AS "sku",
+    "b0"."quantity" AS "quantity",
+    "b0"."license_type" AS "license_type"
+FROM "b0"
+WHERE ("b0"."product_name" >= 'Object-based 24/7 artificial intelligence');
+                                                          QUERY PLAN                                                           
+-------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=1040) (actual rows=7483 loops=1)
+   Filter: (((product_name)::text >= 'Object-based 24/7 artificial intelligence'::text) AND ((role)::text = 'software'::text))
+   Rows Removed by Filter: 16789299
+   Buffers: shared hit=231 read=419039
+ Planning Time: 0.044 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1668.636 ms
+(9 rows)
+
+-- Q011 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.product_id FROM Footwear e WHERE e.product_id <= 15716945;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('footwear'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."product_id" <= 15716945);
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Index Scan using relation_1_pkey on relation_1 source  (cost=0.38..8.39 rows=1 width=8) (actual rows=20055 loops=1)
+   Index Cond: (product_id <= 15716945)
+   Filter: ((role)::text = 'footwear'::text)
+   Rows Removed by Filter: 15696890
+   Buffers: shared hit=1138873 read=480178 written=11889
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.049 ms
+ Execution Time: 1967.748 ms
+(9 rows)
+
+-- Q012 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.is_active, e.dimensions FROM Accessory e WHERE e.accessory_type >= 'case';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."accessory_type" AS "accessory_type",
+        "source"."dimensions" AS "dimensions",
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('accessory'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."is_active" AS "is_active",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."accessory_type" >= 'case');
+                                             QUERY PLAN                                              
+-----------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=1036) (actual rows=98800 loops=1)
+   Filter: (((accessory_type)::text >= 'case'::text) AND ((role)::text = 'accessory'::text))
+   Rows Removed by Filter: 16697982
+   Buffers: shared hit=14787 read=404483
+ Planning Time: 0.040 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1380.498 ms
+(9 rows)
+
+-- Q013 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku, e.quantity FROM Software e WHERE e.quantity > 16;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT 
+    "b0"."sku" AS "sku",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."quantity" > 16);
+                                            QUERY PLAN                                             
+---------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=520) (actual rows=9062 loops=1)
+   Filter: ((quantity > 16) AND ((role)::text = 'software'::text))
+   Rows Removed by Filter: 16787720
+   Buffers: shared hit=14819 read=404451
+ Planning Time: 0.040 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1201.672 ms
+(9 rows)
+
+-- Q014 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.product_name FROM MenClothing e WHERE e.sku >= 'SKU-FSCK-64850736';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."sku" >= 'SKU-FSCK-64850736');
+                                              QUERY PLAN                                              
+------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=520) (actual rows=1319097 loops=1)
+   Filter: (((sku)::text >= 'SKU-FSCK-64850736'::text) AND ((role)::text = 'menclothing'::text))
+   Rows Removed by Filter: 15477685
+   Buffers: shared hit=14851 read=404419
+ Planning Time: 0.044 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 2289.397 ms
+(9 rows)
+
+-- Q015 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.renewal_date, e.password_hash, e.email FROM PrimeCustomer e WHERE e.email < 'ujones@example.com';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."renewal_date" AS "renewal_date",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('primecustomer'))
+)
+SELECT 
+    "b0"."renewal_date" AS "renewal_date",
+    "b0"."password_hash" AS "password_hash",
+    "b0"."email" AS "email"
+FROM "b0"
+WHERE ("b0"."email" < 'ujones@example.com');
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..68392.74 rows=91569 width=98) (actual rows=90281 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared read=48608
+   ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=38154 width=98) (actual rows=90281 loops=1)
+         Filter: (((email)::text < 'ujones@example.com'::text) AND ((role)::text = 'primecustomer'::text))
+         Rows Removed by Filter: 1450259
+         Buffers: shared read=48608
+ Planning:
+   Buffers: shared read=3
+ Planning Time: 0.089 ms
+ Execution Time: 165.807 ms
+(12 rows)
+
+-- Q016 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku, e.product_id, e.format FROM Media e WHERE e.product_id > 16045006;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."format" AS "format",
+        "source"."product_id" AS "product_id",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('media'))
+)
+SELECT 
+    "b0"."sku" AS "sku",
+    "b0"."product_id" AS "product_id",
+    "b0"."format" AS "format"
+FROM "b0"
+WHERE ("b0"."product_id" > 16045006);
+                                                       QUERY PLAN                                                        
+-------------------------------------------------------------------------------------------------------------------------
+ Index Scan using relation_1_pkey on relation_1 source  (cost=0.38..8.39 rows=1 width=1036) (actual rows=736776 loops=1)
+   Index Cond: (product_id > 16045006)
+   Filter: ((role)::text = 'media'::text)
+   Rows Removed by Filter: 15000
+   Buffers: shared hit=55090 read=22247 written=815
+ Planning:
+   Buffers: shared read=3
+ Planning Time: 0.070 ms
+ Execution Time: 134.938 ms
+(9 rows)
+
+-- Q017 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.dimensions, e.sku FROM Camera e WHERE e.dimensions > 'large';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('camera'))
+)
+SELECT 
+    "b0"."dimensions" AS "dimensions",
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."dimensions" > 'large');
+                                              QUERY PLAN                                              
+------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=1032) (actual rows=126953 loops=1)
+   Filter: (((dimensions)::text > 'large'::text) AND ((role)::text = 'camera'::text))
+   Rows Removed by Filter: 16669829
+   Buffers: shared hit=14863 read=404407
+ Planning Time: 0.041 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1621.980 ms
+(9 rows)
+
+-- Q018 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.product_name, e.product_id FROM Footwear e WHERE e.sole_material > 'TPU';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sole_material" AS "sole_material",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('footwear'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."product_name" AS "product_name",
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."sole_material" > 'TPU');
+                                           QUERY PLAN                                           
+------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=524) (actual rows=0 loops=1)
+   Filter: (((sole_material)::text > 'TPU'::text) AND ((role)::text = 'footwear'::text))
+   Rows Removed by Filter: 16796782
+   Buffers: shared hit=14895 read=404375
+ Planning Time: 0.041 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1511.823 ms
+(9 rows)
+
+-- Q019 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_id, e.sku, e.accessory_type, e.dimensions FROM Accessory e WHERE e.quantity <= 22;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."accessory_type" AS "accessory_type",
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('accessory'))
+)
+SELECT 
+    "b0"."product_id" AS "product_id",
+    "b0"."sku" AS "sku",
+    "b0"."accessory_type" AS "accessory_type",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."quantity" <= 22);
+                                             QUERY PLAN                                              
+-----------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..419270.00 rows=1 width=1552) (actual rows=72278 loops=1)
+   Filter: ((quantity <= 22) AND ((role)::text = 'accessory'::text))
+   Rows Removed by Filter: 16724504
+   Buffers: shared hit=14927 read=404343
+ Planning Time: 0.042 ms
+ JIT:
+   Functions: 4
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1173.801 ms
+(9 rows)
+
+-- Q020 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.employee_no, e.password_hash, e.email, e.user_id FROM Employee e WHERE e.user_id >= 1427893;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."employee_no" AS "employee_no",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('employee'))
+)
+SELECT DISTINCT 
+    "b0"."employee_no" AS "employee_no",
+    "b0"."password_hash" AS "password_hash",
+    "b0"."email" AS "email",
+    "b0"."user_id" AS "user_id"
+FROM "b0"
+WHERE ("b0"."user_id" >= 1427893);
+                                                       QUERY PLAN                                                        
+-------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=53299.98..53462.00 rows=16202 width=104) (actual rows=112648 loops=1)
+   Group Key: source.employee_no, source.password_hash, source.email, source.user_id
+   Batches: 1  Memory Usage: 22545kB
+   Buffers: shared read=4555 written=19
+   ->  Bitmap Heap Scan on relation_2 source  (cost=2862.31..53137.96 rows=16202 width=104) (actual rows=112648 loops=1)
+         Recheck Cond: (user_id >= 1427893)
+         Filter: ((role)::text = 'employee'::text)
+         Heap Blocks: exact=4244
+         Buffers: shared read=4555 written=19
+         ->  Bitmap Index Scan on relation_2_pkey  (cost=0.00..2858.25 rows=111177 width=0) (actual rows=112648 loops=1)
+               Index Cond: (user_id >= 1427893)
+               Buffers: shared read=311
+ Planning:
+   Buffers: shared read=6
+ Planning Time: 0.093 ms
+ Execution Time: 77.124 ms
+(16 rows)
+
+-- Q021 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.sole_material, e.product_name FROM Footwear e WHERE e.product_id < 15725246;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sole_material" AS "sole_material",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('footwear'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."sole_material" AS "sole_material",
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."product_id" < 15725246);
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Index Scan using relation_1_pkey on relation_1 source  (cost=0.38..8.39 rows=1 width=1036) (actual rows=28355 loops=1)
+   Index Cond: (product_id < 15725246)
+   Filter: ((role)::text = 'footwear'::text)
+   Rows Removed by Filter: 15696890
+   Buffers: shared hit=1139486 read=480415 written=1164
+ Planning Time: 0.046 ms
+ Execution Time: 2015.978 ms
+(7 rows)
+
+-- Q022 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku FROM Camera e WHERE e.sku <= 'SKU-pcfH-16550496';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('camera'))
+)
+SELECT 
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."sku" <= 'SKU-pcfH-16550496');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..533995.90 rows=87662 width=18) (actual rows=98483 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=14759 read=404511
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=36526 width=18) (actual rows=98483 loops=1)
+         Filter: (((sku)::text <= 'SKU-pcfH-16550496'::text) AND ((role)::text = 'camera'::text))
+         Rows Removed by Filter: 16698299
+         Buffers: shared hit=14759 read=404511
+ Planning:
+   Buffers: shared hit=9 read=12 dirtied=2
+ Planning Time: 0.115 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 2061.348 ms
+(15 rows)
+
+-- Q023 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.dimensions, e.accessory_type, e.sku FROM Accessory e WHERE e.accessory_type <= 'case';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."accessory_type" AS "accessory_type",
+        "source"."dimensions" AS "dimensions",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('accessory'))
+)
+SELECT 
+    "b0"."dimensions" AS "dimensions",
+    "b0"."accessory_type" AS "accessory_type",
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."accessory_type" <= 'case');
+                                                     QUERY PLAN                                                     
+--------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..525327.00 rows=973 width=30) (actual rows=82575 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=14791 read=404479
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=405 width=30) (actual rows=82575 loops=1)
+         Filter: (((accessory_type)::text <= 'case'::text) AND ((role)::text = 'accessory'::text))
+         Rows Removed by Filter: 16714207
+         Buffers: shared hit=14791 read=404479
+ Planning:
+   Buffers: shared hit=5 read=1 dirtied=1
+ Planning Time: 0.066 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1045.751 ms
+(15 rows)
+
+-- Q024 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.user_id, e.email, e.employee_no, e.password_hash FROM Employee e WHERE e.employee_no <= 'EMP-99018214';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."employee_no" AS "employee_no",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('employee'))
+)
+SELECT 
+    "b0"."user_id" AS "user_id",
+    "b0"."email" AS "email",
+    "b0"."employee_no" AS "employee_no",
+    "b0"."password_hash" AS "password_hash"
+FROM "b0"
+WHERE ("b0"."employee_no" <= 'EMP-99018214');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..62506.14 rows=32703 width=104) (actual rows=222798 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared read=48608
+   ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=13626 width=104) (actual rows=222798 loops=1)
+         Filter: (((employee_no)::text <= 'EMP-99018214'::text) AND ((role)::text = 'employee'::text))
+         Rows Removed by Filter: 1317742
+         Buffers: shared read=48608
+ Planning Time: 0.052 ms
+ Execution Time: 154.645 ms
+(10 rows)
+
+-- Q025 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.dimensions, e.base_price, e.fit_type_men FROM MenClothing e WHERE e.product_name > 'Focused optimizing complexity';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."fit_type_men" AS "fit_type_men",
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."dimensions" AS "dimensions",
+    "b0"."base_price" AS "base_price",
+    "b0"."fit_type_men" AS "fit_type_men"
+FROM "b0"
+WHERE ("b0"."product_name" > 'Focused optimizing complexity');
+                                                        QUERY PLAN                                                         
+---------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..646977.40 rows=1217477 width=21) (actual rows=1187181 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=14823 read=404447
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=507282 width=21) (actual rows=1187181 loops=1)
+         Filter: (((product_name)::text > 'Focused optimizing complexity'::text) AND ((role)::text = 'menclothing'::text))
+         Rows Removed by Filter: 15609601
+         Buffers: shared hit=14823 read=404447
+ Planning:
+   Buffers: shared hit=15 read=3
+ Planning Time: 0.123 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1636.559 ms
+(15 rows)
+
+-- Q026 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name FROM KitchenAppliance e WHERE e.base_price > 95;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."base_price" > 95);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..540501.20 rows=152715 width=34) (actual rows=160026 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=14855 read=404415
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=63631 width=34) (actual rows=160026 loops=1)
+         Filter: ((base_price > 95) AND ((role)::text = 'kitchenappliance'::text))
+         Rows Removed by Filter: 16636756
+         Buffers: shared hit=14855 read=404415
+ Planning Time: 0.049 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1000.890 ms
+(13 rows)
+
+-- Q027 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.is_active FROM Electronics e WHERE e.product_id > 3971079;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('electronics', 'accessory', 'camera', 'computer', 'desktop', 'laptop', 'phone', 'smartwatch', 'tablet'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."product_id" > 3971079);
+                                                                       QUERY PLAN                                                                       
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.02..713157.18 rows=9680838 width=8) (actual rows=8931522 loops=1)
+   Filter: ((product_id > 3971079) AND ((role)::text = ANY ('{electronics,accessory,camera,computer,desktop,laptop,phone,smartwatch,tablet}'::text[])))
+   Rows Removed by Filter: 7865260
+   Buffers: shared hit=14887 read=404383
+ Planning:
+   Buffers: shared hit=46 read=6
+ Planning Time: 0.135 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1255.365 ms
+(11 rows)
+
+-- Q028 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.delivery_type, e.base_price FROM Software e WHERE e.product_id <= 16796632;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."delivery_type" AS "delivery_type",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT DISTINCT 
+    "b0"."delivery_type" AS "delivery_type",
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."product_id" <= 16796632);
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=525760.11..526844.22 rows=4247 width=14) (actual rows=2272 loops=1)
+   Buffers: shared hit=14919 read=404351
+   ->  Gather Merge  (cost=525760.11..526801.75 rows=8494 width=14) (actual rows=2272 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=14919 read=404351
+         ->  Unique  (cost=524760.09..524821.31 rows=4247 width=14) (actual rows=2272 loops=1)
+               Buffers: shared hit=14919 read=404351
+               ->  Sort  (cost=524760.09..524780.49 rows=8163 width=14) (actual rows=14850 loops=1)
+                     Sort Key: source.delivery_type, source.base_price
+                     Sort Method: quicksort  Memory: 973kB
+                     Buffers: shared hit=14919 read=404351
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=8163 width=14) (actual rows=14850 loops=1)
+                           Filter: ((product_id <= 16796632) AND ((role)::text = 'software'::text))
+                           Rows Removed by Filter: 16781932
+                           Buffers: shared hit=14919 read=404351
+ Planning:
+   Buffers: shared hit=3 read=4
+ Planning Time: 0.140 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 926.421 ms
+(23 rows)
+
+-- Q029 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku, e.product_name FROM Tablet e WHERE e.sku > 'SKU-aLIL-48201596';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('tablet'))
+)
+SELECT 
+    "b0"."sku" AS "sku",
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."sku" > 'SKU-aLIL-48201596');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..535006.90 rows=97772 width=52) (actual rows=98376 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=14951 read=404319
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=40738 width=52) (actual rows=98376 loops=1)
+         Filter: (((sku)::text > 'SKU-aLIL-48201596'::text) AND ((role)::text = 'tablet'::text))
+         Rows Removed by Filter: 16698406
+         Buffers: shared hit=14951 read=404319
+ Planning Time: 0.057 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1937.455 ms
+(13 rows)
+
+-- Q030 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.sku FROM MenClothing e WHERE e.material >= 'cotton';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."material" AS "material",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT DISTINCT 
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."material" >= 'cotton');
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=541679.88..543192.54 rows=151266 width=18) (actual rows=1402967 loops=1)
+   Group Key: source.sku
+   Batches: 5  Memory Usage: 131121kB  Disk Usage: 11776kB
+   Buffers: shared hit=14983 read=404287, temp read=3047 written=4640
+   ->  Gather  (cost=525418.78..541301.71 rows=151266 width=18) (actual rows=1402967 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=14983 read=404287, temp read=1668 written=3165
+         ->  HashAggregate  (cost=524418.78..525175.11 rows=75633 width=18) (actual rows=1402967 loops=1)
+               Group Key: source.sku
+               Batches: 5  Memory Usage: 131121kB  Disk Usage: 15416kB
+               Buffers: shared hit=14983 read=404287, temp read=1668 written=3165
+               ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=75633 width=18) (actual rows=1402967 loops=1)
+                     Filter: (((material)::text >= 'cotton'::text) AND ((role)::text = 'menclothing'::text))
+                     Rows Removed by Filter: 15393815
+                     Buffers: shared hit=14983 read=404287
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.076 ms
+ JIT:
+   Functions: 15
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 2103.931 ms
+(23 rows)
+
+-- Q031 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.loyalty_tier, e.user_id FROM PrimeCustomer e WHERE e.password_hash >= '80121adceba1683a4e0c327f08ae179a45f26e01f05e851d4580fa4a0c309a8e';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('primecustomer'))
+)
+SELECT DISTINCT 
+    "b0"."loyalty_tier" AS "loyalty_tier",
+    "b0"."user_id" AS "user_id"
+FROM "b0"
+WHERE ("b0"."password_hash" >= '80121adceba1683a4e0c327f08ae179a45f26e01f05e851d4580fa4a0c309a8e');
+                                                                                  QUERY PLAN                                                                                  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=64004.71..64428.61 rows=42390 width=10) (actual rows=49950 loops=1)
+   Group Key: source.loyalty_tier, source.user_id
+   Batches: 1  Memory Usage: 3601kB
+   Buffers: shared hit=33 read=48575
+   ->  Gather  (cost=59341.81..63792.76 rows=42390 width=10) (actual rows=49950 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=33 read=48575
+         ->  HashAggregate  (cost=58341.81..58553.76 rows=21195 width=10) (actual rows=49950 loops=1)
+               Group Key: source.loyalty_tier, source.user_id
+               Batches: 1  Memory Usage: 3601kB
+               Buffers: shared hit=33 read=48575
+               ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=21195 width=10) (actual rows=49950 loops=1)
+                     Filter: (((password_hash)::text >= '80121adceba1683a4e0c327f08ae179a45f26e01f05e851d4580fa4a0c309a8e'::text) AND ((role)::text = 'primecustomer'::text))
+                     Rows Removed by Filter: 1490590
+                     Buffers: shared hit=33 read=48575
+ Planning Time: 0.072 ms
+ Execution Time: 194.652 ms
+(18 rows)
+
+-- Q032 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.cpu FROM Desktop e WHERE e.product_id > 9517334;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."cpu" AS "cpu",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."cpu" AS "cpu"
+FROM "b0"
+WHERE ("b0"."product_id" > 9517334);
+                                                       QUERY PLAN                                                        
+-------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..607369.90 rows=821402 width=12) (actual rows=1686252 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15015 read=404255
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=342251 width=12) (actual rows=1686252 loops=1)
+         Filter: ((product_id > 9517334) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 15110530
+         Buffers: shared hit=15015 read=404255
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.069 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1017.937 ms
+(15 rows)
+
+-- Q033 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price FROM MenClothing e WHERE e.material < 'polyester';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."material" AS "material",
+        "source"."base_price" AS "base_price"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."material" < 'polyester');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..540007.50 rows=147778 width=4) (actual rows=1148637 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15047 read=404223
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=61574 width=4) (actual rows=1148637 loops=1)
+         Filter: (((material)::text < 'polyester'::text) AND ((role)::text = 'menclothing'::text))
+         Rows Removed by Filter: 15648145
+         Buffers: shared hit=15047 read=404223
+ Planning Time: 0.048 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1163.726 ms
+(13 rows)
+
+-- Q034 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.password_hash FROM PrimeCustomer e WHERE e.renewal_date >= '2026-09-07';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."renewal_date" AS "renewal_date",
+        "source"."password_hash" AS "password_hash"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('primecustomer'))
+)
+SELECT 
+    "b0"."password_hash" AS "password_hash"
+FROM "b0"
+WHERE ("b0"."renewal_date" >= '2026-09-07');
+                                                     QUERY PLAN                                                     
+--------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..59646.44 rows=4106 width=65) (actual rows=60324 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=65 read=48543
+   ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=1711 width=65) (actual rows=60324 loops=1)
+         Filter: (((renewal_date)::text >= '2026-09-07'::text) AND ((role)::text = 'primecustomer'::text))
+         Rows Removed by Filter: 1480216
+         Buffers: shared hit=65 read=48543
+ Planning Time: 0.052 ms
+ Execution Time: 128.587 ms
+(10 rows)
+
+-- Q035 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.dimensions, e.product_id, e.warranty_months, e.product_name FROM Tablet e WHERE e.base_price >= 17;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('tablet'))
+)
+SELECT 
+    "b0"."dimensions" AS "dimensions",
+    "b0"."product_id" AS "product_id",
+    "b0"."warranty_months" AS "warranty_months",
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."base_price" >= 17);
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..535097.00 rows=98673 width=48) (actual rows=99019 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15079 read=404191
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=41114 width=48) (actual rows=99019 loops=1)
+         Filter: ((base_price >= 17) AND ((role)::text = 'tablet'::text))
+         Rows Removed by Filter: 16697763
+         Buffers: shared hit=15079 read=404191
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.064 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 989.737 ms
+(15 rows)
+
+-- Q036 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.base_price, e.sku FROM Software e WHERE e.sku > 'SKU-KINm-31688537';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."base_price" AS "base_price",
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."sku" > 'SKU-KINm-31688537');
+                                                     QUERY PLAN                                                     
+--------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..526422.20 rows=11925 width=56) (actual rows=9086 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15111 read=404159
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=4969 width=56) (actual rows=9086 loops=1)
+         Filter: (((sku)::text > 'SKU-KINm-31688537'::text) AND ((role)::text = 'software'::text))
+         Rows Removed by Filter: 16787696
+         Buffers: shared hit=15111 read=404159
+ Planning Time: 0.058 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 2027.742 ms
+(13 rows)
+
+-- Q037 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.dimensions FROM Desktop e WHERE e.product_id >= 10269945;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."product_id" >= 10269945);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..598768.10 rows=735384 width=6) (actual rows=933642 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15143 read=404127
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=306410 width=6) (actual rows=933642 loops=1)
+         Filter: ((product_id >= 10269945) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 15863140
+         Buffers: shared hit=15143 read=404127
+ Planning Time: 0.053 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 961.915 ms
+(13 rows)
+
+-- Q038 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.warranty_months, e.quantity, e.dimensions, e.sku FROM Accessory e WHERE e.warranty_months > 6;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."dimensions" AS "dimensions",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('accessory'))
+)
+SELECT 
+    "b0"."warranty_months" AS "warranty_months",
+    "b0"."quantity" AS "quantity",
+    "b0"."dimensions" AS "dimensions",
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."warranty_months" > 6);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..535953.20 rows=107235 width=32) (actual rows=123338 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15175 read=404095
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=44681 width=32) (actual rows=123338 loops=1)
+         Filter: ((warranty_months > 6) AND ((role)::text = 'accessory'::text))
+         Rows Removed by Filter: 16673444
+         Buffers: shared hit=15175 read=404095
+ Planning Time: 0.045 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1010.957 ms
+(13 rows)
+
+-- Q039 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.sku, e.warranty_months, e.is_active FROM Smartwatch e WHERE e.product_id <= 11725791;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('smartwatch'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."sku" AS "sku",
+    "b0"."warranty_months" AS "warranty_months",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."product_id" <= 11725791);
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..558376.10 rows=331464 width=60) (actual rows=282535 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15207 read=404063
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=138110 width=60) (actual rows=282535 loops=1)
+         Filter: ((product_id <= 11725791) AND ((role)::text = 'smartwatch'::text))
+         Rows Removed by Filter: 16514247
+         Buffers: shared hit=15207 read=404063
+ Planning Time: 0.051 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 909.566 ms
+(13 rows)
+
+-- Q040 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.warranty_months, e.is_active, e.carrier_lock FROM Phone e WHERE e.product_name <= 'Object-based bandwidth-monitored contingency';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."carrier_lock" AS "carrier_lock",
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('phone'))
+)
+SELECT 
+    "b0"."warranty_months" AS "warranty_months",
+    "b0"."is_active" AS "is_active",
+    "b0"."carrier_lock" AS "carrier_lock"
+FROM "b0"
+WHERE ("b0"."product_name" <= 'Object-based bandwidth-monitored contingency');
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..558289.50 rows=330598 width=16) (actual rows=339517 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15239 read=404031
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=137749 width=16) (actual rows=339517 loops=1)
+         Filter: (((product_name)::text <= 'Object-based bandwidth-monitored contingency'::text) AND ((role)::text = 'phone'::text))
+         Rows Removed by Filter: 16457265
+         Buffers: shared hit=15239 read=404031
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.072 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1455.263 ms
+(15 rows)
+
+-- Q041 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.accessory_type, e.product_name, e.warranty_months FROM Accessory e WHERE e.sku <= 'SKU-Zmip-90105888';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."accessory_type" AS "accessory_type",
+        "source"."warranty_months" AS "warranty_months",
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('accessory'))
+)
+SELECT 
+    "b0"."accessory_type" AS "accessory_type",
+    "b0"."product_name" AS "product_name",
+    "b0"."warranty_months" AS "warranty_months"
+FROM "b0"
+WHERE ("b0"."sku" <= 'SKU-Zmip-90105888');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..541577.70 rows=163480 width=44) (actual rows=141967 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15271 read=403999
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=68117 width=44) (actual rows=141967 loops=1)
+         Filter: (((sku)::text <= 'SKU-Zmip-90105888'::text) AND ((role)::text = 'accessory'::text))
+         Rows Removed by Filter: 16654815
+         Buffers: shared hit=15271 read=403999
+ Planning Time: 0.058 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 2051.266 ms
+(13 rows)
+
+-- Q042 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_id FROM Phone e WHERE e.product_id >= 12284908;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('phone'))
+)
+SELECT 
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."product_id" >= 12284908);
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..542405.90 rows=171762 width=4) (actual rows=472796 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=15303 read=403967
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=71568 width=4) (actual rows=472796 loops=1)
+         Filter: ((product_id >= 12284908) AND ((role)::text = 'phone'::text))
+         Rows Removed by Filter: 16323986
+         Buffers: shared hit=15303 read=403967
+ Planning Time: 0.050 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 873.407 ms
+(13 rows)
+
+-- Q043 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.cpu FROM Desktop e WHERE e.form_factor > 'all-in-one';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."cpu" AS "cpu",
+        "source"."form_factor" AS "form_factor"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT DISTINCT 
+    "b0"."cpu" AS "cpu"
+FROM "b0"
+WHERE ("b0"."form_factor" > 'all-in-one');
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=525411.94..525412.01 rows=7 width=8) (actual rows=7 loops=1)
+   Buffers: shared hit=15335 read=403935
+   ->  Sort  (cost=525411.94..525411.98 rows=14 width=8) (actual rows=7 loops=1)
+         Sort Key: source.cpu
+         Sort Method: quicksort  Memory: 25kB
+         Buffers: shared hit=15335 read=403935
+         ->  Gather  (cost=525410.21..525411.68 rows=14 width=8) (actual rows=7 loops=1)
+               Workers Planned: 2
+               Workers Launched: 0
+               Buffers: shared hit=15335 read=403935
+               ->  HashAggregate  (cost=524410.21..524410.28 rows=7 width=8) (actual rows=7 loops=1)
+                     Group Key: source.cpu
+                     Batches: 1  Memory Usage: 24kB
+                     Buffers: shared hit=15335 read=403935
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=72203 width=8) (actual rows=1484264 loops=1)
+                           Filter: (((form_factor)::text > 'all-in-one'::text) AND ((role)::text = 'desktop'::text))
+                           Rows Removed by Filter: 15312518
+                           Buffers: shared hit=15335 read=403935
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.075 ms
+ JIT:
+   Functions: 8
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1084.695 ms
+(25 rows)
+
+-- Q044 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.quantity, e.sku, e.delivery_type FROM Media e WHERE e.base_price < 242;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."delivery_type" AS "delivery_type",
+        "source"."base_price" AS "base_price",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('media'))
+)
+SELECT DISTINCT 
+    "b0"."quantity" AS "quantity",
+    "b0"."sku" AS "sku",
+    "b0"."delivery_type" AS "delivery_type"
+FROM "b0"
+WHERE ("b0"."base_price" < 242);
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=602434.81..609076.11 rows=664130 width=32) (actual rows=838632 loops=1)
+   Group Key: source.quantity, source.sku, source.delivery_type
+   Batches: 1  Memory Usage: 110609kB
+   Buffers: shared hit=15367 read=403903
+   ->  Gather  (cost=527720.19..597453.84 rows=664130 width=32) (actual rows=838632 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=15367 read=403903
+         ->  HashAggregate  (cost=526720.19..530040.84 rows=332065 width=32) (actual rows=838632 loops=1)
+               Group Key: source.quantity, source.sku, source.delivery_type
+               Batches: 1  Memory Usage: 110609kB
+               Buffers: shared hit=15367 read=403903
+               ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=332065 width=32) (actual rows=838632 loops=1)
+                     Filter: ((base_price < 242) AND ((role)::text = 'media'::text))
+                     Rows Removed by Filter: 15958150
+                     Buffers: shared hit=15367 read=403903
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 11
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1487.881 ms
+(21 rows)
+
+-- Q045 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.product_id, e.is_active FROM Apparel e WHERE e.product_id > 13255741;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('apparel', 'clothing', 'menclothing', 'womenclothing', 'footwear'))
+)
+SELECT DISTINCT 
+    "b0"."product_id" AS "product_id",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."product_id" > 13255741);
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=580973.88..586157.30 rows=518342 width=8) (actual rows=2469791 loops=1)
+   Group Key: source.product_id, source.is_active
+   Batches: 5  Memory Usage: 159793kB  Disk Usage: 35976kB
+   Buffers: shared hit=1 read=107441 written=3, temp read=4267 written=7676
+   ->  Bitmap Heap Scan on relation_1 source  (cost=93664.92..578382.17 rows=518342 width=8) (actual rows=2469791 loops=1)
+         Recheck Cond: (product_id > 13255741)
+         Filter: ((role)::text = ANY ('{apparel,clothing,menclothing,womenclothing,footwear}'::text[]))
+         Rows Removed by Filter: 1071250
+         Heap Blocks: exact=90743
+         Buffers: shared hit=1 read=107441 written=3
+         ->  Bitmap Index Scan on relation_1_pkey  (cost=0.00..93535.34 rows=3490520 width=0) (actual rows=3541041 loops=1)
+               Index Cond: (product_id > 13255741)
+               Buffers: shared hit=1 read=16698 written=1
+ Planning Time: 0.073 ms
+ JIT:
+   Functions: 11
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1610.076 ms
+(18 rows)
+
+-- Q046 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.dimensions, e.product_id, e.warranty_months FROM Camera e WHERE e.sensor_mp > 16;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sensor_mp" AS "sensor_mp",
+        "source"."warranty_months" AS "warranty_months",
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('camera'))
+)
+SELECT 
+    "b0"."dimensions" AS "dimensions",
+    "b0"."product_id" AS "product_id",
+    "b0"."warranty_months" AS "warranty_months"
+FROM "b0"
+WHERE ("b0"."sensor_mp" > 16);
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..525342.60 rows=1129 width=14) (actual rows=145316 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16346 read=402924
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=470 width=14) (actual rows=145316 loops=1)
+         Filter: ((sensor_mp > 16) AND ((role)::text = 'camera'::text))
+         Rows Removed by Filter: 16651466
+         Buffers: shared hit=16346 read=402924
+ Planning:
+   Buffers: shared read=3 dirtied=1
+ Planning Time: 0.075 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 947.424 ms
+(15 rows)
+
+-- Q047 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.user_id, e.password_hash FROM Customer e WHERE e.user_id < 1213873;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('customer', 'businesscustomer', 'primecustomer'))
+)
+SELECT 
+    "b0"."user_id" AS "user_id",
+    "b0"."password_hash" AS "password_hash"
+FROM "b0"
+WHERE ("b0"."user_id" < 1213873);
+                                                   QUERY PLAN                                                   
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..73640.38 rows=822094 width=69) (actual rows=935317 loops=1)
+   Filter: ((user_id < 1213873) AND ((role)::text = ANY ('{customer,businesscustomer,primecustomer}'::text[])))
+   Rows Removed by Filter: 605223
+   Buffers: shared read=48608
+ Planning Time: 0.058 ms
+ Execution Time: 167.238 ms
+(6 rows)
+
+-- Q048 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.product_name, e.is_active FROM Media e WHERE e.quantity >= 4;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('media'))
+)
+SELECT DISTINCT 
+    "b0"."product_name" AS "product_name",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."quantity" >= 4);
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=609579.95..616690.75 rows=711080 width=38) (actual rows=694716 loops=1)
+   Group Key: source.product_name, source.is_active
+   Batches: 1  Memory Usage: 77841kB
+   Buffers: shared hit=16313 read=402957
+   ->  Gather  (cost=527104.15..605831.05 rows=749780 width=38) (actual rows=694716 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16313 read=402957
+         ->  HashAggregate  (cost=526104.15..529853.05 rows=374890 width=38) (actual rows=694716 loops=1)
+               Group Key: source.product_name, source.is_active
+               Batches: 1  Memory Usage: 77841kB
+               Buffers: shared hit=16313 read=402957
+               ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=374890 width=38) (actual rows=947712 loops=1)
+                     Filter: ((quantity >= 4) AND ((role)::text = 'media'::text))
+                     Rows Removed by Filter: 15849070
+                     Buffers: shared hit=16313 read=402957
+ Planning Time: 0.059 ms
+ JIT:
+   Functions: 11
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1383.319 ms
+(21 rows)
+
+-- Q049 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.base_price, e.fit_type_men, e.dimensions FROM MenClothing e WHERE e.size_system > 'EU';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."fit_type_men" AS "fit_type_men",
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."base_price" AS "base_price",
+    "b0"."fit_type_men" AS "fit_type_men",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."size_system" > 'EU');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..538320.50 rows=130908 width=21) (actual rows=827444 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16316 read=402954
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=54545 width=21) (actual rows=827444 loops=1)
+         Filter: (((size_system)::text > 'EU'::text) AND ((role)::text = 'menclothing'::text))
+         Rows Removed by Filter: 15969338
+         Buffers: shared hit=16316 read=402954
+ Planning:
+   Buffers: shared hit=3 dirtied=1
+ Planning Time: 0.066 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1115.098 ms
+(15 rows)
+
+-- Q050 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.warranty_years, e.quantity, e.product_name, e.dimensions FROM KitchenAppliance e WHERE e.dimensions <= 'oversize';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_years" AS "warranty_years",
+        "source"."dimensions" AS "dimensions",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT 
+    "b0"."warranty_years" AS "warranty_years",
+    "b0"."quantity" AS "quantity",
+    "b0"."product_name" AS "product_name",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."dimensions" <= 'oversize');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..543041.00 rows=178113 width=48) (actual rows=200658 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16305 read=402965
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=74214 width=48) (actual rows=200658 loops=1)
+         Filter: (((dimensions)::text <= 'oversize'::text) AND ((role)::text = 'kitchenappliance'::text))
+         Rows Removed by Filter: 16596124
+         Buffers: shared hit=16305 read=402965
+ Planning:
+   Buffers: shared hit=3 dirtied=1
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1403.622 ms
+(15 rows)
+
+-- Q051 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.quantity, e.warranty_months FROM Smartwatch e WHERE e.product_id >= 11490727;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('smartwatch'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."quantity" AS "quantity",
+    "b0"."warranty_months" AS "warranty_months"
+FROM "b0"
+WHERE ("b0"."product_id" >= 11490727);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..539941.30 rows=147116 width=12) (actual rows=421975 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16308 read=402962
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=61298 width=12) (actual rows=421975 loops=1)
+         Filter: ((product_id >= 11490727) AND ((role)::text = 'smartwatch'::text))
+         Rows Removed by Filter: 16374807
+         Buffers: shared hit=16308 read=402962
+ Planning Time: 0.051 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 883.997 ms
+(13 rows)
+
+-- Q052 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.product_id, e.product_name, e.quantity FROM Smartwatch e WHERE e.sku <= 'SKU-eqJB-90041693';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('smartwatch'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."product_id" AS "product_id",
+    "b0"."product_name" AS "product_name",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."sku" <= 'SKU-eqJB-90041693');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..533501.30 rows=82716 width=46) (actual rows=83736 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16325 read=402945
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=34465 width=46) (actual rows=83736 loops=1)
+         Filter: (((sku)::text <= 'SKU-eqJB-90041693'::text) AND ((role)::text = 'smartwatch'::text))
+         Rows Removed by Filter: 16713046
+         Buffers: shared hit=16325 read=402945
+ Planning Time: 0.057 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1919.677 ms
+(13 rows)
+
+-- Q053 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price FROM Desktop e WHERE e.product_id <= 10462920;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."product_id" <= 10462920);
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..644662.20 rows=1194325 width=4) (actual rows=1137112 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16327 read=402943
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=497635 width=4) (actual rows=1137112 loops=1)
+         Filter: ((product_id <= 10462920) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 15659670
+         Buffers: shared hit=16327 read=402943
+ Planning Time: 0.051 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 925.011 ms
+(13 rows)
+
+-- Q054 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.product_id FROM Apparel e WHERE e.base_price <= 148;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('apparel', 'clothing', 'menclothing', 'womenclothing', 'footwear'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."base_price" <= 148);
+                                                            QUERY PLAN                                                            
+----------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..699212.32 rows=1477427 width=38) (actual rows=1496309 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16345 read=402925
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..550469.62 rows=615595 width=38) (actual rows=1496309 loops=1)
+         Filter: ((base_price <= 148) AND ((role)::text = ANY ('{apparel,clothing,menclothing,womenclothing,footwear}'::text[])))
+         Rows Removed by Filter: 15300473
+         Buffers: shared hit=16345 read=402925
+ Planning Time: 0.056 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1377.597 ms
+(13 rows)
+
+-- Q055 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_id, e.screen_size_in, e.quantity, e.product_name FROM Tablet e WHERE e.product_name >= 'Object-based transitional portal';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."screen_size_in" AS "screen_size_in"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('tablet'))
+)
+SELECT 
+    "b0"."product_id" AS "product_id",
+    "b0"."screen_size_in" AS "screen_size_in",
+    "b0"."quantity" AS "quantity",
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."product_name" >= 'Object-based transitional portal');
+                                                        QUERY PLAN                                                        
+--------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..530112.20 rows=48825 width=46) (actual rows=49075 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16348 read=402922
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=20344 width=46) (actual rows=49075 loops=1)
+         Filter: (((product_name)::text >= 'Object-based transitional portal'::text) AND ((role)::text = 'tablet'::text))
+         Rows Removed by Filter: 16747707
+         Buffers: shared hit=16348 read=402922
+ Planning:
+   Buffers: shared read=3 dirtied=1
+ Planning Time: 0.384 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1516.336 ms
+(15 rows)
+
+-- Q056 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.material FROM Clothing e WHERE e.size_system > 'EU';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."material" AS "material",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('clothing', 'menclothing', 'womenclothing'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."material" AS "material"
+FROM "b0"
+WHERE ("b0"."size_system" > 'EU');
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..549822.64 rows=158463 width=11) (actual rows=1031126 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16349 read=402921
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..532976.34 rows=66026 width=11) (actual rows=1031126 loops=1)
+         Filter: (((size_system)::text > 'EU'::text) AND ((role)::text = ANY ('{clothing,menclothing,womenclothing}'::text[])))
+         Rows Removed by Filter: 15765656
+         Buffers: shared hit=16349 read=402921
+ Planning Time: 0.057 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1238.451 ms
+(13 rows)
+
+-- Q057 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.material, e.size_system, e.quantity FROM WomenClothing e WHERE e.dimensions >= 'medium';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."material" AS "material",
+        "source"."dimensions" AS "dimensions",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('womenclothing'))
+)
+SELECT 
+    "b0"."material" AS "material",
+    "b0"."size_system" AS "size_system",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."dimensions" >= 'medium');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..531615.30 rows=63856 width=14) (actual rows=87666 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16352 read=402918
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=26607 width=14) (actual rows=87666 loops=1)
+         Filter: (((dimensions)::text >= 'medium'::text) AND ((role)::text = 'womenclothing'::text))
+         Rows Removed by Filter: 16709116
+         Buffers: shared hit=16352 read=402918
+ Planning Time: 0.048 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1464.782 ms
+(13 rows)
+
+-- Q058 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.email, e.loyalty_tier, e.password_hash, e.user_id FROM BusinessCustomer e WHERE e.email <= 'saramcdonald@example.org';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT DISTINCT 
+    "b0"."email" AS "email",
+    "b0"."loyalty_tier" AS "loyalty_tier",
+    "b0"."password_hash" AS "password_hash",
+    "b0"."user_id" AS "user_id"
+FROM "b0"
+WHERE ("b0"."email" <= 'saramcdonald@example.org');
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=78845.77..85976.73 rows=713096 width=97) (actual rows=717841 loops=1)
+   Group Key: source.email, source.loyalty_tier, source.password_hash, source.user_id
+   Batches: 1  Memory Usage: 122897kB
+   Buffers: shared read=48608
+   ->  Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=713096 width=97) (actual rows=717841 loops=1)
+         Filter: (((email)::text <= 'saramcdonald@example.org'::text) AND ((role)::text = 'businesscustomer'::text))
+         Rows Removed by Filter: 822699
+         Buffers: shared read=48608
+ Planning Time: 0.070 ms
+ Execution Time: 519.766 ms
+(10 rows)
+
+-- Q059 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.cpu, e.dimensions, e.is_active, e.warranty_months FROM Laptop e WHERE e.base_price < 371;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."cpu" AS "cpu",
+        "source"."warranty_months" AS "warranty_months",
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('laptop'))
+)
+SELECT 
+    "b0"."cpu" AS "cpu",
+    "b0"."dimensions" AS "dimensions",
+    "b0"."is_active" AS "is_active",
+    "b0"."warranty_months" AS "warranty_months"
+FROM "b0"
+WHERE ("b0"."base_price" < 371);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..539678.40 rows=144487 width=22) (actual rows=126714 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16319 read=402951
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=60203 width=22) (actual rows=126714 loops=1)
+         Filter: ((base_price < 371) AND ((role)::text = 'laptop'::text))
+         Rows Removed by Filter: 16670068
+         Buffers: shared hit=16319 read=402951
+ Planning Time: 0.049 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1005.792 ms
+(13 rows)
+
+-- Q060 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.employee_no, e.password_hash, e.email, e.user_id FROM Employee e WHERE e.email <= 'scontreras@example.net';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."employee_no" AS "employee_no",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('employee'))
+)
+SELECT 
+    "b0"."employee_no" AS "employee_no",
+    "b0"."password_hash" AS "password_hash",
+    "b0"."email" AS "email",
+    "b0"."user_id" AS "user_id"
+FROM "b0"
+WHERE ("b0"."email" <= 'scontreras@example.net');
+                                               QUERY PLAN                                                
+---------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=179605 width=104) (actual rows=180520 loops=1)
+   Filter: (((email)::text <= 'scontreras@example.net'::text) AND ((role)::text = 'employee'::text))
+   Rows Removed by Filter: 1360020
+   Buffers: shared hit=33 read=48575
+ Planning Time: 0.056 ms
+ Execution Time: 184.130 ms
+(6 rows)
+
+-- Q061 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_id, e.quantity, e.base_price FROM MenClothing e WHERE e.size_system > 'UK';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."product_id" AS "product_id",
+    "b0"."quantity" AS "quantity",
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."size_system" > 'UK');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..535085.50 rows=98558 width=12) (actual rows=624555 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16287 read=402983
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=41066 width=12) (actual rows=624555 loops=1)
+         Filter: (((size_system)::text > 'UK'::text) AND ((role)::text = 'menclothing'::text))
+         Rows Removed by Filter: 16172227
+         Buffers: shared hit=16287 read=402983
+ Planning Time: 0.050 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1183.370 ms
+(13 rows)
+
+-- Q062 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_id FROM KitchenAppliance e WHERE e.base_price <= 243;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT 
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."base_price" <= 243);
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..545298.80 rows=200691 width=4) (actual rows=210599 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16287 read=402983
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=83621 width=4) (actual rows=210599 loops=1)
+         Filter: ((base_price <= 243) AND ((role)::text = 'kitchenappliance'::text))
+         Rows Removed by Filter: 16586183
+         Buffers: shared hit=16287 read=402983
+ Planning Time: 0.048 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 960.461 ms
+(13 rows)
+
+-- Q063 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.sensor_mp FROM Camera e WHERE e.sensor_mp > 20;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sensor_mp" AS "sensor_mp"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('camera'))
+)
+SELECT DISTINCT 
+    "b0"."sensor_mp" AS "sensor_mp"
+FROM "b0"
+WHERE ("b0"."sensor_mp" > 20);
+                                                              QUERY PLAN                                                              
+--------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=525246.76..525250.39 rows=7 width=4) (actual rows=4 loops=1)
+   Buffers: shared hit=16319 read=402951
+   ->  Gather Merge  (cost=525246.76..525250.35 rows=14 width=4) (actual rows=4 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16319 read=402951
+         ->  Unique  (cost=524246.74..524248.71 rows=7 width=4) (actual rows=4 loops=1)
+               Buffers: shared hit=16319 read=402951
+               ->  Sort  (cost=524246.74..524247.72 rows=395 width=4) (actual rows=114934 loops=1)
+                     Sort Key: source.sensor_mp
+                     Sort Method: quicksort  Memory: 3073kB
+                     Buffers: shared hit=16319 read=402951
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=395 width=4) (actual rows=114934 loops=1)
+                           Filter: ((sensor_mp > 20) AND ((role)::text = 'camera'::text))
+                           Rows Removed by Filter: 16681848
+                           Buffers: shared hit=16319 read=402951
+ Planning Time: 0.051 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 964.651 ms
+(21 rows)
+
+-- Q064 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.employee_no, e.email FROM Employee e WHERE e.email >= 'klinevictoria@example.net';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."employee_no" AS "employee_no",
+        "source"."email" AS "email"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('employee'))
+)
+SELECT 
+    "b0"."employee_no" AS "employee_no",
+    "b0"."email" AS "email"
+FROM "b0"
+WHERE ("b0"."email" >= 'klinevictoria@example.net');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..70362.74 rows=111269 width=35) (actual rows=110895 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=1 read=48607
+   ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=46362 width=35) (actual rows=110895 loops=1)
+         Filter: (((email)::text >= 'klinevictoria@example.net'::text) AND ((role)::text = 'employee'::text))
+         Rows Removed by Filter: 1429645
+         Buffers: shared hit=1 read=48607
+ Planning Time: 0.070 ms
+ Execution Time: 175.541 ms
+(10 rows)
+
+-- Q065 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.quantity, e.product_name, e.warranty_years FROM KitchenAppliance e WHERE e.is_active > 0;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_years" AS "warranty_years",
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT DISTINCT 
+    "b0"."quantity" AS "quantity",
+    "b0"."product_name" AS "product_name",
+    "b0"."warranty_years" AS "warranty_years"
+FROM "b0"
+WHERE ("b0"."is_active" > 0);
+                                                            QUERY PLAN                                                             
+-----------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=545994.04..547780.22 rows=178618 width=42) (actual rows=224368 loops=1)
+   Group Key: source.quantity, source.product_name, source.warranty_years
+   Batches: 1  Memory Usage: 32785kB
+   Buffers: shared hit=16319 read=402951
+   ->  Gather  (cost=525899.52..544654.41 rows=178618 width=42) (actual rows=224368 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16319 read=402951
+         ->  HashAggregate  (cost=524899.52..525792.61 rows=89309 width=42) (actual rows=224368 loops=1)
+               Group Key: source.quantity, source.product_name, source.warranty_years
+               Batches: 1  Memory Usage: 32785kB
+               Buffers: shared hit=16319 read=402951
+               ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=89309 width=42) (actual rows=224507 loops=1)
+                     Filter: ((is_active > 0) AND ((role)::text = 'kitchenappliance'::text))
+                     Rows Removed by Filter: 16572275
+                     Buffers: shared hit=16319 read=402951
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 11
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1106.846 ms
+(21 rows)
+
+-- Q066 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.is_active, e.sensor_mp, e.quantity FROM Camera e WHERE e.base_price <= 153;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."sensor_mp" AS "sensor_mp",
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('camera'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."is_active" AS "is_active",
+    "b0"."sensor_mp" AS "sensor_mp",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."base_price" <= 153);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..534416.30 rows=91866 width=46) (actual rows=103447 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16351 read=402919
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=38278 width=46) (actual rows=103447 loops=1)
+         Filter: ((base_price <= 153) AND ((role)::text = 'camera'::text))
+         Rows Removed by Filter: 16693335
+         Buffers: shared hit=16351 read=402919
+ Planning Time: 0.049 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 982.589 ms
+(13 rows)
+
+-- Q067 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.is_active, e.dimensions FROM MenClothing e WHERE e.base_price >= 122;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."is_active" AS "is_active",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."base_price" >= 122);
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..611518.10 rows=862884 width=14) (actual rows=835299 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16352 read=402918
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=359535 width=14) (actual rows=835299 loops=1)
+         Filter: ((base_price >= 122) AND ((role)::text = 'menclothing'::text))
+         Rows Removed by Filter: 15961483
+         Buffers: shared hit=16352 read=402918
+ Planning Time: 0.047 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1028.266 ms
+(13 rows)
+
+-- Q068 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.loyalty_tier, e.email, e.user_id FROM BusinessCustomer e WHERE e.loyalty_tier > 'bronze';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."email" AS "email",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT 
+    "b0"."loyalty_tier" AS "loyalty_tier",
+    "b0"."email" AS "email",
+    "b0"."user_id" AS "user_id"
+FROM "b0"
+WHERE ("b0"."loyalty_tier" > 'bronze');
+                                               QUERY PLAN                                               
+--------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=318017 width=32) (actual rows=466523 loops=1)
+   Filter: (((loyalty_tier)::text > 'bronze'::text) AND ((role)::text = 'businesscustomer'::text))
+   Rows Removed by Filter: 1074017
+   Buffers: shared read=48608
+ Planning Time: 0.048 ms
+ Execution Time: 158.503 ms
+(6 rows)
+
+-- Q069 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.product_name, e.is_active, e.size_system FROM MenClothing e WHERE e.quantity < 30;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."product_name" AS "product_name",
+    "b0"."is_active" AS "is_active",
+    "b0"."size_system" AS "size_system"
+FROM "b0"
+WHERE ("b0"."quantity" < 30);
+                                                       QUERY PLAN                                                        
+-------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..630658.70 rows=1054290 width=45) (actual rows=1014879 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16319 read=402951
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=439288 width=45) (actual rows=1014879 loops=1)
+         Filter: ((quantity < 30) AND ((role)::text = 'menclothing'::text))
+         Rows Removed by Filter: 15781903
+         Buffers: shared hit=16319 read=402951
+ Planning Time: 0.044 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1067.219 ms
+(13 rows)
+
+-- Q070 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.password_hash, e.user_id, e.company_name, e.loyalty_tier FROM BusinessCustomer e WHERE e.email <= 'kimberlyduffy@example.net';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."company_name" AS "company_name",
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT 
+    "b0"."password_hash" AS "password_hash",
+    "b0"."user_id" AS "user_id",
+    "b0"."company_name" AS "company_name",
+    "b0"."loyalty_tier" AS "loyalty_tier"
+FROM "b0"
+WHERE ("b0"."email" <= 'kimberlyduffy@example.net');
+                                                   QUERY PLAN                                                   
+----------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=451392 width=92) (actual rows=451589 loops=1)
+   Filter: (((email)::text <= 'kimberlyduffy@example.net'::text) AND ((role)::text = 'businesscustomer'::text))
+   Rows Removed by Filter: 1088951
+   Buffers: shared hit=33 read=48575
+ Planning Time: 0.056 ms
+ Execution Time: 186.761 ms
+(6 rows)
+
+-- Q071 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku FROM KitchenAppliance e WHERE e.base_price < 244;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT 
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."base_price" < 244);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..545317.90 rows=200882 width=18) (actual rows=210599 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16287 read=402983
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=83701 width=18) (actual rows=210599 loops=1)
+         Filter: ((base_price < 244) AND ((role)::text = 'kitchenappliance'::text))
+         Rows Removed by Filter: 16586183
+         Buffers: shared hit=16287 read=402983
+ Planning Time: 0.045 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 940.943 ms
+(13 rows)
+
+-- Q072 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.product_id, e.dimensions FROM WomenClothing e WHERE e.dimensions > 'large';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('womenclothing'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."product_id" AS "product_id",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."dimensions" > 'large');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..531615.30 rows=63856 width=14) (actual rows=87666 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16287 read=402983
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=26607 width=14) (actual rows=87666 loops=1)
+         Filter: (((dimensions)::text > 'large'::text) AND ((role)::text = 'womenclothing'::text))
+         Rows Removed by Filter: 16709116
+         Buffers: shared hit=16287 read=402983
+ Planning Time: 0.047 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1496.241 ms
+(13 rows)
+
+-- Q073 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.product_id, e.is_active FROM Tablet e WHERE e.dimensions >= 'medium';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('tablet'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."product_id" AS "product_id",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."dimensions" >= 'medium');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..532160.40 rows=69307 width=42) (actual rows=74993 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16319 read=402951
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=28878 width=42) (actual rows=74993 loops=1)
+         Filter: (((dimensions)::text >= 'medium'::text) AND ((role)::text = 'tablet'::text))
+         Rows Removed by Filter: 16721789
+         Buffers: shared hit=16319 read=402951
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1400.724 ms
+(13 rows)
+
+-- Q074 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.base_price, e.product_id, e.sku, e.delivery_type FROM Software e WHERE e.sku > 'SKU-AZVi-78639304';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."delivery_type" AS "delivery_type",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT DISTINCT 
+    "b0"."base_price" AS "base_price",
+    "b0"."product_id" AS "product_id",
+    "b0"."sku" AS "sku",
+    "b0"."delivery_type" AS "delivery_type"
+FROM "b0"
+WHERE ("b0"."sku" > 'SKU-AZVi-78639304');
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=525742.52..527827.99 rows=15838 width=36) (actual rows=14403 loops=1)
+   Buffers: shared hit=16351 read=402919
+   ->  Gather Merge  (cost=525742.52..527669.61 rows=15838 width=36) (actual rows=14403 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16351 read=402919
+         ->  Unique  (cost=524742.50..524841.49 rows=7919 width=36) (actual rows=14403 loops=1)
+               Buffers: shared hit=16351 read=402919
+               ->  Sort  (cost=524742.50..524762.30 rows=7919 width=36) (actual rows=14403 loops=1)
+                     Sort Key: source.base_price, source.product_id, source.sku, source.delivery_type
+                     Sort Method: quicksort  Memory: 1293kB
+                     Buffers: shared hit=16351 read=402919
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=7919 width=36) (actual rows=14403 loops=1)
+                           Filter: (((sku)::text > 'SKU-AZVi-78639304'::text) AND ((role)::text = 'software'::text))
+                           Rows Removed by Filter: 16782379
+                           Buffers: shared hit=16351 read=402919
+ Planning Time: 0.072 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 2082.235 ms
+(21 rows)
+
+-- Q075 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku, e.product_id FROM Desktop e WHERE e.cpu <= 'Ryzen 5';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."cpu" AS "cpu",
+        "source"."product_id" AS "product_id",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."sku" AS "sku",
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."cpu" <= 'Ryzen 5');
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..546132.30 rows=209026 width=22) (actual rows=1615054 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16352 read=402918
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=87094 width=22) (actual rows=1615054 loops=1)
+         Filter: (((cpu)::text <= 'Ryzen 5'::text) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 15181728
+         Buffers: shared hit=16352 read=402918
+ Planning Time: 0.049 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1104.135 ms
+(13 rows)
+
+-- Q076 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.warranty_months FROM Desktop e WHERE e.product_name >= 'Integrated tertiary system engine';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."product_name" AS "product_name"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."warranty_months" AS "warranty_months"
+FROM "b0"
+WHERE ("b0"."product_name" >= 'Integrated tertiary system engine');
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..639694.70 rows=1144650 width=4) (actual rows=1128389 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16352 read=402918
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=476938 width=4) (actual rows=1128389 loops=1)
+         Filter: (((product_name)::text >= 'Integrated tertiary system engine'::text) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 15668393
+         Buffers: shared hit=16352 read=402918
+ Planning Time: 0.062 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1564.002 ms
+(13 rows)
+
+-- Q077 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.warranty_months, e.dimensions, e.carrier_lock FROM Phone e WHERE e.product_id >= 12088872;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."carrier_lock" AS "carrier_lock",
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('phone'))
+)
+SELECT 
+    "b0"."warranty_months" AS "warranty_months",
+    "b0"."dimensions" AS "dimensions",
+    "b0"."carrier_lock" AS "carrier_lock"
+FROM "b0"
+WHERE ("b0"."product_id" >= 12088872);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..543140.80 rows=179111 width=18) (actual rows=668832 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16352 read=402918
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=74630 width=18) (actual rows=668832 loops=1)
+         Filter: ((product_id >= 12088872) AND ((role)::text = 'phone'::text))
+         Rows Removed by Filter: 16127950
+         Buffers: shared hit=16352 read=402918
+ Planning Time: 0.053 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 981.468 ms
+(13 rows)
+
+-- Q078 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.product_name, e.is_active, e.sku FROM Smartwatch e WHERE e.product_id < 11908200;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('smartwatch'))
+)
+SELECT DISTINCT 
+    "b0"."product_name" AS "product_name",
+    "b0"."is_active" AS "is_active",
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."product_id" < 11908200);
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=557859.91..560666.81 rows=280690 width=56) (actual rows=464943 loops=1)
+   Group Key: source.product_name, source.is_active, source.sku
+   Batches: 1  Memory Usage: 86033kB
+   Buffers: shared hit=16314 read=402956
+   ->  Gather  (cost=526282.29..555754.74 rows=280690 width=56) (actual rows=464943 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16314 read=402956
+         ->  HashAggregate  (cost=525282.29..526685.74 rows=140345 width=56) (actual rows=464943 loops=1)
+               Group Key: source.product_name, source.is_active, source.sku
+               Batches: 1  Memory Usage: 86033kB
+               Buffers: shared hit=16314 read=402956
+               ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=140345 width=56) (actual rows=464943 loops=1)
+                     Filter: ((product_id < 11908200) AND ((role)::text = 'smartwatch'::text))
+                     Rows Removed by Filter: 16331839
+                     Buffers: shared hit=16314 read=402956
+ Planning Time: 0.067 ms
+ JIT:
+   Functions: 11
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1278.559 ms
+(21 rows)
+
+-- Q079 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name FROM Desktop e WHERE e.sku > 'SKU-PprG-17406221';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."sku" > 'SKU-PprG-17406221');
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..601674.60 rows=764449 width=34) (actual rows=750954 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16314 read=402956
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=318520 width=34) (actual rows=750954 loops=1)
+         Filter: (((sku)::text > 'SKU-PprG-17406221'::text) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 16045828
+         Buffers: shared hit=16314 read=402956
+ Planning Time: 0.057 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1999.688 ms
+(13 rows)
+
+-- Q080 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.loyalty_tier, e.password_hash, e.company_name, e.user_id FROM BusinessCustomer e WHERE e.password_hash < 'cd3532bab6fa3c35fb43b3dc77f7136fb6fbceb7e8876d7305ac0baab77a8468';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."company_name" AS "company_name",
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT 
+    "b0"."loyalty_tier" AS "loyalty_tier",
+    "b0"."password_hash" AS "password_hash",
+    "b0"."company_name" AS "company_name",
+    "b0"."user_id" AS "user_id"
+FROM "b0"
+WHERE ("b0"."password_hash" < 'cd3532bab6fa3c35fb43b3dc77f7136fb6fbceb7e8876d7305ac0baab77a8468');
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=722075 width=92) (actual rows=721222 loops=1)
+   Filter: (((password_hash)::text < 'cd3532bab6fa3c35fb43b3dc77f7136fb6fbceb7e8876d7305ac0baab77a8468'::text) AND ((role)::text = 'businesscustomer'::text))
+   Rows Removed by Filter: 819318
+   Buffers: shared read=48608
+ Planning Time: 0.061 ms
+ Execution Time: 195.519 ms
+(6 rows)
+
+-- Q081 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.size_system, e.material, e.base_price FROM MenClothing e WHERE e.product_id < 14898778;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."material" AS "material",
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."size_system" AS "size_system",
+    "b0"."material" AS "material",
+    "b0"."base_price" AS "base_price"
+FROM "b0"
+WHERE ("b0"."product_id" < 14898778);
+                                                QUERY PLAN                                                 
+-----------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..671173.28 rows=1543415 width=14) (actual rows=1009249 loops=1)
+   Filter: ((product_id < 14898778) AND ((role)::text = 'menclothing'::text))
+   Rows Removed by Filter: 15787533
+   Buffers: shared hit=16297 read=402973
+ Planning Time: 0.055 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1015.126 ms
+(9 rows)
+
+-- Q082 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.delivery_type, e.quantity, e.license_type, e.sku FROM Software e WHERE e.product_name <= 'Networked zero-defect core';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."delivery_type" AS "delivery_type",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku",
+        "source"."license_type" AS "license_type"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT 
+    "b0"."delivery_type" AS "delivery_type",
+    "b0"."quantity" AS "quantity",
+    "b0"."license_type" AS "license_type",
+    "b0"."sku" AS "sku"
+FROM "b0"
+WHERE ("b0"."product_name" <= 'Networked zero-defect core');
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..526209.30 rows=9796 width=43) (actual rows=7516 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16296 read=402974
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=4082 width=43) (actual rows=7516 loops=1)
+         Filter: (((product_name)::text <= 'Networked zero-defect core'::text) AND ((role)::text = 'software'::text))
+         Rows Removed by Filter: 16789266
+         Buffers: shared hit=16296 read=402974
+ Planning:
+   Buffers: shared read=3 dirtied=1
+ Planning Time: 0.282 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1497.078 ms
+(15 rows)
+
+-- Q083 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_name, e.sku, e.dimensions, e.quantity FROM Footwear e WHERE e.product_id < 15725246;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('footwear'))
+)
+SELECT 
+    "b0"."product_name" AS "product_name",
+    "b0"."sku" AS "sku",
+    "b0"."dimensions" AS "dimensions",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."product_id" < 15725246);
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..528016.20 rows=27865 width=62) (actual rows=28355 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16328 read=402942
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=11610 width=62) (actual rows=28355 loops=1)
+         Filter: ((product_id < 15725246) AND ((role)::text = 'footwear'::text))
+         Rows Removed by Filter: 16768427
+         Buffers: shared hit=16328 read=402942
+ Planning Time: 0.055 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 917.170 ms
+(13 rows)
+
+-- Q084 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.password_hash, e.loyalty_tier, e.user_id, e.email FROM BusinessCustomer e WHERE e.company_name > 'Davis PLC';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."company_name" AS "company_name",
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT 
+    "b0"."password_hash" AS "password_hash",
+    "b0"."loyalty_tier" AS "loyalty_tier",
+    "b0"."user_id" AS "user_id",
+    "b0"."email" AS "email"
+FROM "b0"
+WHERE ("b0"."company_name" > 'Davis PLC');
+                                               QUERY PLAN                                               
+--------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_2 source  (cost=0.00..71714.81 rows=423273 width=97) (actual rows=717002 loops=1)
+   Filter: (((company_name)::text > 'Davis PLC'::text) AND ((role)::text = 'businesscustomer'::text))
+   Rows Removed by Filter: 823538
+   Buffers: shared read=48608
+ Planning Time: 0.070 ms
+ Execution Time: 178.311 ms
+(6 rows)
+
+-- Q085 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.sku, e.form_factor FROM Desktop e WHERE e.cpu >= 'Core i7';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."cpu" AS "cpu",
+        "source"."form_factor" AS "form_factor",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT DISTINCT 
+    "b0"."sku" AS "sku",
+    "b0"."form_factor" AS "form_factor"
+FROM "b0"
+WHERE ("b0"."cpu" >= 'Core i7');
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=530257.18..545918.60 rows=126124 width=25) (actual rows=1127317 loops=1)
+   Buffers: shared hit=16318 read=402952, temp read=4937 written=4938
+   ->  Gather Merge  (cost=530257.18..545287.98 rows=126124 width=25) (actual rows=1127317 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16318 read=402952, temp read=4937 written=4938
+         ->  Unique  (cost=529257.16..529730.12 rows=63062 width=25) (actual rows=1127317 loops=1)
+               Buffers: shared hit=16318 read=402952, temp read=4937 written=4938
+               ->  Sort  (cost=529257.16..529414.81 rows=63062 width=25) (actual rows=1127317 loops=1)
+                     Sort Key: source.sku, source.form_factor
+                     Sort Method: external merge  Disk: 39496kB
+                     Buffers: shared hit=16318 read=402952, temp read=4937 written=4938
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=63062 width=25) (actual rows=1127317 loops=1)
+                           Filter: (((cpu)::text >= 'Core i7'::text) AND ((role)::text = 'desktop'::text))
+                           Rows Removed by Filter: 15669465
+                           Buffers: shared hit=16318 read=402952
+ Planning Time: 0.058 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 3652.770 ms
+(21 rows)
+
+-- Q086 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.product_name FROM KitchenAppliance e WHERE e.quantity < 246;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT DISTINCT 
+    "b0"."product_name" AS "product_name"
+FROM "b0"
+WHERE ("b0"."quantity" < 246);
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=547894.29..549978.39 rows=208410 width=34) (actual rows=231314 loops=1)
+   Group Key: source.product_name
+   Batches: 1  Memory Usage: 32785kB
+   Buffers: shared hit=16319 read=402951
+   ->  Gather  (cost=525490.21..547373.26 rows=208410 width=34) (actual rows=231314 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16319 read=402951
+         ->  HashAggregate  (cost=524490.21..525532.26 rows=104205 width=34) (actual rows=231314 loops=1)
+               Group Key: source.product_name
+               Batches: 1  Memory Usage: 32785kB
+               Buffers: shared hit=16319 read=402951
+               ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=104205 width=34) (actual rows=261261 loops=1)
+                     Filter: ((quantity < 246) AND ((role)::text = 'kitchenappliance'::text))
+                     Rows Removed by Filter: 16535521
+                     Buffers: shared hit=16319 read=402951
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 11
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1061.428 ms
+(21 rows)
+
+-- Q087 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.quantity FROM Appliance e WHERE e.quantity < 56;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."is_active" AS "is_active",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('appliance', 'kitchenappliance'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."quantity" < 56);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..550526.90 rows=252972 width=8) (actual rows=260389 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16351 read=402919
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=105405 width=8) (actual rows=260389 loops=1)
+         Filter: (((role)::text = ANY ('{appliance,kitchenappliance}'::text[])) AND (quantity < 56))
+         Rows Removed by Filter: 16536393
+         Buffers: shared hit=16351 read=402919
+ Planning Time: 0.058 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1231.819 ms
+(13 rows)
+
+-- Q088 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.delivery_type, e.product_id, e.is_active FROM Media e WHERE e.format >= 'ebook';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."delivery_type" AS "delivery_type",
+        "source"."format" AS "format",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('media'))
+)
+SELECT DISTINCT 
+    "b0"."delivery_type" AS "delivery_type",
+    "b0"."product_id" AS "product_id",
+    "b0"."is_active" AS "is_active"
+FROM "b0"
+WHERE ("b0"."format" >= 'ebook');
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=526699.92..531951.48 rows=41052 width=18) (actual rows=876734 loops=1)
+   Buffers: shared hit=16349 read=402921
+   ->  Gather Merge  (cost=526699.92..531643.59 rows=41052 width=18) (actual rows=876734 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16349 read=402921
+         ->  Unique  (cost=525699.89..525905.15 rows=20526 width=18) (actual rows=876734 loops=1)
+               Buffers: shared hit=16349 read=402921
+               ->  Sort  (cost=525699.89..525751.21 rows=20526 width=18) (actual rows=876734 loops=1)
+                     Sort Key: source.delivery_type, source.product_id, source.is_active
+                     Sort Method: quicksort  Memory: 62378kB
+                     Buffers: shared hit=16349 read=402921
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=20526 width=18) (actual rows=876734 loops=1)
+                           Filter: (((format)::text >= 'ebook'::text) AND ((role)::text = 'media'::text))
+                           Rows Removed by Filter: 15920048
+                           Buffers: shared hit=16349 read=402921
+ Planning:
+   Buffers: shared read=3 dirtied=1
+ Planning Time: 0.340 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1769.645 ms
+(23 rows)
+
+-- Q089 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.product_id, e.ram_gb, e.dimensions FROM Desktop e WHERE e.cpu > 'Apple M3';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."cpu" AS "cpu",
+        "source"."ram_gb" AS "ram_gb",
+        "source"."dimensions" AS "dimensions",
+        "source"."product_id" AS "product_id"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('desktop'))
+)
+SELECT 
+    "b0"."product_id" AS "product_id",
+    "b0"."ram_gb" AS "ram_gb",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."cpu" > 'Apple M3');
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..548300.70 rows=230710 width=14) (actual rows=1746880 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16349 read=402921
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=96129 width=14) (actual rows=1746880 loops=1)
+         Filter: (((cpu)::text > 'Apple M3'::text) AND ((role)::text = 'desktop'::text))
+         Rows Removed by Filter: 15049902
+         Buffers: shared hit=16349 read=402921
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.068 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1021.440 ms
+(15 rows)
+
+-- Q090 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.quantity FROM Laptop e WHERE e.product_id >= 11246252;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('laptop'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."product_id" >= 11246252);
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..530434.20 rows=52045 width=8) (actual rows=97005 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16350 read=402920
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=21685 width=8) (actual rows=97005 loops=1)
+         Filter: ((product_id >= 11246252) AND ((role)::text = 'laptop'::text))
+         Rows Removed by Filter: 16699777
+         Buffers: shared hit=16350 read=402920
+ Planning Time: 0.052 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 877.157 ms
+(13 rows)
+
+-- Q091 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.employee_no, e.password_hash, e.user_id, e.email FROM Employee e WHERE e.email <= 'klindsey@example.org';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."employee_no" AS "employee_no",
+        "source"."email" AS "email",
+        "source"."password_hash" AS "password_hash",
+        "source"."user_id" AS "user_id"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('employee'))
+)
+SELECT 
+    "b0"."employee_no" AS "employee_no",
+    "b0"."password_hash" AS "password_hash",
+    "b0"."user_id" AS "user_id",
+    "b0"."email" AS "email"
+FROM "b0"
+WHERE ("b0"."email" <= 'klindsey@example.org');
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..70558.64 rows=113228 width=104) (actual rows=114079 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared read=48608 written=1
+   ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=47178 width=104) (actual rows=114079 loops=1)
+         Filter: (((email)::text <= 'klindsey@example.org'::text) AND ((role)::text = 'employee'::text))
+         Rows Removed by Filter: 1426461
+         Buffers: shared read=48608 written=1
+ Planning Time: 0.058 ms
+ Execution Time: 178.379 ms
+(10 rows)
+
+-- Q092 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.quantity, e.product_name, e.screen_size_in, e.product_id FROM Tablet e WHERE e.warranty_months < 36;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."warranty_months" AS "warranty_months",
+        "source"."product_id" AS "product_id",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity",
+        "source"."screen_size_in" AS "screen_size_in"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('tablet'))
+)
+SELECT 
+    "b0"."quantity" AS "quantity",
+    "b0"."product_name" AS "product_name",
+    "b0"."screen_size_in" AS "screen_size_in",
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."warranty_months" < 36);
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..532206.60 rows=69769 width=46) (actual rows=92021 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16319 read=402951
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=29070 width=46) (actual rows=92021 loops=1)
+         Filter: ((warranty_months < 36) AND ((role)::text = 'tablet'::text))
+         Rows Removed by Filter: 16704761
+         Buffers: shared hit=16319 read=402951
+ Planning Time: 0.050 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 957.253 ms
+(13 rows)
+
+-- Q093 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.sku, e.dimensions FROM Camera e WHERE e.product_name < 'Visionary asynchronous hardware';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."product_name" AS "product_name",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('camera'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."sku" AS "sku",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."product_name" < 'Visionary asynchronous hardware');
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..540041.60 rows=148119 width=28) (actual rows=165737 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16319 read=402951
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=61716 width=28) (actual rows=165737 loops=1)
+         Filter: (((product_name)::text < 'Visionary asynchronous hardware'::text) AND ((role)::text = 'camera'::text))
+         Rows Removed by Filter: 16631045
+         Buffers: shared hit=16319 read=402951
+ Planning Time: 0.063 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1487.478 ms
+(13 rows)
+
+-- Q094 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.sku, e.quantity FROM MenClothing e WHERE e.quantity < 269;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."quantity" AS "quantity",
+        "source"."sku" AS "sku"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."sku" AS "sku",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."quantity" < 269);
+                                                QUERY PLAN                                                 
+-----------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..671173.28 rows=1725925 width=22) (actual rows=1676099 loops=1)
+   Filter: ((quantity < 269) AND ((role)::text = 'menclothing'::text))
+   Rows Removed by Filter: 15120683
+   Buffers: shared hit=16351 read=402919
+ Planning Time: 0.045 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 999.747 ms
+(9 rows)
+
+-- Q095 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.is_active, e.quantity, e.dimensions FROM KitchenAppliance e WHERE e.base_price < 187;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."dimensions" AS "dimensions",
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('kitchenappliance'))
+)
+SELECT 
+    "b0"."is_active" AS "is_active",
+    "b0"."quantity" AS "quantity",
+    "b0"."dimensions" AS "dimensions"
+FROM "b0"
+WHERE ("b0"."base_price" < 187);
+                                                      QUERY PLAN                                                       
+-----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..542761.70 rows=175320 width=14) (actual rows=184318 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16352 read=402918
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=73050 width=14) (actual rows=184318 loops=1)
+         Filter: ((base_price < 187) AND ((role)::text = 'kitchenappliance'::text))
+         Rows Removed by Filter: 16612464
+         Buffers: shared hit=16352 read=402918
+ Planning Time: 0.049 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 968.171 ms
+(13 rows)
+
+-- Q096 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.loyalty_tier FROM BusinessCustomer e WHERE e.email > 'brian79@example.net';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."loyalty_tier" AS "loyalty_tier",
+        "source"."email" AS "email"
+    FROM "relation_2" AS "source"
+    WHERE ("source"."role" IN ('businesscustomer'))
+)
+SELECT DISTINCT 
+    "b0"."loyalty_tier" AS "loyalty_tier"
+FROM "b0"
+WHERE ("b0"."email" > 'brian79@example.net');
+                                                               QUERY PLAN                                                               
+----------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=60083.01..60083.05 rows=4 width=6) (actual rows=4 loops=1)
+   Buffers: shared read=48608
+   ->  Sort  (cost=60083.01..60083.03 rows=8 width=6) (actual rows=4 loops=1)
+         Sort Key: source.loyalty_tier
+         Sort Method: quicksort  Memory: 25kB
+         Buffers: shared read=48608
+         ->  Gather  (cost=60082.05..60082.89 rows=8 width=6) (actual rows=4 loops=1)
+               Workers Planned: 2
+               Workers Launched: 0
+               Buffers: shared read=48608
+               ->  HashAggregate  (cost=59082.05..59082.09 rows=4 width=6) (actual rows=4 loops=1)
+                     Group Key: source.loyalty_tier
+                     Batches: 1  Memory Usage: 24kB
+                     Buffers: shared read=48608
+                     ->  Parallel Seq Scan on relation_2 source  (cost=0.00..58235.84 rows=338484 width=6) (actual rows=809481 loops=1)
+                           Filter: (((email)::text > 'brian79@example.net'::text) AND ((role)::text = 'businesscustomer'::text))
+                           Rows Removed by Filter: 731059
+                           Buffers: shared read=48608
+ Planning Time: 0.070 ms
+ Execution Time: 235.398 ms
+(20 rows)
+
+-- Q097 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.base_price, e.is_active, e.quantity FROM Software e WHERE e.product_name >= 'Front-line foreground Local Area Network';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."base_price" AS "base_price",
+        "source"."is_active" AS "is_active",
+        "source"."product_name" AS "product_name",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT 
+    "b0"."base_price" AS "base_price",
+    "b0"."is_active" AS "is_active",
+    "b0"."quantity" AS "quantity"
+FROM "b0"
+WHERE ("b0"."product_name" >= 'Front-line foreground Local Area Network');
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..526581.60 rows=13519 width=12) (actual rows=10481 loops=1)
+   Workers Planned: 2
+   Workers Launched: 0
+   Buffers: shared hit=16319 read=402951
+   ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=5633 width=12) (actual rows=10481 loops=1)
+         Filter: (((product_name)::text >= 'Front-line foreground Local Area Network'::text) AND ((role)::text = 'software'::text))
+         Rows Removed by Filter: 16786301
+         Buffers: shared hit=16319 read=402951
+ Planning Time: 0.063 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1475.500 ms
+(13 rows)
+
+-- Q098 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.is_active, e.quantity, e.size_system FROM WomenClothing e WHERE e.product_id <= 15695838;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."is_active" AS "is_active",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('womenclothing'))
+)
+SELECT DISTINCT 
+    "b0"."is_active" AS "is_active",
+    "b0"."quantity" AS "quantity",
+    "b0"."size_system" AS "size_system"
+FROM "b0"
+WHERE ("b0"."product_id" <= 15695838);
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=527942.96..529133.57 rows=3384 width=11) (actual rows=2570 loops=1)
+   Buffers: shared hit=16319 read=402951
+   ->  Gather Merge  (cost=527942.96..529082.81 rows=6768 width=11) (actual rows=2570 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16319 read=402951
+         ->  Unique  (cost=526942.94..527301.59 rows=3384 width=11) (actual rows=2570 loops=1)
+               Buffers: shared hit=16319 read=402951
+               ->  Sort  (cost=526942.94..527032.60 rows=35865 width=11) (actual rows=116310 loops=1)
+                     Sort Key: source.is_active, source.quantity, source.size_system
+                     Sort Method: quicksort  Memory: 7616kB
+                     Buffers: shared hit=16319 read=402951
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=35865 width=11) (actual rows=116310 loops=1)
+                           Filter: ((product_id <= 15695838) AND ((role)::text = 'womenclothing'::text))
+                           Rows Removed by Filter: 16680472
+                           Buffers: shared hit=16319 read=402951
+ Planning Time: 0.062 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 987.531 ms
+(21 rows)
+
+-- Q099 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT e.size_system FROM MenClothing e WHERE e.quantity < 85;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."size_system" AS "size_system",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('menclothing'))
+)
+SELECT 
+    "b0"."size_system" AS "size_system"
+FROM "b0"
+WHERE ("b0"."quantity" < 85);
+                                                QUERY PLAN                                                
+----------------------------------------------------------------------------------------------------------
+ Seq Scan on relation_1 source  (cost=0.00..671173.28 rows=1561514 width=3) (actual rows=1516250 loops=1)
+   Filter: ((quantity < 85) AND ((role)::text = 'menclothing'::text))
+   Rows Removed by Filter: 15280532
+   Buffers: shared hit=16351 read=402919
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 4
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1039.880 ms
+(9 rows)
+
+-- Q100 [selection_projection] occurrence 1/1
+-- Original E/R: SELECT DISTINCT e.delivery_type, e.quantity, e.product_id FROM Software e WHERE e.delivery_type < 'stream';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY ON, FORMAT TEXT)
+WITH
+"b0" AS (
+    SELECT
+        "source"."delivery_type" AS "delivery_type",
+        "source"."product_id" AS "product_id",
+        "source"."quantity" AS "quantity"
+    FROM "relation_1" AS "source"
+    WHERE ("source"."role" IN ('software'))
+)
+SELECT DISTINCT 
+    "b0"."delivery_type" AS "delivery_type",
+    "b0"."quantity" AS "quantity",
+    "b0"."product_id" AS "product_id"
+FROM "b0"
+WHERE ("b0"."delivery_type" < 'stream');
+                                                              QUERY PLAN                                                              
+--------------------------------------------------------------------------------------------------------------------------------------
+ Unique  (cost=525248.43..525357.93 rows=856 width=18) (actual rows=11974 loops=1)
+   Buffers: shared hit=16352 read=402918
+   ->  Gather Merge  (cost=525248.43..525351.51 rows=856 width=18) (actual rows=11974 loops=1)
+         Workers Planned: 2
+         Workers Launched: 0
+         Buffers: shared hit=16352 read=402918
+         ->  Unique  (cost=524248.41..524252.69 rows=428 width=18) (actual rows=11974 loops=1)
+               Buffers: shared hit=16352 read=402918
+               ->  Sort  (cost=524248.41..524249.48 rows=428 width=18) (actual rows=11974 loops=1)
+                     Sort Key: source.delivery_type, source.quantity, source.product_id
+                     Sort Method: quicksort  Memory: 954kB
+                     Buffers: shared hit=16352 read=402918
+                     ->  Parallel Seq Scan on relation_1 source  (cost=0.00..524229.70 rows=428 width=18) (actual rows=11974 loops=1)
+                           Filter: (((delivery_type)::text < 'stream'::text) AND ((role)::text = 'software'::text))
+                           Rows Removed by Filter: 16784808
+                           Buffers: shared hit=16352 read=402918
+ Planning Time: 0.060 ms
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 953.973 ms
+(21 rows)
+
+ROLLBACK;
+ROLLBACK

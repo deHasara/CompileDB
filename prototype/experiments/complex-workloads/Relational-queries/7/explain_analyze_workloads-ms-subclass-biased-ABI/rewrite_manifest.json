@@ -1,0 +1,951 @@
+{
+  "format_version": 1,
+  "database": "university_9",
+  "workload_count": 1,
+  "mapping_id": "b26df79b796efe2e3034f14c8982d82f25b3d58f9804318cdc807901d3eb8442",
+  "emits_explain_analyze": true,
+  "explain_format": "text",
+  "workloads": [
+    {
+      "mapping_id": "b26df79b796efe2e3034f14c8982d82f25b3d58f9804318cdc807901d3eb8442",
+      "statement_count": 100,
+      "category_counts": {
+        "aggregation": 15,
+        "complex_multi_join": 15,
+        "relationship_join": 20,
+        "selection_projection": 30,
+        "weak_owner": 20
+      },
+      "compiled_template_count": 100,
+      "queries": [
+        {
+          "id": "Q001",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "fde40835645fcfbccddbe46a41c941ac10805d7bbd701666122d9102ae0829ca",
+          "arguments": {
+            "p0": "A"
+          }
+        },
+        {
+          "id": "Q002",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "07f1d7a5a35ac371705da5df567ee6d11092c0826b7c402bc6db1c05e61096a7",
+          "arguments": {
+            "p0": "19c716d8af3d5dce1f622af1acde19736a8d049634907253b387fce96f7c5251"
+          }
+        },
+        {
+          "id": "Q003",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "05970592339f18c3a61d31ef95d10637d03bf19e9194cfac05ad4078ac655172",
+          "arguments": {
+            "p0": "subscription",
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q004",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "1ccc82db944d7f6984fb3ec5135efd63c3e7186140caa7f3ee20dc3a38d984c6",
+          "arguments": {
+            "p0": 31533,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q005",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "0f16da4154a06ef5ededfd9d7a41958883db5c2de73fe5261599cacfe4aff66f",
+          "arguments": {
+            "p0": "2023-02-11",
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q006",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "3859d72c3912193a6c5d1e94100b07d3e0084ff8ae236a93e13ff2379ae3df35",
+          "arguments": {
+            "p0": 5999287
+          }
+        },
+        {
+          "id": "Q007",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "c0e072ca6545cd9106a4c6d5837740a60b4daabca5c06ec8fdb3a653f1e11bcf",
+          "arguments": {
+            "p0": "silver"
+          }
+        },
+        {
+          "id": "Q008",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "13459bab05fbdc19c9ced56f415c374a750df5b03ba2005344c7027943bf0ee8",
+          "arguments": {
+            "p0": "top",
+            "p1": 5
+          }
+        },
+        {
+          "id": "Q009",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "1a3a660f7f3075c55704763cef5abdd683f7de55e72bec39b722c5393d0d90e4",
+          "arguments": {
+            "p0": 6015590
+          }
+        },
+        {
+          "id": "Q010",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "4a38d6c4e8e8223c4e61a7098531b8870285cdedfe6c60595484faa63a59f09a",
+          "arguments": {
+            "p0": 48572
+          }
+        },
+        {
+          "id": "Q011",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "bc31a4e435f3ef81677c71ff4149a8047a9ca55923b9092b088a4bf8e031cdad",
+          "arguments": {
+            "p0": "Gonzalez and Sons"
+          }
+        },
+        {
+          "id": "Q012",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "9bfbbe1222b047cdab2e0cc1ead04c290c1788f6b2a5e4b70620fe6d8df9cf8a",
+          "arguments": {
+            "p0": 3999749
+          }
+        },
+        {
+          "id": "Q013",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "cbacc15a3c15ae4c523d9822246caff6d8e4fce719c2f8889cd09c3283749c19",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q014",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "7d66305fde6e70db2d88f8d4cdfd19fba9e07144e01cf6521c92e986973a3616",
+          "arguments": {
+            "p0": "false",
+            "p1": 4
+          }
+        },
+        {
+          "id": "Q015",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "b6f66fc4b2a8660c5aa85db6d5da4247457736ce3475b7bbdbe462958c147e90",
+          "arguments": {
+            "p0": "large",
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q016",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "38395e634c68cd4ea600f177eb94eac9b5fae7635deadb00360192773b36e9d5",
+          "arguments": {
+            "p0": 120
+          }
+        },
+        {
+          "id": "Q017",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "2faeec4c55ff87ca1d864d9647e68f6d419e04ffb80990930257e0e37bef505e",
+          "arguments": {
+            "p0": 8
+          }
+        },
+        {
+          "id": "Q018",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "74a633f83b4ca4f7e8604e237312f285c29bb870596dedb9b8fc5477d2e9de47",
+          "arguments": {
+            "p0": 59,
+            "p1": 4
+          }
+        },
+        {
+          "id": "Q019",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "3d20a50b1060005a2bb26e6b35a5a4957f67802603335eed555876baa8544459",
+          "arguments": {
+            "p0": "draft"
+          }
+        },
+        {
+          "id": "Q020",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "93743d9b03b6d85ec6a85df49458e36f25f914d37d0675392d61e771a3293694",
+          "arguments": {
+            "p0": 9017243
+          }
+        },
+        {
+          "id": "Q021",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c85afb2eb9c7a7e9c120748d7cb751b899dbafb7cf515008823e23c3c298d256",
+          "arguments": {
+            "p0": 59
+          }
+        },
+        {
+          "id": "Q022",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "2508cc9c1156a77b620b79d34f6e11e8df8acdae90a2bf16cb8f86c2ac3d7672",
+          "arguments": {
+            "p0": 5066821
+          }
+        },
+        {
+          "id": "Q023",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "c7b5fca441751dd8a6a6ee9500aba8037705b537d61ef69d358841b02ed0b1f0",
+          "arguments": {
+            "p0": "popular",
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q024",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "725cc250ce6ee7169d6803dcce8a0bd40ecdf5b0b6422e3c7d63447960acfb32",
+          "arguments": {
+            "p0": "CAR-Zqgk"
+          }
+        },
+        {
+          "id": "Q025",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "f1a0901ed6ccc55caf8b5009bffb2bd2b6eacab16941431fd6925bcec9ea7513",
+          "arguments": {
+            "p0": 36
+          }
+        },
+        {
+          "id": "Q026",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "5b2616743183e8a05512e1086bed5257d5c8ca044960250aaa64f44573e72b00",
+          "arguments": {
+            "p0": 5980571
+          }
+        },
+        {
+          "id": "Q027",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "f7b26b542880dd9c78948ef6d9f4e41d9501dbb5e27a14018cd302b43ee629d7",
+          "arguments": {
+            "p0": "marriage",
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q028",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "4de89eda00a32b9b20a082934f0253bca65c8086c01cb7420d38bb53fb97d9f1",
+          "arguments": {
+            "p0": "597-986-7639x537"
+          }
+        },
+        {
+          "id": "Q029",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3b1e3339621cf352ab13242f9b02fe5e6b06bc99f9bd61371d78c2b6e07a37f3",
+          "arguments": {
+            "p0": "received"
+          }
+        },
+        {
+          "id": "Q030",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "e1137568129ece278cc0bfaa802cac963f63c91f91174eefdb38324504a5e7ff",
+          "arguments": {
+            "p0": "B"
+          }
+        },
+        {
+          "id": "Q031",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "edf8008999cd746505d6a4931b6ab2ff1f692f34b5acb0146b10dcfa842324d5",
+          "arguments": {
+            "p0": "download"
+          }
+        },
+        {
+          "id": "Q032",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "6b8d3dc996502899e9b3873780ff1b30c2e28b942735a06977fa35add725eafd",
+          "arguments": {
+            "p0": "2026-12-07"
+          }
+        },
+        {
+          "id": "Q033",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b0fa852ac3d8d0d041300ffbca4b9a09383c69b77fa53e8c7ea0164528f38075",
+          "arguments": {
+            "p0": "Lewis-Hartman"
+          }
+        },
+        {
+          "id": "Q034",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3e6cc0879d52b70c42c46928b6d9663fe04dd2e24d480a81ad8f98e27c54071b",
+          "arguments": {
+            "p0": "SKU-KKYN-92026277"
+          }
+        },
+        {
+          "id": "Q035",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "cf612931475f34acf9f87817c88e0da548277f6663ca9a8a35986d31da04c75e",
+          "arguments": {
+            "p0": 54,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q036",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "aeb4f63f7b108ff4f51b7b1854f1cad2df90ee322112e164ad66109ba9875c88",
+          "arguments": {
+            "p0": 185
+          }
+        },
+        {
+          "id": "Q037",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "86bf3cd53b87be5085a40baa93b87bdc1ea0843f6f7edba3f9d8db23727f1e2c",
+          "arguments": {
+            "p0": "Distributed responsive Graphical User Interface"
+          }
+        },
+        {
+          "id": "Q038",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9eb1235a3506133bf64df7508b1a2281bd37746185ff8fcedcdf69ae11081095",
+          "arguments": {
+            "p0": "Triple-buffered discrete contingency"
+          }
+        },
+        {
+          "id": "Q039",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "55c4700acf19220da37fb7b91ebfcd7ba14d3ef0cdbd4336920f06ba5382199b",
+          "arguments": {
+            "p0": "default",
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q040",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "a7d2ed0d6999cc80230880e4ce348b3823ceb3090430a0bc591b8567db4cd617",
+          "arguments": {
+            "p0": "60207"
+          }
+        },
+        {
+          "id": "Q041",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5880820dc8401e793c49e9a9cfea2940f5b2ec661bc668381d35bd8d4e05e90c",
+          "arguments": {
+            "p0": "SKU-kiOl-20372260"
+          }
+        },
+        {
+          "id": "Q042",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "c5a11d8e69c168b9269a0636b7146ffa79cfb10b708007c4d34b8c32662f3433",
+          "arguments": {
+            "p0": "Johnsonberg"
+          }
+        },
+        {
+          "id": "Q043",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "dcd8594e2d1aa088982fb9ffbef60e299037130e348d8fe17d5adf2cb11cdc4b",
+          "arguments": {
+            "p0": 345714
+          }
+        },
+        {
+          "id": "Q044",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "db072eb66844609561f33e743fca5868e97287a2fee837757fbd88d312654d1d",
+          "arguments": {
+            "p0": "FedEx"
+          }
+        },
+        {
+          "id": "Q045",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "6f7f35447e7f8cceb0cb3b1e3af55345281e14900d3fc82b44884a8479b9c3a2",
+          "arguments": {
+            "p0": "market"
+          }
+        },
+        {
+          "id": "Q046",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "bc36f5ecbe58371a1968a989011a87e74aea25dd818623e8aa3b2b4aace0f973",
+          "arguments": {
+            "p0": "2025-08-21"
+          }
+        },
+        {
+          "id": "Q047",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "30ac9316d558724d0f4ece9d5d90bdbca416372bc35e63de6cfe16c53c08390c",
+          "arguments": {
+            "p0": "Re-contextualized stable emulation"
+          }
+        },
+        {
+          "id": "Q048",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "84f79b50b94a6ec8484427aa5807508e526d2669fbe41b893fe7751e18181b0f",
+          "arguments": {
+            "p0": "false"
+          }
+        },
+        {
+          "id": "Q049",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "e80fba3b2d15bd5a20c03820733a6dfd61a1dad6b8d3a06e9b704158c82cd8aa",
+          "arguments": {
+            "p0": "Focused stable knowledge user"
+          }
+        },
+        {
+          "id": "Q050",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "01d013a4be53c1138733f495a065441ea782ebf49decefa7b86ec5ffa088a413",
+          "arguments": {
+            "p0": 29
+          }
+        },
+        {
+          "id": "Q051",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "44766825efee1af8ee59606d9f31e9ad3edde4b7a609027a2b55cc01cc5ffc51",
+          "arguments": {
+            "p0": "EMP-29876878"
+          }
+        },
+        {
+          "id": "Q052",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "a2af47370602aa15d97312d985fcd7fb74514768c9e2746599ebfc85cafbead6",
+          "arguments": {
+            "p0": 67054
+          }
+        },
+        {
+          "id": "Q053",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "05b5080dadaac2ce396ad6b8a6f795b560bce8e5667f396041b29015a6f0faae",
+          "arguments": {
+            "p0": 186,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q054",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "495879bbb5167998e6185ac390dfdfdc39535f1d854269fd0975402c5c2c038f",
+          "arguments": {
+            "p0": 3005059,
+            "p1": 5
+          }
+        },
+        {
+          "id": "Q055",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "05df6b203bd49c75e29a55df5ba156c5deaeec2d59eb7d27c11e73f2e61155d5",
+          "arguments": {
+            "p0": "FedEx",
+            "p1": 5
+          }
+        },
+        {
+          "id": "Q056",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a0501de296644c1b27d0b6acb2aa1f6ae31bb252ad6a66b6b93d7e0212e24166",
+          "arguments": {
+            "p0": 30
+          }
+        },
+        {
+          "id": "Q057",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "b1948772c4df0d2722ff30d6da4e8624a1234b5d36bf0193ecd59ff644029e41",
+          "arguments": {
+            "p0": 23
+          }
+        },
+        {
+          "id": "Q058",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "e2afc3bb06f5f2e67094697c87ad9a58d7f74b4c4e5507ee69cfef7da78f93c4",
+          "arguments": {
+            "p0": "2024-04-11"
+          }
+        },
+        {
+          "id": "Q059",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "b9270270b2306db90e7c1775d8aa27419efd49aa7d05f73299d64ed80506894b",
+          "arguments": {
+            "p0": "bronze"
+          }
+        },
+        {
+          "id": "Q060",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1fc165de30c23ac857d17f6fc796a302982a10fe5d396440b4ffd08b9a110d60",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q061",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "3adf949ca0431f4bb219f94c77af22cfc89e199ccd1ffb96aa03e53214cb494a",
+          "arguments": {
+            "p0": 1,
+            "p1": 2
+          }
+        },
+        {
+          "id": "Q062",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "e1c65f4419a6e0a9549a533e32eef157bfde0ad8ba9b4501b5aa7bebb23734f5",
+          "arguments": {
+            "p0": "2025-02-27"
+          }
+        },
+        {
+          "id": "Q063",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "aa5e8794a88ee5c41d217c53613f808f352ed2122c6856b69ea3de3663bd7928",
+          "arguments": {
+            "p0": 86
+          }
+        },
+        {
+          "id": "Q064",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "913e4852800ca58156c11026952fd68417467d19ad2e785acf5fdc629e4ddf51",
+          "arguments": {
+            "p0": "SKU-VHHJ-72832451"
+          }
+        },
+        {
+          "id": "Q065",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "879649b241f0dc5f760fd5c192901fa0f37b02b9e3eae8a2fce7da90d7fe2c9a",
+          "arguments": {
+            "p0": "false"
+          }
+        },
+        {
+          "id": "Q066",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "bd024541460549f0f9977acf32311bec87f36dc706b2defe9b9556510fbb4c26",
+          "arguments": {
+            "p0": 77
+          }
+        },
+        {
+          "id": "Q067",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "ee8d130ad852aa53701c13468042c222e894a4bc18ea10d1121c4baac2e3ffc3",
+          "arguments": {
+            "p0": "subscription",
+            "p1": 5
+          }
+        },
+        {
+          "id": "Q068",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "98504d0c3c3868b4e95d5a8d11fc4a9fddae6969cefa595c8f1ce02644c95777",
+          "arguments": {
+            "p0": "false"
+          }
+        },
+        {
+          "id": "Q069",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "1180128e4afea0ebb7f071dc0ff91a06a9daba798395149802d7f5ce2cf72fe8",
+          "arguments": {
+            "p0": 1,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q070",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "6298c3e56deff730f0c6d3e4e6ed24910919572f602c6992e624182ab2f3101a",
+          "arguments": {
+            "p0": 17,
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q071",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "823de94ea8fedf1aaffc06cc8d3ec0e2f6df9c647114cf0f9febdb7741451644",
+          "arguments": {
+            "p0": "8043143497919"
+          }
+        },
+        {
+          "id": "Q072",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "d7b690a212b4c4c4969271cafc1a6fd739ddc904311dd3dfbbf8cc1fd2f82ba6",
+          "arguments": {
+            "p0": "jacksonlisa@example.net"
+          }
+        },
+        {
+          "id": "Q073",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "961a48b9ac7dcad67e31dbe89330b4b1eb1ef260466dc0ec44909c620bc8fecc",
+          "arguments": {
+            "p0": 23
+          }
+        },
+        {
+          "id": "Q074",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "17a10081cbc85a938262a5db061bb5d5aff37aaa6f9c4cc52acbaa6dc6a4b699",
+          "arguments": {
+            "p0": "Ut9912159629"
+          }
+        },
+        {
+          "id": "Q075",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "752f7487a6b37d4269ca887cbaa6ff42596aa442ad0370dc6b0365f1d070e9e6",
+          "arguments": {
+            "p0": "2025-01-02",
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q076",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "984c41cad673b7b71ae38cc6c21a2b623c30376d029e029c5253fadf59881eb6",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q077",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "0df6aa7ba22a9d8f05de5164709267f5dd48c80859107a39d78c275c0d4b72f7",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q078",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "6a43f97b540ed8664338af13506430620e72766ec742d9357e60a8ae51fc3a11",
+          "arguments": {
+            "p0": 72513,
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q079",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "81a46c9395fdf55c3ffe10d28c203335e43fd57d468854e5a3e6740253f84777",
+          "arguments": {
+            "p0": 4
+          }
+        },
+        {
+          "id": "Q080",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "4ca069264229e79057e96812e57fb3da2d41015a575c341d9528b570e5bb7e5d",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q081",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "35b6670ff6a18aedacea62e524a19f6911fcf99100158f84a5c4c3111c65aba6",
+          "arguments": {
+            "p0": "oversize"
+          }
+        },
+        {
+          "id": "Q082",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b47073f566b217ed057feef5fe77c1771b8c8b9a494368ec580df1e61fbb4bc4",
+          "arguments": {
+            "p0": "Persistent directional project"
+          }
+        },
+        {
+          "id": "Q083",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3cac3e2f559abfe02a74193a502d152691928de1e02856cee83c813879b5148d",
+          "arguments": {
+            "p0": "Ryzen 7"
+          }
+        },
+        {
+          "id": "Q084",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "9828fa36c2886585ecdbadf6433a6112df4b2068b9b156e9efafacc3f44f126c",
+          "arguments": {
+            "p0": 56
+          }
+        },
+        {
+          "id": "Q085",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "752579fc208c43a83b43699ca202b2310a3703aba02f86e2bece7397702859bb",
+          "arguments": {
+            "p0": 20894,
+            "p1": 3
+          }
+        },
+        {
+          "id": "Q086",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "042275941514c1596d0486195abde61d17f20d46e630368bff1c681237376b54",
+          "arguments": {
+            "p0": "regular"
+          }
+        },
+        {
+          "id": "Q087",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f78e264777773e3cce7215625a8a68c40c3ec1462da8a710c8b450bb15fd4074",
+          "arguments": {
+            "p0": "cotton"
+          }
+        },
+        {
+          "id": "Q088",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "29b125c60f10d3d92f7dbcd70e78bf65bc9a95a87a5bb697b6198575fd220988",
+          "arguments": {
+            "p0": 2958584
+          }
+        },
+        {
+          "id": "Q089",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "03a17390b33e7ec41ac0b9325c051db036534206903e860277ec5ae73b7f3528",
+          "arguments": {
+            "p0": 53
+          }
+        },
+        {
+          "id": "Q090",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "a20c52e6f08b72b11ffa69e4f50f2c14083410b677879e61d72a275a1bfd41d6",
+          "arguments": {
+            "p0": "SKU-fRiT-80477349"
+          }
+        },
+        {
+          "id": "Q091",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "918d989e1f589c70bd45be0131f28f02bbc610130d27b6d0edaac72d83d40772",
+          "arguments": {
+            "p0": "sale"
+          }
+        },
+        {
+          "id": "Q092",
+          "category": "relationship_join",
+          "frequency": 1,
+          "canonical_template_hash": "197bc2d4e3728b3c664f67507b6f4b634393eb172fc239dfd5a3b76bdc3efee8",
+          "arguments": {
+            "p0": "2026-08-07"
+          }
+        },
+        {
+          "id": "Q093",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "389c2de79a1094274369843b5b4afe03c801c4da0af64a34ed9c2765131b0b4f",
+          "arguments": {
+            "p0": 12668,
+            "p1": 1
+          }
+        },
+        {
+          "id": "Q094",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "91b21e41ed8c34c5a8947ecf4ed2effe2217f25b304e6faa2d7d7c791b402823",
+          "arguments": {
+            "p0": "Recognize cup poor pay."
+          }
+        },
+        {
+          "id": "Q095",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "53a9ac31a11d6d22e5705ae6ce9a2a041f99ee6ef5ddb0b9d3fc58b36bd121cf",
+          "arguments": {
+            "p0": 1
+          }
+        },
+        {
+          "id": "Q096",
+          "category": "aggregation",
+          "frequency": 1,
+          "canonical_template_hash": "bb16af55d77a1bcb9986e05a9bf8a83147e043933c504d47ad536871ecd00be3",
+          "arguments": {
+            "p0": "open_source",
+            "p1": 5
+          }
+        },
+        {
+          "id": "Q097",
+          "category": "complex_multi_join",
+          "frequency": 1,
+          "canonical_template_hash": "86332c4c88bfb85bae8b64b9bf135d12135321b0990f9dd53c1bad0fd6547b15",
+          "arguments": {
+            "p0": 127050
+          }
+        },
+        {
+          "id": "Q098",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b9735ba045c782676cee649616140123cb0aa8d80c469150b0737bb35a66ec38",
+          "arguments": {
+            "p0": 8
+          }
+        },
+        {
+          "id": "Q099",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "344c8a55e15a6b7c1a8cbc8b8adfeb01787eaa99bfbfc65dd60ceaa41cec06cf",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q100",
+          "category": "weak_owner",
+          "frequency": 1,
+          "canonical_template_hash": "2a4bbd4061940ffa8dc407a541e97fc33a2cc72b04d2ef8009e1383d40fd0487",
+          "arguments": {
+            "p0": 26870
+          }
+        }
+      ],
+      "input_workload": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/er_query_workloads-ms-subclass-biased/er_query_workload_100_09.json",
+      "input_sha256": "e01f157aec80557315c49ce7108ff11dc16bf82e3be470793a57f0de07e0125c",
+      "output_sql": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/explain_analyze_workloads-ms-subclass-biased-ABI/rewritten_er_query_workload_100_09.sql",
+      "output_sha256": "dcee709da090685fbca75b791eddfa2b0217ef43f83f00a4abf7450cc58e7ed3"
+    }
+  ]
+}

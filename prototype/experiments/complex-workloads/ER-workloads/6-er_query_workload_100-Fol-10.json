@@ -1,0 +1,2954 @@
+{
+  "format_version": 3,
+  "workload_name": "example2_schema_driven_selectivity_100_w09",
+  "query_language": "CompileDB E/R SPJG SQL",
+  "schema_source": "example2_small_with_distributions.json",
+  "schema_sha256": "572f5fc023a153dd5f043370b318b9fbf716edcc23c4e1bfc1249b1bc0eaa599",
+  "data_profile_source": "conceptual_data_profile.json",
+  "data_profile_sha256": "ecd5f6401fd6d4b618dfebf5c50e37c5b0ce9895a63e2f134a2b05a338d5c47c",
+  "shape_generation_method": "schema_graph_random_validated_unique",
+  "shape_seed": 9,
+  "cross_workload_shape_reuse_allowed": false,
+  "selectivity_method": "initialization_time_conceptual_reservoir",
+  "selectivity_targets": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5
+  ],
+  "selectivity_scope": "where_filter_over_join_input",
+  "category_counts": {
+    "aggregation": 15,
+    "complex_multi_join": 15,
+    "relationship_join": 20,
+    "selection_projection": 30,
+    "weak_owner": 20
+  },
+  "query_count": 100,
+  "total_frequency": 100,
+  "unique_canonical_shape_count": 100,
+  "mean_absolute_where_selectivity_error": 0.051205999999999995,
+  "contains_select_star": false,
+  "queries": [
+    {
+      "id": "Q001",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.ends_at, e.starts_at, e.promo_name FROM Promotion e WHERE e.promo_name > 'Object-based responsive policy';",
+      "canonical_template_hash": "c318e46a71a5595658c1ccc5f7696e29851c893f217fcdfd3ffc80c737e76943",
+      "literal_arguments": {
+        "p0": "Object-based responsive policy"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "promotion",
+            "attribute": "promo_name",
+            "operator": ">",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "Object-based responsive policy",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q002",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.device, w.session_id, o.password_hash FROM BrowsingSession w JOIN User o ON OWNER(w) = REF(o) WHERE o.password_hash >= '7f77e1d72ca05f11515ce34eb13029810461de5058fa890e4a72e479fef250d6';",
+      "canonical_template_hash": "07f1d7a5a35ac371705da5df567ee6d11092c0826b7c402bc6db1c05e61096a7",
+      "literal_arguments": {
+        "p0": "7f77e1d72ca05f11515ce34eb13029810461de5058fa890e4a72e479fef250d6"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "user",
+            "attribute": "password_hash",
+            "operator": ">=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "7f77e1d72ca05f11515ce34eb13029810461de5058fa890e4a72e479fef250d6",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q003",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e2.supplier_id, COUNT(DISTINCT REF(e3)) AS related_count FROM supplier_products r1 JOIN Product e1 ON ENDPOINT(r1, Product) = REF(e1) JOIN Supplier e2 ON ENDPOINT(r1, Supplier) = REF(e2) JOIN supplier_pos r2 ON ENDPOINT(r2, Supplier) = REF(e2) JOIN PurchaseOrder e3 ON ENDPOINT(r2, PurchaseOrder) = REF(e3) WHERE e2.supplier_id <= 10516 GROUP BY REF(e2), e2.supplier_id HAVING COUNT(DISTINCT REF(e3)) >= 2;",
+      "canonical_template_hash": "4f010702702dc7525ab870ebfc0074fe2c45e77d276d54618b65a3ae9678bd30",
+      "literal_arguments": {
+        "p0": 10516,
+        "p1": 2
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "supplier",
+            "attribute": "supplier_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": 10516,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q004",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.delivered_at, COUNT(DISTINCT REF(e1)) AS related_count FROM courier_shipments r JOIN CourierPartner e1 ON ENDPOINT(r, CourierPartner) = REF(e1) JOIN Shipment e2 ON ENDPOINT(r, Shipment) = REF(e2) WHERE e1.webhook_url < 'http://horn.com/' GROUP BY REF(e2), e2.delivered_at HAVING COUNT(DISTINCT REF(e1)) >= 4;",
+      "canonical_template_hash": "f589b00bcc4858c9c46fd3a324c901639f9e9967fa46cf30de801f79da824c49",
+      "literal_arguments": {
+        "p0": "http://horn.com/",
+        "p1": 4
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1001,
+        "absolute_error": 9.999999999998899e-05,
+        "predicates": [
+          {
+            "object": "courierpartner",
+            "attribute": "webhook_url",
+            "operator": "<",
+            "estimated_selectivity": 0.1001,
+            "target_selectivity": 0.1,
+            "value": "http://horn.com/",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q005",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.brand, COUNT(DISTINCT REF(e2)) AS related_count FROM payment_order r JOIN PaymentMethod e1 ON ENDPOINT(r, PaymentMethod) = REF(e1) JOIN CustOrder e2 ON ENDPOINT(r, CustOrder) = REF(e2) WHERE e2.placed_at <= '2023-05-03' GROUP BY REF(e1), e1.brand HAVING COUNT(DISTINCT REF(e2)) >= 1;",
+      "canonical_template_hash": "fe031edb664f92961f2deb693efdd804d13c2094c3ab259d21173f81af29d861",
+      "literal_arguments": {
+        "p0": "2023-05-03",
+        "p1": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.2998,
+        "absolute_error": 0.00019999999999997797,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "placed_at",
+            "operator": "<=",
+            "estimated_selectivity": 0.2998,
+            "target_selectivity": 0.3,
+            "value": "2023-05-03",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q006",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.wishlist_name, w.wishlist_id, o.password_hash FROM Wishlist w JOIN Customer o ON OWNER(w) = REF(o) WHERE o.password_hash >= 'cd94b32f6ece0a42e85bf394c7927439ba8e207a59c3a2f039d1af18522b09b0';",
+      "canonical_template_hash": "4e3995210bca0cc25ee7e2473c48be619df2eb4a425eec9f2a196b1c4147d1e3",
+      "literal_arguments": {
+        "p0": "cd94b32f6ece0a42e85bf394c7927439ba8e207a59c3a2f039d1af18522b09b0"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "password_hash",
+            "operator": ">=",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": "cd94b32f6ece0a42e85bf394c7927439ba8e207a59c3a2f039d1af18522b09b0",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q007",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.product_id, e2.is_active, e3.cart_id FROM bundle_components r1 JOIN Product e1 ON ENDPOINT(r1, product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, bundle_product_id) = REF(e2) JOIN cart_contains r2 ON ENDPOINT(r2, Product) = REF(e2) JOIN Cart e3 ON ENDPOINT(r2, Cart) = REF(e3) WHERE e1.sku >= 'SKU-klfZ-12422029';",
+      "canonical_template_hash": "7122206053eef95b61fcb5dc909a68ca0fdf5b97b7f551367dc690aceedaeaf6",
+      "literal_arguments": {
+        "p0": "SKU-klfZ-12422029"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "SKU-klfZ-12422029",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q008",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.sku, COUNT(DISTINCT REF(e1)) AS related_count FROM bought_together r JOIN Product e1 ON ENDPOINT(r, product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r, bought_together_product_id) = REF(e2) WHERE e1.product_id < 8432208 GROUP BY REF(e2), e2.sku HAVING COUNT(DISTINCT REF(e1)) >= 3;",
+      "canonical_template_hash": "00652f6a10c93266c3aee84e4d6999fd4c065ff919ff187fec6ea0b426ee814c",
+      "literal_arguments": {
+        "p0": 8432208,
+        "p1": 3
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 8432208,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q009",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.price_id, w.ends_at, w.price, o.base_price FROM PriceHistory w JOIN Product o ON OWNER(w) = REF(o) WHERE o.sku < 'SKU-KWpp-43251915';",
+      "canonical_template_hash": "9f77d4a22e63bc7e24189ada80f316182828341b4c6dd72c51e3e39029930d89",
+      "literal_arguments": {
+        "p0": "SKU-KWpp-43251915"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "sku",
+            "operator": "<",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": "SKU-KWpp-43251915",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q010",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.dimensions, e2.accessory_type FROM bundled_phone_accessory r JOIN Phone e1 ON ENDPOINT(r, Phone) = REF(e1) JOIN Accessory e2 ON ENDPOINT(r, Accessory) = REF(e2) WHERE e2.quantity <= 8;",
+      "canonical_template_hash": "259ad87c1dfc2a609bfa71953630fab43eb8d1bc15c9da872a628f98c456bcf9",
+      "literal_arguments": {
+        "p0": 8
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2085,
+        "absolute_error": 0.00849999999999998,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "quantity",
+            "operator": "<=",
+            "estimated_selectivity": 0.2085,
+            "target_selectivity": 0.2,
+            "value": 8,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q011",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.custorder_id, e2.sku, e2.quantity FROM order_items r JOIN CustOrder e1 ON ENDPOINT(r, CustOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.status > 'pending';",
+      "canonical_template_hash": "c6c7987914526173d794572525427e5aa661b33652cff3f611ab3ee59d683293",
+      "literal_arguments": {
+        "p0": "pending"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.2977,
+        "absolute_error": 0.0022999999999999687,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "status",
+            "operator": ">",
+            "estimated_selectivity": 0.2977,
+            "target_selectivity": 0.3,
+            "value": "pending",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q012",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.bin_id, e2.is_active, e3.created_at FROM stock r1 JOIN WarehouseBin e1 ON ENDPOINT(r1, WarehouseBin) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN po_items r2 ON ENDPOINT(r2, Product) = REF(e2) JOIN PurchaseOrder e3 ON ENDPOINT(r2, PurchaseOrder) = REF(e3) WHERE e3.status < 'cancelled';",
+      "canonical_template_hash": "6e6308b10b446036733fffc19ba8faf49c66eeb2eb169592271ac462d4e4d315",
+      "literal_arguments": {
+        "p0": "cancelled"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.1736,
+        "absolute_error": 0.026400000000000007,
+        "predicates": [
+          {
+            "object": "purchaseorder",
+            "attribute": "status",
+            "operator": "<",
+            "estimated_selectivity": 0.1736,
+            "target_selectivity": 0.2,
+            "value": "cancelled",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q013",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.supplier_name, e2.status FROM supplier_pos r JOIN Supplier e1 ON ENDPOINT(r, Supplier) = REF(e1) JOIN PurchaseOrder e2 ON ENDPOINT(r, PurchaseOrder) = REF(e2) WHERE e1.supplier_name > 'Pittman, Wagner and Kelly';",
+      "canonical_template_hash": "7541f94a4fab8efdf2d3355d200cd956f7d5cc3256f88bc64647e842c66ff103",
+      "literal_arguments": {
+        "p0": "Pittman, Wagner and Kelly"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "supplier",
+            "attribute": "supplier_name",
+            "operator": ">",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "Pittman, Wagner and Kelly",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q014",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.category_id, COUNT(DISTINCT REF(e2)) AS related_count FROM category_products r JOIN Category e1 ON ENDPOINT(r, Category) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.category_name > 'our' GROUP BY REF(e1), e1.category_id HAVING COUNT(DISTINCT REF(e2)) >= 4;",
+      "canonical_template_hash": "1a3b7ac34c960e95115b3db1e1c8779470720dab6be39cf7770f283aa219af10",
+      "literal_arguments": {
+        "p0": "our",
+        "p1": 4
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.3994,
+        "absolute_error": 0.0006000000000000449,
+        "predicates": [
+          {
+            "object": "category",
+            "attribute": "category_name",
+            "operator": ">",
+            "estimated_selectivity": 0.3994,
+            "target_selectivity": 0.4,
+            "value": "our",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q015",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e2.product_id, COUNT(DISTINCT REF(e3)) AS related_count FROM product_tags r1 JOIN Tag e1 ON ENDPOINT(r1, Tag) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN order_returns r2 ON ENDPOINT(r2, Product) = REF(e2) JOIN CustOrder e3 ON ENDPOINT(r2, CustOrder) = REF(e3) WHERE e2.quantity > 55 GROUP BY REF(e2), e2.product_id HAVING COUNT(DISTINCT REF(e3)) >= 1;",
+      "canonical_template_hash": "4fb0477fdbd6e0149c3ef09a173a8454c17d274bc765c17407537da276ee6d5d",
+      "literal_arguments": {
+        "p0": 55,
+        "p1": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.199,
+        "absolute_error": 0.0010000000000000009,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "quantity",
+            "operator": ">",
+            "estimated_selectivity": 0.199,
+            "target_selectivity": 0.2,
+            "value": 55,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q016",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.email, e.user_id, e.password_hash, e.renewal_date FROM PrimeCustomer e WHERE e.renewal_date >= '2027-10-14';",
+      "canonical_template_hash": "28b96532313a9f6f61ffdd0b0f81fa8ebb203b664dfb72e7e299186c65b1e26a",
+      "literal_arguments": {
+        "p0": "2027-10-14"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1008,
+        "absolute_error": 0.0007999999999999952,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "renewal_date",
+            "operator": ">=",
+            "estimated_selectivity": 0.1008,
+            "target_selectivity": 0.1,
+            "value": "2027-10-14",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q017",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.password_hash, e2.status, e2.placed_at FROM customer_orders r JOIN Customer e1 ON ENDPOINT(r, Customer) = REF(e1) JOIN CustOrder e2 ON ENDPOINT(r, CustOrder) = REF(e2) WHERE e1.email <= 'jeffreybentley@example.org';",
+      "canonical_template_hash": "b3f2415a941f74e82d191ca8619e25facd294b38fd1f8c7a9ba110d6d1cae6c0",
+      "literal_arguments": {
+        "p0": "jeffreybentley@example.org"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "email",
+            "operator": "<=",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": "jeffreybentley@example.org",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q018",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.supplier_id, e2.product_name, e3.sku FROM supplier_products r1 JOIN Supplier e1 ON ENDPOINT(r1, Supplier) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN bought_together r2 ON ENDPOINT(r2, product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, bought_together_product_id) = REF(e3) WHERE e2.product_id < 6628845;",
+      "canonical_template_hash": "62086c0c1d1636ec3048b9c3890784f78b0770753e643a72b724b345933f6829",
+      "literal_arguments": {
+        "p0": 6628845
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": 6628845,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q019",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e2.base_price, COUNT(DISTINCT REF(e3)) AS related_count FROM bundle_components r1 JOIN Product e1 ON ENDPOINT(r1, bundle_product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, product_id) = REF(e2) JOIN bought_together r2 ON ENDPOINT(r2, product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, bought_together_product_id) = REF(e3) WHERE e3.sku < 'SKU-PTjD-46248744' GROUP BY REF(e2), e2.base_price HAVING COUNT(DISTINCT REF(e3)) >= 2;",
+      "canonical_template_hash": "2a5ceb1bc62e47be65c2a6aca7d3194cd6e04872d14a6c6d0e04ab79f8f6cd82",
+      "literal_arguments": {
+        "p0": "SKU-PTjD-46248744",
+        "p1": 2
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "sku",
+            "operator": "<",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "SKU-PTjD-46248744",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q020",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash, e.renewal_date, e.loyalty_tier FROM PrimeCustomer e WHERE e.email > 'perezrodney@example.com';",
+      "canonical_template_hash": "5fc0f600a5b58e2aa19eb73f9596574923bfe6c907434e527cb9329e1ba1caf3",
+      "literal_arguments": {
+        "p0": "perezrodney@example.com"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "email",
+            "operator": ">",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "perezrodney@example.com",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q021",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.quantity FROM Tablet e WHERE e.warranty_months < 24;",
+      "canonical_template_hash": "6b5418ac0033f73b0145f88e127212d2baa4e4bedc7675338af57fd413743970",
+      "literal_arguments": {
+        "p0": 24
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.6132,
+        "absolute_error": 0.21319999999999995,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "warranty_months",
+            "operator": "<",
+            "estimated_selectivity": 0.6132,
+            "target_selectivity": 0.4,
+            "value": 24,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q022",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.wishlist_id, w.wishlist_name, o.email FROM Wishlist w JOIN Customer o ON OWNER(w) = REF(o) WHERE w.wishlist_name > 'holiday';",
+      "canonical_template_hash": "09061e79e4e11c8ca69bb552bb6cbcbaa81542c1744c154c97fc1e94ec8480dd",
+      "literal_arguments": {
+        "p0": "holiday"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1764,
+        "absolute_error": 0.0764,
+        "predicates": [
+          {
+            "object": "wishlist",
+            "attribute": "wishlist_name",
+            "operator": ">",
+            "estimated_selectivity": 0.1764,
+            "target_selectivity": 0.1,
+            "value": "holiday",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q023",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.product_name, COUNT(DISTINCT REF(e1)) AS related_count FROM bought_together r JOIN Product e1 ON ENDPOINT(r, product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r, bought_together_product_id) = REF(e2) WHERE e1.quantity < 4 GROUP BY REF(e2), e2.product_name HAVING COUNT(DISTINCT REF(e1)) >= 2;",
+      "canonical_template_hash": "65273379752cd97306aa8a2cf30d31b856982e8de6a37b8db104059ee361871b",
+      "literal_arguments": {
+        "p0": 4,
+        "p1": 2
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.0988,
+        "absolute_error": 0.0012000000000000066,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "quantity",
+            "operator": "<",
+            "estimated_selectivity": 0.0988,
+            "target_selectivity": 0.1,
+            "value": 4,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q024",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.wishlist_id, e2.sku FROM wishlist_contains r JOIN Wishlist e1 ON ENDPOINT(r, Wishlist) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e2.base_price >= 358;",
+      "canonical_template_hash": "183276976b6cf3d93faf10a493cc1743e6589ed6ea3e89e2fcdcd4a69618da82",
+      "literal_arguments": {
+        "p0": 358
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1002,
+        "absolute_error": 0.00019999999999999185,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "base_price",
+            "operator": ">=",
+            "estimated_selectivity": 0.1002,
+            "target_selectivity": 0.1,
+            "value": 358,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q025",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.is_active, e2.is_active, e2.product_name FROM bundle_components r JOIN Product e1 ON ENDPOINT(r, product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r, bundle_product_id) = REF(e2) WHERE e1.quantity < 23;",
+      "canonical_template_hash": "34ad1ef44a2e9dcdfad3eab840725b0ef4e9c7acfca4d0382a076ade8d58db9f",
+      "literal_arguments": {
+        "p0": 23
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.4998,
+        "absolute_error": 0.00019999999999997797,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "quantity",
+            "operator": "<",
+            "estimated_selectivity": 0.4998,
+            "target_selectivity": 0.5,
+            "value": 23,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q026",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.shipped_at, w.tracking_no, w.delivered_at, o.status FROM Shipment w JOIN CustOrder o ON OWNER(w) = REF(o) WHERE w.tracking_no < 'KT0862261685';",
+      "canonical_template_hash": "43a7cf5d12efe946be8df1583c453c029ebf4b6dabb998e72a87081a9a5b3402",
+      "literal_arguments": {
+        "p0": "KT0862261685"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "shipment",
+            "attribute": "tracking_no",
+            "operator": "<",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": "KT0862261685",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q027",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.custorder_id, COUNT(DISTINCT REF(e1)) AS related_count FROM customer_orders r JOIN Customer e1 ON ENDPOINT(r, Customer) = REF(e1) JOIN CustOrder e2 ON ENDPOINT(r, CustOrder) = REF(e2) WHERE e1.password_hash < '1954c55d5d08b48e85e9b1d50237be6a53a0dfbbd25cbe55d26a823a4e7a31e9' GROUP BY REF(e2), e2.custorder_id HAVING COUNT(DISTINCT REF(e1)) >= 4;",
+      "canonical_template_hash": "14027f4d80018978497298b925c571d5b3259ab82d9ce3bf4370b3cf5e427847",
+      "literal_arguments": {
+        "p0": "1954c55d5d08b48e85e9b1d50237be6a53a0dfbbd25cbe55d26a823a4e7a31e9",
+        "p1": 4
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "password_hash",
+            "operator": "<",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": "1954c55d5d08b48e85e9b1d50237be6a53a0dfbbd25cbe55d26a823a4e7a31e9",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q028",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.review_id, w.created_at, w.rating, o.user_id, o.password_hash FROM Review w JOIN Customer o ON OWNER(w) = REF(o) WHERE w.created_at >= '2025-03-18';",
+      "canonical_template_hash": "615b25594ae3ef18020f9b0b23d9f732d2aac82e151b503a324d43b3ad434af3",
+      "literal_arguments": {
+        "p0": "2025-03-18"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3001,
+        "absolute_error": 9.999999999998899e-05,
+        "predicates": [
+          {
+            "object": "review",
+            "attribute": "created_at",
+            "operator": ">=",
+            "estimated_selectivity": 0.3001,
+            "target_selectivity": 0.3,
+            "value": "2025-03-18",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q029",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions FROM Apparel e WHERE e.is_active >= 1;",
+      "canonical_template_hash": "f7bd1b38946564bc3a3d6c788bcb0e71a107dcc547f6c9ff56e359c4e60eea9b",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.8536,
+        "absolute_error": 0.6536,
+        "predicates": [
+          {
+            "object": "apparel",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8536,
+            "target_selectivity": 0.2,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q030",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.sku FROM Electronics e WHERE e.product_id < 2749696;",
+      "canonical_template_hash": "4c42d91bcbe12ab28bba6f78065c868325001068b54139239431be30b64adeb7",
+      "literal_arguments": {
+        "p0": 2749696
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "electronics",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": 2749696,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q031",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price FROM Electronics e WHERE e.quantity < 23;",
+      "canonical_template_hash": "84997cf41ce31284cb7017b4607d9b50a28c6194825682ccc2674500aa4e08ee",
+      "literal_arguments": {
+        "p0": 23
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.4995,
+        "absolute_error": 0.0005000000000000004,
+        "predicates": [
+          {
+            "object": "electronics",
+            "attribute": "quantity",
+            "operator": "<",
+            "estimated_selectivity": 0.4995,
+            "target_selectivity": 0.5,
+            "value": 23,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q032",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.code, o.warehouse_id, o.warehouse_name FROM WarehouseBin w JOIN Warehouse o ON OWNER(w) = REF(o) WHERE w.bin_id >= 4986645;",
+      "canonical_template_hash": "f33e550ed3958199ab8f755b894a5f57ca446981b62ba7114655ae5c49f4c7c5",
+      "literal_arguments": {
+        "p0": 4986645
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "warehousebin",
+            "attribute": "bin_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 4986645,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q033",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.warehouse_id FROM Warehouse e WHERE e.region <= 'Midwest';",
+      "canonical_template_hash": "1fbbd0a8b2600cf90670eba4d01ee3031e9f356bcea44989bb07fc498b3a4848",
+      "literal_arguments": {
+        "p0": "Midwest"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1965,
+        "absolute_error": 0.0965,
+        "predicates": [
+          {
+            "object": "warehouse",
+            "attribute": "region",
+            "operator": "<=",
+            "estimated_selectivity": 0.1965,
+            "target_selectivity": 0.1,
+            "value": "Midwest",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q034",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.delivery_type FROM DigitalProduct e WHERE e.delivery_type > 'download';",
+      "canonical_template_hash": "ca850e6eb3e2023d445b8775f2d7e371473675c15e4bad05304225f2befac986",
+      "literal_arguments": {
+        "p0": "download"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.5011,
+        "absolute_error": 0.10109999999999997,
+        "predicates": [
+          {
+            "object": "digitalproduct",
+            "attribute": "delivery_type",
+            "operator": ">",
+            "estimated_selectivity": 0.5011,
+            "target_selectivity": 0.4,
+            "value": "download",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q035",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.base_price, COUNT(DISTINCT REF(e1)) AS related_count FROM bought_together r JOIN Product e1 ON ENDPOINT(r, product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r, bought_together_product_id) = REF(e2) WHERE e1.quantity < 18 GROUP BY REF(e2), e2.base_price HAVING COUNT(DISTINCT REF(e1)) >= 3;",
+      "canonical_template_hash": "0fc25235ac4467ec5c819a8d6049f9a3ff9abec620d03f1c297e3d15d953785a",
+      "literal_arguments": {
+        "p0": 18,
+        "p1": 3
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4064,
+        "absolute_error": 0.006399999999999961,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "quantity",
+            "operator": "<",
+            "estimated_selectivity": 0.4064,
+            "target_selectivity": 0.4,
+            "value": 18,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q036",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name FROM Apparel e WHERE e.sku < 'SKU-PpUx-53765904';",
+      "canonical_template_hash": "13137902a4fe04241fc58f962422b3447905466835b9e41746fc8a1fa8964eb0",
+      "literal_arguments": {
+        "p0": "SKU-PpUx-53765904"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "apparel",
+            "attribute": "sku",
+            "operator": "<",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "SKU-PpUx-53765904",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q037",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.status, e.custorder_id FROM CustOrder e WHERE e.status >= 'paid';",
+      "canonical_template_hash": "dcb7c9482843065c4b1c37b8af8cc852be4f41bd6b67c96a46a1f93db61da6eb",
+      "literal_arguments": {
+        "p0": "paid"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4181,
+        "absolute_error": 0.018100000000000005,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "status",
+            "operator": ">=",
+            "estimated_selectivity": 0.4181,
+            "target_selectivity": 0.4,
+            "value": "paid",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q038",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name, e.sku, e.base_price FROM DigitalProduct e WHERE e.is_active < 1;",
+      "canonical_template_hash": "30bace6ba9740010606679db833e413f42fad85b3d650cd9bb39a9a095836535",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.144,
+        "absolute_error": 0.356,
+        "predicates": [
+          {
+            "object": "digitalproduct",
+            "attribute": "is_active",
+            "operator": "<",
+            "estimated_selectivity": 0.144,
+            "target_selectivity": 0.5,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q039",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.custorder_id, COUNT(DISTINCT REF(e2)) AS related_count FROM order_items r JOIN CustOrder e1 ON ENDPOINT(r, CustOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.placed_at < '2024-04-12' GROUP BY REF(e1), e1.custorder_id HAVING COUNT(DISTINCT REF(e2)) >= 3;",
+      "canonical_template_hash": "aac8ab2ff5b948a758127448c6bbb5d61214d9c05ca17ecd28b5b58c201c7290",
+      "literal_arguments": {
+        "p0": "2024-04-12",
+        "p1": 3
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.4999,
+        "absolute_error": 9.999999999998899e-05,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "placed_at",
+            "operator": "<",
+            "estimated_selectivity": 0.4999,
+            "target_selectivity": 0.5,
+            "value": "2024-04-12",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q040",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.payment_method_id, o.password_hash FROM PaymentMethod w JOIN Customer o ON OWNER(w) = REF(o) WHERE w.exp_month > 10;",
+      "canonical_template_hash": "cd82fa18905b5e2869744ad9e5d04f7f0540d8d1a46c4102005c9f9265696fca",
+      "literal_arguments": {
+        "p0": 10
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.1666,
+        "absolute_error": 0.03340000000000001,
+        "predicates": [
+          {
+            "object": "paymentmethod",
+            "attribute": "exp_month",
+            "operator": ">",
+            "estimated_selectivity": 0.1666,
+            "target_selectivity": 0.2,
+            "value": 10,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q041",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.loyalty_tier, e.company_name, e.password_hash, e.user_id FROM BusinessCustomer e WHERE e.password_hash >= 'b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4';",
+      "canonical_template_hash": "c2121c224bf59f419392afff9ed089cb50f27648eab2c3387632a5ad70bbb339",
+      "literal_arguments": {
+        "p0": "b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "businesscustomer",
+            "attribute": "password_hash",
+            "operator": ">=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q042",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.rating, w.title, o.loyalty_tier, o.password_hash FROM Review w JOIN Customer o ON OWNER(w) = REF(o) WHERE o.loyalty_tier <= 'bronze';",
+      "canonical_template_hash": "2ec9aadec169fc52b518e1afe61882c086dfc1e0f84b936bf4b4b14a8dbba5c0",
+      "literal_arguments": {
+        "p0": "bronze"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.4772,
+        "absolute_error": 0.17720000000000002,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "loyalty_tier",
+            "operator": "<=",
+            "estimated_selectivity": 0.4772,
+            "target_selectivity": 0.3,
+            "value": "bronze",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q043",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.product_id, e2.product_name, e3.base_price FROM bought_together r1 JOIN Product e1 ON ENDPOINT(r1, bought_together_product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, product_id) = REF(e2) JOIN bundle_components r2 ON ENDPOINT(r2, product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, bundle_product_id) = REF(e3) WHERE e3.product_name <= 'Front-line client-driven middleware';",
+      "canonical_template_hash": "b6c151965a8c8ee591f32da722620c67985e202f702abab1597ffebec56d8117",
+      "literal_arguments": {
+        "p0": "Front-line client-driven middleware"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_name",
+            "operator": "<=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "Front-line client-driven middleware",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q044",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.shipped_at, w.carrier, w.tracking_no, o.custorder_id, o.status FROM Shipment w JOIN CustOrder o ON OWNER(w) = REF(o) WHERE w.shipped_at >= '2026-02-02';",
+      "canonical_template_hash": "f305e3ec5750f53a4695588501451057a096d4fbf125e176c4dc4a0aa73e64eb",
+      "literal_arguments": {
+        "p0": "2026-02-02"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.0999,
+        "absolute_error": 0.00010000000000000286,
+        "predicates": [
+          {
+            "object": "shipment",
+            "attribute": "shipped_at",
+            "operator": ">=",
+            "estimated_selectivity": 0.0999,
+            "target_selectivity": 0.1,
+            "value": "2026-02-02",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q045",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.loyalty_tier, e1.user_id, e2.placed_at FROM customer_orders r JOIN Customer e1 ON ENDPOINT(r, Customer) = REF(e1) JOIN CustOrder e2 ON ENDPOINT(r, CustOrder) = REF(e2) WHERE e1.loyalty_tier <= 'bronze';",
+      "canonical_template_hash": "253234237382c4b5c2dc7146beec951f9e95c0e7bf460345fd67d3b521206029",
+      "literal_arguments": {
+        "p0": "bronze"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.4772,
+        "absolute_error": 0.3772,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "loyalty_tier",
+            "operator": "<=",
+            "estimated_selectivity": 0.4772,
+            "target_selectivity": 0.1,
+            "value": "bronze",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q046",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.category_id, e1.parent, e2.product_name FROM category_products r JOIN Category e1 ON ENDPOINT(r, Category) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.parent < 5297;",
+      "canonical_template_hash": "c0454212599c505fced274500d20675f78592c91c2e56de281dd96497edfb28c",
+      "literal_arguments": {
+        "p0": 5297
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "category",
+            "attribute": "parent",
+            "operator": "<",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": 5297,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q047",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.status, e.created_at FROM PurchaseOrder e WHERE e.status <= 'draft';",
+      "canonical_template_hash": "e6377426d84ffb5af5265f06ea1fbc1bfcbd8b665de269d1a6ba849546f74654",
+      "literal_arguments": {
+        "p0": "draft"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3142,
+        "absolute_error": 0.01419999999999999,
+        "predicates": [
+          {
+            "object": "purchaseorder",
+            "attribute": "status",
+            "operator": "<=",
+            "estimated_selectivity": 0.3142,
+            "target_selectivity": 0.3,
+            "value": "draft",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q048",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.carrier_code, e1.webhook_url, e2.tracking_no FROM courier_shipments r JOIN CourierPartner e1 ON ENDPOINT(r, CourierPartner) = REF(e1) JOIN Shipment e2 ON ENDPOINT(r, Shipment) = REF(e2) WHERE e2.delivered_at <= '2025-01-11';",
+      "canonical_template_hash": "5cd9a2d29bd4fb7008eb7e48b9eeaafb856954606c2f27b86ec6a482d3c011cd",
+      "literal_arguments": {
+        "p0": "2025-01-11"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5002,
+        "absolute_error": 0.00019999999999997797,
+        "predicates": [
+          {
+            "object": "shipment",
+            "attribute": "delivered_at",
+            "operator": "<=",
+            "estimated_selectivity": 0.5002,
+            "target_selectivity": 0.5,
+            "value": "2025-01-11",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q049",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.product_id, e2.email FROM software_downloads r JOIN Software e1 ON ENDPOINT(r, Software) = REF(e1) JOIN Customer e2 ON ENDPOINT(r, Customer) = REF(e2) WHERE e1.product_name >= 'Re-contextualized asymmetric implementation';",
+      "canonical_template_hash": "f3e46f300fb3a426062dd181d3c79282ef933abf6299efef3ab4d810f5c790f6",
+      "literal_arguments": {
+        "p0": "Re-contextualized asymmetric implementation"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "software",
+            "attribute": "product_name",
+            "operator": ">=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "Re-contextualized asymmetric implementation",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q050",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.carrier_code, e.courierpartner_id, e.webhook_url FROM CourierPartner e WHERE e.webhook_url >= 'https://www.cummings.com/';",
+      "canonical_template_hash": "2580f4df156ce868d83fe1bfa2b4145f5de9c20071eafd8d7644c65906dc7f71",
+      "literal_arguments": {
+        "p0": "https://www.cummings.com/"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "courierpartner",
+            "attribute": "webhook_url",
+            "operator": ">=",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": "https://www.cummings.com/",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q051",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.warehouse_id, e.region, e.warehouse_name FROM Warehouse e WHERE e.region > 'Southwest';",
+      "canonical_template_hash": "214f2a70166e7196f01924dda7032498f5648258ed32067bad398eb378207239",
+      "literal_arguments": {
+        "p0": "Southwest"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.2481,
+        "absolute_error": 0.0519,
+        "predicates": [
+          {
+            "object": "warehouse",
+            "attribute": "region",
+            "operator": ">",
+            "estimated_selectivity": 0.2481,
+            "target_selectivity": 0.3,
+            "value": "Southwest",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q052",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.purchaseorder_id, e2.is_active, e3.tag_id FROM po_items r1 JOIN PurchaseOrder e1 ON ENDPOINT(r1, PurchaseOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN product_tags r2 ON ENDPOINT(r2, Product) = REF(e2) JOIN Tag e3 ON ENDPOINT(r2, Tag) = REF(e3) WHERE e3.tag_id > 106964;",
+      "canonical_template_hash": "cf3f547d930e8cb24272a31b276be8b72c6ee21caab71b7f667875d734b6168d",
+      "literal_arguments": {
+        "p0": 106964
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "tag",
+            "attribute": "tag_id",
+            "operator": ">",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": 106964,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q053",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.warranty_months, COUNT(DISTINCT REF(e1)) AS related_count FROM bundle_phones r JOIN Phone e1 ON ENDPOINT(r, phone_id) = REF(e1) JOIN Phone e2 ON ENDPOINT(r, bundle_phone_id) = REF(e2) WHERE e2.product_name <= 'Front-line bi-directional system engine' GROUP BY REF(e2), e2.warranty_months HAVING COUNT(DISTINCT REF(e1)) >= 2;",
+      "canonical_template_hash": "f3c6f52d5155bba874f8774687a777a77f42b2b3c9329f01bb68f7cc89d504f0",
+      "literal_arguments": {
+        "p0": "Front-line bi-directional system engine",
+        "p1": 2
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "product_name",
+            "operator": "<=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "Front-line bi-directional system engine",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q054",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e2.sku, COUNT(DISTINCT REF(e3)) AS related_count FROM po_items r1 JOIN PurchaseOrder e1 ON ENDPOINT(r1, PurchaseOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN bundle_components r2 ON ENDPOINT(r2, product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, bundle_product_id) = REF(e3) WHERE e3.sku >= 'SKU-klfZ-12422029' GROUP BY REF(e2), e2.sku HAVING COUNT(DISTINCT REF(e3)) >= 5;",
+      "canonical_template_hash": "0da5f8962eb31cc8902f5168559627b0366794eb429c23bfa102a8979b50b366",
+      "literal_arguments": {
+        "p0": "SKU-klfZ-12422029",
+        "p1": 5
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "SKU-klfZ-12422029",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q055",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.supplier_id, COUNT(DISTINCT REF(e2)) AS related_count FROM supplier_products r JOIN Supplier e1 ON ENDPOINT(r, Supplier) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e2.product_name < 'Intuitive asynchronous task-force' GROUP BY REF(e1), e1.supplier_id HAVING COUNT(DISTINCT REF(e2)) >= 4;",
+      "canonical_template_hash": "2517e23fa78cc01eb7161ba7b14dc4c1a9190cbf819538b962ad9a4183880309",
+      "literal_arguments": {
+        "p0": "Intuitive asynchronous task-force",
+        "p1": 4
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_name",
+            "operator": "<",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": "Intuitive asynchronous task-force",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q056",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash, e.user_id, e.loyalty_tier, e.email FROM Customer e WHERE e.loyalty_tier > 'platinum';",
+      "canonical_template_hash": "a279b82530c47fb7d6019c797ce3c69cd96bc5021ec06bb2b70d12c16fbf1b34",
+      "literal_arguments": {
+        "p0": "platinum"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2956,
+        "absolute_error": 0.09559999999999996,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "loyalty_tier",
+            "operator": ">",
+            "estimated_selectivity": 0.2956,
+            "target_selectivity": 0.2,
+            "value": "platinum",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q057",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.placed_at, e2.is_active FROM order_items r JOIN CustOrder e1 ON ENDPOINT(r, CustOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.status > 'returned';",
+      "canonical_template_hash": "35c412fe480c900a257cc1045d8d2193413f748298ddeaab63b7b767cf2f4812",
+      "literal_arguments": {
+        "p0": "returned"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1403,
+        "absolute_error": 0.0403,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "status",
+            "operator": ">",
+            "estimated_selectivity": 0.1403,
+            "target_selectivity": 0.1,
+            "value": "returned",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q058",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.loyalty_tier, e2.status FROM customer_orders r JOIN Customer e1 ON ENDPOINT(r, Customer) = REF(e1) JOIN CustOrder e2 ON ENDPOINT(r, CustOrder) = REF(e2) WHERE e1.email > 'uhunt@example.org';",
+      "canonical_template_hash": "0aabc08281abaaffdf7e3379560c429e1b8f6c6dd8cc4648d0b5e83c5f7db98f",
+      "literal_arguments": {
+        "p0": "uhunt@example.org"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "email",
+            "operator": ">",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": "uhunt@example.org",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q059",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.updated_at, e1.cart_id, e2.product_id FROM cart_contains r JOIN Cart e1 ON ENDPOINT(r, Cart) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e2.sku >= 'SKU-vFdW-79279946';",
+      "canonical_template_hash": "42d830b057741da4456e148b07765dd25e9b1ff216693a35f4d6b489b5e06fc6",
+      "literal_arguments": {
+        "p0": "SKU-vFdW-79279946"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": "SKU-vFdW-79279946",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q060",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.ends_at FROM Promotion e WHERE e.starts_at <= '2024-04-21';",
+      "canonical_template_hash": "1f5a6c654a5852d676f7d9ff816e550c7f7587d541b61966445e8c5b871fea6e",
+      "literal_arguments": {
+        "p0": "2024-04-21"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1001,
+        "absolute_error": 9.999999999998899e-05,
+        "predicates": [
+          {
+            "object": "promotion",
+            "attribute": "starts_at",
+            "operator": "<=",
+            "estimated_selectivity": 0.1001,
+            "target_selectivity": 0.1,
+            "value": "2024-04-21",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q061",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.bin_id, e2.base_price, e3.product_id FROM stock r1 JOIN WarehouseBin e1 ON ENDPOINT(r1, WarehouseBin) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN bundle_components r2 ON ENDPOINT(r2, bundle_product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, product_id) = REF(e3) WHERE e3.is_active >= 1;",
+      "canonical_template_hash": "1fd2dad5ae894a8e785289504ad00b6bf845b97e8918c88609a3d67262cde8b4",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.8489,
+        "absolute_error": 0.44889999999999997,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8489,
+            "target_selectivity": 0.4,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q062",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.wishlist_name, o.loyalty_tier FROM Wishlist w JOIN Customer o ON OWNER(w) = REF(o) WHERE w.wishlist_name > 'default';",
+      "canonical_template_hash": "4d6717c9a0aa827ddb42fabfb56ce64b0b3c17fbcea2aa91883bd3678fb7b135",
+      "literal_arguments": {
+        "p0": "default"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.45,
+        "absolute_error": 0.04999999999999999,
+        "predicates": [
+          {
+            "object": "wishlist",
+            "attribute": "wishlist_name",
+            "operator": ">",
+            "estimated_selectivity": 0.45,
+            "target_selectivity": 0.5,
+            "value": "default",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q063",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.status, e1.placed_at, e2.sku FROM order_items r JOIN CustOrder e1 ON ENDPOINT(r, CustOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.status >= 'paid';",
+      "canonical_template_hash": "2d03b20a578284ee2a939a9ae5c5221fe908d2f72f3673f0d6f61c8d8a6249be",
+      "literal_arguments": {
+        "p0": "paid"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.4181,
+        "absolute_error": 0.08189999999999997,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "status",
+            "operator": ">=",
+            "estimated_selectivity": 0.4181,
+            "target_selectivity": 0.5,
+            "value": "paid",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q064",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id FROM Footwear e WHERE e.product_id >= 15719843;",
+      "canonical_template_hash": "766e92792d8f2c2748a2c8e9e85ab16996961ae79e436aa281eb77203cec0672",
+      "literal_arguments": {
+        "p0": 15719843
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "footwear",
+            "attribute": "product_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": 15719843,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q065",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.product_name, e1.quantity, e2.product_id FROM bought_together r JOIN Product e1 ON ENDPOINT(r, product_id) = REF(e1) JOIN Product e2 ON ENDPOINT(r, bought_together_product_id) = REF(e2) WHERE e1.quantity >= 30;",
+      "canonical_template_hash": "b2ff89dd44715c67d1d4d0fcd99672f977d6ab0487fac794da5b3ecc24f206f0",
+      "literal_arguments": {
+        "p0": 30
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.3977,
+        "absolute_error": 0.0023000000000000242,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "quantity",
+            "operator": ">=",
+            "estimated_selectivity": 0.3977,
+            "target_selectivity": 0.4,
+            "value": 30,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q066",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku, e.quantity, e.size_system FROM MenClothing e WHERE e.fit_type_men <= 'athletic';",
+      "canonical_template_hash": "6ae8bf42cb25c390a45cd72bd294c688f724d9c59cdc8876bad32e25a54c4f7f",
+      "literal_arguments": {
+        "p0": "athletic"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.1028,
+        "absolute_error": 0.1972,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "fit_type_men",
+            "operator": "<=",
+            "estimated_selectivity": 0.1028,
+            "target_selectivity": 0.3,
+            "value": "athletic",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q067",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.sku, COUNT(DISTINCT REF(e2)) AS related_count FROM reviews r JOIN Product e1 ON ENDPOINT(r, Product) = REF(e1) JOIN Review e2 ON ENDPOINT(r, Review) = REF(e2) WHERE e1.quantity >= 30 GROUP BY REF(e1), e1.sku HAVING COUNT(DISTINCT REF(e2)) >= 3;",
+      "canonical_template_hash": "53867dc90ff609db19546de819b29589da557fe026c38bc38c46493e4c74fa28",
+      "literal_arguments": {
+        "p0": 30,
+        "p1": 3
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.3977,
+        "absolute_error": 0.0023000000000000242,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "quantity",
+            "operator": ">=",
+            "estimated_selectivity": 0.3977,
+            "target_selectivity": 0.4,
+            "value": 30,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q068",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.cart_id, w.updated_at, o.user_id, o.loyalty_tier FROM Cart w JOIN Customer o ON OWNER(w) = REF(o) WHERE o.user_id >= 1111339;",
+      "canonical_template_hash": "b28886c13ed5158668ea467f466e54e0c5d9f8ca85579e352f0c6cd2b844f2de",
+      "literal_arguments": {
+        "p0": 1111339
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "user_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": 1111339,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q069",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.wishlist_name, e2.product_id, e3.cart_id FROM wishlist_contains r1 JOIN Wishlist e1 ON ENDPOINT(r1, Wishlist) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN cart_contains r2 ON ENDPOINT(r2, Product) = REF(e2) JOIN Cart e3 ON ENDPOINT(r2, Cart) = REF(e3) WHERE e3.cart_id > 5998881;",
+      "canonical_template_hash": "d5b5bfadba9722556f8a26afb914769390155a9e4b5e181c3d04f0f42c80e0be",
+      "literal_arguments": {
+        "p0": 5998881
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "cart",
+            "attribute": "cart_id",
+            "operator": ">",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": 5998881,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q070",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.is_active, COUNT(DISTINCT REF(e2)) AS related_count FROM bundle_phones r JOIN Phone e1 ON ENDPOINT(r, phone_id) = REF(e1) JOIN Phone e2 ON ENDPOINT(r, bundle_phone_id) = REF(e2) WHERE e2.base_price >= 245 GROUP BY REF(e1), e1.is_active HAVING COUNT(DISTINCT REF(e2)) >= 3;",
+      "canonical_template_hash": "fac7a58bc22a777299740d555a402e6da747d9870eca2436c6169f5c742df621",
+      "literal_arguments": {
+        "p0": 245,
+        "p1": 3
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2002,
+        "absolute_error": 0.00019999999999997797,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "base_price",
+            "operator": ">=",
+            "estimated_selectivity": 0.2002,
+            "target_selectivity": 0.2,
+            "value": 245,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q071",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.bin_id FROM WarehouseBin w WHERE w.bin_id >= 5974866;",
+      "canonical_template_hash": "83527ed31f069663bd6d92e8d99b47c0c0c285e3e82a408c4d57777909bc4f43",
+      "literal_arguments": {
+        "p0": 5974866
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "warehousebin",
+            "attribute": "bin_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": 5974866,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q072",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.exp_month, w.last4, o.user_id, o.loyalty_tier FROM PaymentMethod w JOIN Customer o ON OWNER(w) = REF(o) WHERE w.is_default > 'false';",
+      "canonical_template_hash": "c686254722f56f67811a65e8b47b87a405633ee1610a34d9356feb022c295d08",
+      "literal_arguments": {
+        "p0": "false"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2205,
+        "absolute_error": 0.02049999999999999,
+        "predicates": [
+          {
+            "object": "paymentmethod",
+            "attribute": "is_default",
+            "operator": ">",
+            "estimated_selectivity": 0.2205,
+            "target_selectivity": 0.2,
+            "value": "false",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q073",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.tag_id, e.tag_name FROM Tag e WHERE e.tag_name > 'sale';",
+      "canonical_template_hash": "1bf70071f7855e904b2f1093d46185eefe23613be67c4e0ca9a5f89861035c27",
+      "literal_arguments": {
+        "p0": "sale"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.0911,
+        "absolute_error": 0.008900000000000005,
+        "predicates": [
+          {
+            "object": "tag",
+            "attribute": "tag_name",
+            "operator": ">",
+            "estimated_selectivity": 0.0911,
+            "target_selectivity": 0.1,
+            "value": "sale",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q074",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.city, w.kind, w.state, o.loyalty_tier, o.email FROM Address w JOIN Customer o ON OWNER(w) = REF(o) WHERE o.loyalty_tier <= 'bronze';",
+      "canonical_template_hash": "2b6535ae5b9ab8e55a6b96fb21192afed04d707fe12ce69de9b5b0c9e71e863b",
+      "literal_arguments": {
+        "p0": "bronze"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.4772,
+        "absolute_error": 0.2772,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "loyalty_tier",
+            "operator": "<=",
+            "estimated_selectivity": 0.4772,
+            "target_selectivity": 0.2,
+            "value": "bronze",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q075",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e2.created_at, COUNT(DISTINCT REF(e1)) AS related_count FROM supplier_pos r JOIN Supplier e1 ON ENDPOINT(r, Supplier) = REF(e1) JOIN PurchaseOrder e2 ON ENDPOINT(r, PurchaseOrder) = REF(e2) WHERE e2.purchaseorder_id > 106773 GROUP BY REF(e2), e2.created_at HAVING COUNT(DISTINCT REF(e1)) >= 2;",
+      "canonical_template_hash": "09841d5cba94e129b33cd699f88edb018157570d5f8e35fe44012a3050f3c5a0",
+      "literal_arguments": {
+        "p0": 106773,
+        "p1": 2
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "purchaseorder",
+            "attribute": "purchaseorder_id",
+            "operator": ">",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": 106773,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q076",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.cart_id, e1.updated_at, e2.base_price, e2.product_name FROM cart_contains r JOIN Cart e1 ON ENDPOINT(r, Cart) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e2.is_active > 0;",
+      "canonical_template_hash": "5a804e76e1a6047f294a8f233f1cf4c8f45ca4002b515834033fd0b18df3a4e7",
+      "literal_arguments": {
+        "p0": 0
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.8489,
+        "absolute_error": 0.3489,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "is_active",
+            "operator": ">",
+            "estimated_selectivity": 0.8489,
+            "target_selectivity": 0.5,
+            "value": 0,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q077",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.purchaseorder_id, e.created_at FROM PurchaseOrder e WHERE e.purchaseorder_id >= 120363;",
+      "canonical_template_hash": "f75d8fc5729f6254ddca3804ad5908ec2b126c574160a5ff8a332aa17766cd52",
+      "literal_arguments": {
+        "p0": 120363
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "purchaseorder",
+            "attribute": "purchaseorder_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": 120363,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q078",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.purchaseorder_id, e2.is_active, e3.is_active FROM po_items r1 JOIN PurchaseOrder e1 ON ENDPOINT(r1, PurchaseOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN bought_together r2 ON ENDPOINT(r2, product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, bought_together_product_id) = REF(e3) WHERE e3.product_name < 'Object-based 3rdgeneration instruction set';",
+      "canonical_template_hash": "af16dc9c15a04e6ec858bfc83c4458c30aa6e0180fab967c9298ede54951c762",
+      "literal_arguments": {
+        "p0": "Object-based 3rdgeneration instruction set"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_name",
+            "operator": "<",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "Object-based 3rdgeneration instruction set",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q079",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.shipped_at, o.custorder_id, o.status FROM Shipment w JOIN CustOrder o ON OWNER(w) = REF(o) WHERE w.shipped_at < '2022-07-08';",
+      "canonical_template_hash": "1084b025d321615388b0b78511ec84cb135b303f92237e4b0c2fd2fc9234567f",
+      "literal_arguments": {
+        "p0": "2022-07-08"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1001,
+        "absolute_error": 9.999999999998899e-05,
+        "predicates": [
+          {
+            "object": "shipment",
+            "attribute": "shipped_at",
+            "operator": "<",
+            "estimated_selectivity": 0.1001,
+            "target_selectivity": 0.1,
+            "value": "2022-07-08",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q080",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.quantity, e1.dimensions, e2.accessory_type, e2.product_name FROM bundled_phone_accessory r JOIN Phone e1 ON ENDPOINT(r, Phone) = REF(e1) JOIN Accessory e2 ON ENDPOINT(r, Accessory) = REF(e2) WHERE e2.quantity > 22;",
+      "canonical_template_hash": "434dc75d08b45a704a94f868e26f95556f6419bc2145c0ab84d12cff86461dbf",
+      "literal_arguments": {
+        "p0": 22
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.4994,
+        "absolute_error": 0.0005999999999999894,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "quantity",
+            "operator": ">",
+            "estimated_selectivity": 0.4994,
+            "target_selectivity": 0.5,
+            "value": 22,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q081",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.custorder_id, e2.quantity, e2.product_name FROM order_returns r JOIN CustOrder e1 ON ENDPOINT(r, CustOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e2.base_price < 41;",
+      "canonical_template_hash": "ea7429830cbe71dff399e81f3b679fb56c2c6e523c5af26e4920902ce03349fb",
+      "literal_arguments": {
+        "p0": 41
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.0996,
+        "absolute_error": 0.00040000000000001146,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "base_price",
+            "operator": "<",
+            "estimated_selectivity": 0.0996,
+            "target_selectivity": 0.1,
+            "value": 41,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q082",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.delivery_type, e.product_name, e.product_id FROM Media e WHERE e.format >= 'video';",
+      "canonical_template_hash": "116e3010f6a446ef6fe0087253e2e14c95ff7447d01db4956f3166b8b5e0c1e3",
+      "literal_arguments": {
+        "p0": "video"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2505,
+        "absolute_error": 0.05049999999999999,
+        "predicates": [
+          {
+            "object": "media",
+            "attribute": "format",
+            "operator": ">=",
+            "estimated_selectivity": 0.2505,
+            "target_selectivity": 0.2,
+            "value": "video",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q083",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.warehouse_name FROM Warehouse e WHERE e.warehouse_name > 'Lewis-Hartman';",
+      "canonical_template_hash": "dec99e89707c95096604abb5a2b75543d7d3294a70d493f1a53d5ba09e2715dd",
+      "literal_arguments": {
+        "p0": "Lewis-Hartman"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "warehouse",
+            "attribute": "warehouse_name",
+            "operator": ">",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "Lewis-Hartman",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q084",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.wishlist_id, w.wishlist_name, o.loyalty_tier FROM Wishlist w JOIN Customer o ON OWNER(w) = REF(o) WHERE o.email < 'jeffreybryant@example.com';",
+      "canonical_template_hash": "1c8ddb744e840d17d96c06494d0bf86b46e43bcf3c46654f8d7b340574ff3d23",
+      "literal_arguments": {
+        "p0": "jeffreybryant@example.com"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "customer",
+            "attribute": "email",
+            "operator": "<",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": "jeffreybryant@example.com",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q085",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.custorder_id, e2.product_id, e3.product_name FROM order_items r1 JOIN CustOrder e1 ON ENDPOINT(r1, CustOrder) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN bought_together r2 ON ENDPOINT(r2, bought_together_product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, product_id) = REF(e3) WHERE e2.product_id >= 10098074;",
+      "canonical_template_hash": "dc79298951e60c7907761e43022a367b53e2bafad4b1aaa328c6de9a0c8122ad",
+      "literal_arguments": {
+        "p0": 10098074
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": 10098074,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q086",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.ram_gb FROM Desktop e WHERE e.product_id > 10269581;",
+      "canonical_template_hash": "cc13fe102e7b8d98b35fec20117b552453fd1442e02109c101d2763501dac380",
+      "literal_arguments": {
+        "p0": 10269581
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "product_id",
+            "operator": ">",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 10269581,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q087",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id, e.is_active FROM KitchenAppliance e WHERE e.product_id >= 13097966;",
+      "canonical_template_hash": "b6e9de3cd9b95e61a1bd1acc8507e9701b38833de69d83960246dc9be0cb53fd",
+      "literal_arguments": {
+        "p0": 13097966
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "product_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 13097966,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q088",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.code, w.bin_id, o.warehouse_name FROM WarehouseBin w JOIN Warehouse o ON OWNER(w) = REF(o) WHERE o.warehouse_id <= 26870;",
+      "canonical_template_hash": "a3a1c91f2160f091922495f41ea14c39b9d1a7bb074a44e30094e7787967291c",
+      "literal_arguments": {
+        "p0": 26870
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "warehouse",
+            "attribute": "warehouse_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": 26870,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q089",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku, e.base_price, e.is_active, e.product_id FROM Product e WHERE e.is_active >= 1;",
+      "canonical_template_hash": "4a7d09566a63496a610887927ec0cec77f6fda74052f7390925611215b883130",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.8489,
+        "absolute_error": 0.44889999999999997,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8489,
+            "target_selectivity": 0.4,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q090",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.sku, e1.quantity, e2.bin_id, e2.code FROM stock r JOIN Product e1 ON ENDPOINT(r, Product) = REF(e1) JOIN WarehouseBin e2 ON ENDPOINT(r, WarehouseBin) = REF(e2) WHERE e1.product_id < 3392411;",
+      "canonical_template_hash": "756b3169123b3a2e72920e13bea61f4e50af9ea87bcd06f2c6314968d8b54695",
+      "literal_arguments": {
+        "p0": 3392411
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.2,
+        "estimated_selectivity": 0.2,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.2,
+            "target_selectivity": 0.2,
+            "value": 3392411,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q091",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.parent, e2.sku, e3.tag_name FROM category_products r1 JOIN Category e1 ON ENDPOINT(r1, Category) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN product_tags r2 ON ENDPOINT(r2, Product) = REF(e2) JOIN Tag e3 ON ENDPOINT(r2, Tag) = REF(e3) WHERE e2.is_active >= 1;",
+      "canonical_template_hash": "c7a267858ab0d9b0370e61f41db862d8441a25cef751ed8ee343cf4b2cdca0f5",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.8489,
+        "absolute_error": 0.44889999999999997,
+        "predicates": [
+          {
+            "object": "product",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8489,
+            "target_selectivity": 0.4,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q092",
+      "category": "relationship_join",
+      "frequency": 1,
+      "sql": "SELECT e1.is_active, e2.product_name, e2.dimensions FROM bundle_phones r JOIN Phone e1 ON ENDPOINT(r, phone_id) = REF(e1) JOIN Phone e2 ON ENDPOINT(r, bundle_phone_id) = REF(e2) WHERE e2.warranty_months > 12;",
+      "canonical_template_hash": "f912789a392b146684c2f1a881059bbd2130f323496a021024dfbd36dcdbfcf6",
+      "literal_arguments": {
+        "p0": 12
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.3746,
+        "absolute_error": 0.025400000000000034,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "warranty_months",
+            "operator": ">",
+            "estimated_selectivity": 0.3746,
+            "target_selectivity": 0.4,
+            "value": 12,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q093",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.sku, COUNT(DISTINCT REF(e2)) AS related_count FROM reviews r JOIN Product e1 ON ENDPOINT(r, Product) = REF(e1) JOIN Review e2 ON ENDPOINT(r, Review) = REF(e2) WHERE e2.review_id <= 3997278 GROUP BY REF(e1), e1.sku HAVING COUNT(DISTINCT REF(e2)) >= 1;",
+      "canonical_template_hash": "45aba3fecb651593bda8ee74817c96b9afd6141ddacb4b95ab8eefeb17f6228b",
+      "literal_arguments": {
+        "p0": 3997278,
+        "p1": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "review",
+            "attribute": "review_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": 3997278,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q094",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.shipment_id, o.status FROM Shipment w JOIN CustOrder o ON OWNER(w) = REF(o) WHERE o.placed_at <= '2023-05-03';",
+      "canonical_template_hash": "4ec3ac679b94747a63d04fd451add68fc3bede80d00169894505fee73c0dbf3b",
+      "literal_arguments": {
+        "p0": "2023-05-03"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.2998,
+        "absolute_error": 0.00019999999999997797,
+        "predicates": [
+          {
+            "object": "custorder",
+            "attribute": "placed_at",
+            "operator": "<=",
+            "estimated_selectivity": 0.2998,
+            "target_selectivity": 0.3,
+            "value": "2023-05-03",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q095",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.password_hash, e.employee_no, e.user_id FROM Employee e WHERE e.employee_no <= 'EMP-09774576';",
+      "canonical_template_hash": "cde50efac5f25c504a95269fdf7730605fc392a0c65dd161b042fd51fad7f523",
+      "literal_arguments": {
+        "p0": "EMP-09774576"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.1,
+        "estimated_selectivity": 0.1,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "employee_no",
+            "operator": "<=",
+            "estimated_selectivity": 0.1,
+            "target_selectivity": 0.1,
+            "value": "EMP-09774576",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q096",
+      "category": "aggregation",
+      "frequency": 1,
+      "sql": "SELECT e1.updated_at, COUNT(DISTINCT REF(e2)) AS related_count FROM cart_contains r JOIN Cart e1 ON ENDPOINT(r, Cart) = REF(e1) JOIN Product e2 ON ENDPOINT(r, Product) = REF(e2) WHERE e1.cart_id > 4994665 GROUP BY REF(e1), e1.updated_at HAVING COUNT(DISTINCT REF(e2)) >= 3;",
+      "canonical_template_hash": "86e6303f556cf3ff4ce0903bc27f3c7c5e97d339f78b9aa6edf43a3ce7af4d16",
+      "literal_arguments": {
+        "p0": 4994665,
+        "p1": 3
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "cart",
+            "attribute": "cart_id",
+            "operator": ">",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 4994665,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": true
+      }
+    },
+    {
+      "id": "Q097",
+      "category": "complex_multi_join",
+      "frequency": 1,
+      "sql": "SELECT e1.bin_id, e2.is_active, e3.quantity FROM stock r1 JOIN WarehouseBin e1 ON ENDPOINT(r1, WarehouseBin) = REF(e1) JOIN Product e2 ON ENDPOINT(r1, Product) = REF(e2) JOIN bought_together r2 ON ENDPOINT(r2, bought_together_product_id) = REF(e2) JOIN Product e3 ON ENDPOINT(r2, product_id) = REF(e3) WHERE e1.bin_id <= 4985556;",
+      "canonical_template_hash": "e4102c7a04c672573679f41b67504f0919bed7e882a40f0ef045d4dddb0e3c20",
+      "literal_arguments": {
+        "p0": 4985556
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "warehousebin",
+            "attribute": "bin_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 4985556,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q098",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.user_id, e.password_hash FROM User e WHERE e.password_hash < '663fbac28ef983d2a9a257a1fdfe87d570db7cf21f735454baaba71abfbbe744';",
+      "canonical_template_hash": "38510d96233ff968153cea8c1cea24bf49139bba00609f7a6c85dd399db875bd",
+      "literal_arguments": {
+        "p0": "663fbac28ef983d2a9a257a1fdfe87d570db7cf21f735454baaba71abfbbe744"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.4,
+        "estimated_selectivity": 0.4,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "user",
+            "attribute": "password_hash",
+            "operator": "<",
+            "estimated_selectivity": 0.4,
+            "target_selectivity": 0.4,
+            "value": "663fbac28ef983d2a9a257a1fdfe87d570db7cf21f735454baaba71abfbbe744",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q099",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.sku FROM Apparel e WHERE e.is_active < 1;",
+      "canonical_template_hash": "0fd1ce7e133e40a2723b04d4b0826dae773005d3f334bc7ca2fb04d320d1f16a",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.1464,
+        "absolute_error": 0.3536,
+        "predicates": [
+          {
+            "object": "apparel",
+            "attribute": "is_active",
+            "operator": "<",
+            "estimated_selectivity": 0.1464,
+            "target_selectivity": 0.5,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q100",
+      "category": "weak_owner",
+      "frequency": 1,
+      "sql": "SELECT w.bin_id, w.code, o.warehouse_name FROM WarehouseBin w JOIN Warehouse o ON OWNER(w) = REF(o) WHERE w.code < 'Pl-104-pP';",
+      "canonical_template_hash": "584eb64c8df5840715435ac64a5d32bf03c87df8aee62c314b99474f0a701515",
+      "literal_arguments": {
+        "p0": "Pl-104-pP"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.3,
+        "estimated_selectivity": 0.3,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "warehousebin",
+            "attribute": "code",
+            "operator": "<",
+            "estimated_selectivity": 0.3,
+            "target_selectivity": 0.3,
+            "value": "Pl-104-pP",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    }
+  ]
+}

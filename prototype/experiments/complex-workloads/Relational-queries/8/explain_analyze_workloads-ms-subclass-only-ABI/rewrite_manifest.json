@@ -1,0 +1,924 @@
+{
+  "format_version": 1,
+  "database": "university_9",
+  "workload_count": 1,
+  "mapping_id": "b26df79b796efe2e3034f14c8982d82f25b3d58f9804318cdc807901d3eb8442",
+  "emits_explain_analyze": true,
+  "explain_format": "text",
+  "workloads": [
+    {
+      "mapping_id": "b26df79b796efe2e3034f14c8982d82f25b3d58f9804318cdc807901d3eb8442",
+      "statement_count": 100,
+      "category_counts": {
+        "selection_projection": 100
+      },
+      "compiled_template_count": 100,
+      "queries": [
+        {
+          "id": "Q001",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ee6b2805cf6b0904c519d7cc52c0c78d9b20264b5605722e1bd4f18c433240b5",
+          "arguments": {
+            "p0": "Intuitive client-server service-desk"
+          }
+        },
+        {
+          "id": "Q002",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "bd68a1407df19e7e9495fe84f4911170ae24831c4f479936d1bd9b1e7b8fe4e2",
+          "arguments": {
+            "p0": 41
+          }
+        },
+        {
+          "id": "Q003",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9d9b7b2bd287bd117bd240db9905c6a30049cc81f221e5815fc42fbf614cc5e4",
+          "arguments": {
+            "p0": "small"
+          }
+        },
+        {
+          "id": "Q004",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "705187c1ac62da677a6f6587275d580c58254abc4b718bd3ba742c1aa03e2a35",
+          "arguments": {
+            "p0": "b48c2613361ebf036b633a98d1a425fe0973362b038e19b9fb3c62a3be45a7c4"
+          }
+        },
+        {
+          "id": "Q005",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a8ddb9a0d62286c79e42b8972c9b8160b7ccc30a49a581305d91bd5069ea0929",
+          "arguments": {
+            "p0": "davidhuff@example.com"
+          }
+        },
+        {
+          "id": "Q006",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5d21f3994917f2a8700b5e435ae1bf5d1c86312ef9cc80459ea6f09b144c3ce0",
+          "arguments": {
+            "p0": 375517
+          }
+        },
+        {
+          "id": "Q007",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9a9b521b51391c3750244d123f48f040825834e771d2e34a3b3adbdf92c9647d",
+          "arguments": {
+            "p0": 22
+          }
+        },
+        {
+          "id": "Q008",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6791fef49bbf99069e676798502e7f3a97738092ed2ff17935d04ce6444901e2",
+          "arguments": {
+            "p0": "Focused content-based focus group"
+          }
+        },
+        {
+          "id": "Q009",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "d3d78b5c11d7fcc499826b1c7697eb6904dc49399356c78cf28d96bc2388c6a3",
+          "arguments": {
+            "p0": 85
+          }
+        },
+        {
+          "id": "Q010",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "7a1efa747129585218565dc1379f25e046a310cf34bb5375c92d392249fa5cb4",
+          "arguments": {
+            "p0": "Object-based 24/7 artificial intelligence"
+          }
+        },
+        {
+          "id": "Q011",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5dd39ae86e56eac2b9a9bcf995d36edaf06a7ab3d52fd1434b7fc400d724e724",
+          "arguments": {
+            "p0": 15716945
+          }
+        },
+        {
+          "id": "Q012",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "8b65cbda52c453691486f38a6ea8e2445a75a2af8531517d6823f9fb634680b0",
+          "arguments": {
+            "p0": "case"
+          }
+        },
+        {
+          "id": "Q013",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "844e97ca282b630351b9e32a69c879ac46422307aaed814d673d1d701ffa2c0a",
+          "arguments": {
+            "p0": 16
+          }
+        },
+        {
+          "id": "Q014",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "54acbae867db0a0aec3b32e42a3eb4093d778c094e52196282184b694799ed8d",
+          "arguments": {
+            "p0": "SKU-FSCK-64850736"
+          }
+        },
+        {
+          "id": "Q015",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1097bea3b8da324b48d157d54cfbc9e3f83c33dc798839a6e4a1d10259eccbd1",
+          "arguments": {
+            "p0": "ujones@example.com"
+          }
+        },
+        {
+          "id": "Q016",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "e485207c39fc0fafa408d7a67480641bbd4128748bdf1054e8eaa10949942bbc",
+          "arguments": {
+            "p0": 16045006
+          }
+        },
+        {
+          "id": "Q017",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "32516f645bfa5cbb0e6d2aef6f2b8316cf619af06eac9983a7b13598755b42c1",
+          "arguments": {
+            "p0": "large"
+          }
+        },
+        {
+          "id": "Q018",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6674e6832285c639e9f0a5f9d5411fe240c7a21abc84af3769e829323c50ab02",
+          "arguments": {
+            "p0": "TPU"
+          }
+        },
+        {
+          "id": "Q019",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1ec98bd945086192b3ad6ee0fbdb102320a9078cbef8caffe52cf326a4c6d2a7",
+          "arguments": {
+            "p0": 22
+          }
+        },
+        {
+          "id": "Q020",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1fdbf4a539c1642b0f7009871e49e3299f0d0d304c50ecbd5de4762baf2a9cc3",
+          "arguments": {
+            "p0": 1427893
+          }
+        },
+        {
+          "id": "Q021",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "96dbf9206c3c559d005c07f5ec182bf1074666d0a883ebd8f2f69307e6f53098",
+          "arguments": {
+            "p0": 15725246
+          }
+        },
+        {
+          "id": "Q022",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "e15e9ab3f1050a4fda19cfa3ca70637fd11fd715bbd4b2e9a2c5a8e72771db7a",
+          "arguments": {
+            "p0": "SKU-pcfH-16550496"
+          }
+        },
+        {
+          "id": "Q023",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "0532870c3dbc8e9232b349a67422d380afa84fef0fce262f84ff5106424d727d",
+          "arguments": {
+            "p0": "case"
+          }
+        },
+        {
+          "id": "Q024",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9744a2e60e6feafd3a359d80f91fbb879d1283ce5c78f4881a440e0b391582a9",
+          "arguments": {
+            "p0": "EMP-99018214"
+          }
+        },
+        {
+          "id": "Q025",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "cba2e7bd8f948fd8e76454d1e0c4c13e333e7d8e3fb7dc7a757980734c1cf746",
+          "arguments": {
+            "p0": "Focused optimizing complexity"
+          }
+        },
+        {
+          "id": "Q026",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "db8f33582f513e0be16e2d9dbdf40efd35f478b2297f35b16bb1f928261f44e5",
+          "arguments": {
+            "p0": 95
+          }
+        },
+        {
+          "id": "Q027",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "618983db18fe7e39788cf3f3b3b29fd63ea820caa8fb843e349c828611a8f3a8",
+          "arguments": {
+            "p0": 3971079
+          }
+        },
+        {
+          "id": "Q028",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c1e5a28beddaf895a715e4eb34aefad960d1ca093a7a5f684e0ebdd39e992b79",
+          "arguments": {
+            "p0": 16796632
+          }
+        },
+        {
+          "id": "Q029",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "25d19955535075bc2a5786e91606df23bcfb0eba8d25d0dbda9f7942a80a27bd",
+          "arguments": {
+            "p0": "SKU-aLIL-48201596"
+          }
+        },
+        {
+          "id": "Q030",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a4e07f44fd4db49002e871cdb0b4df87569585f9df233983451165bc95f4e216",
+          "arguments": {
+            "p0": "cotton"
+          }
+        },
+        {
+          "id": "Q031",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ca9ff07b859f1dc8fa1256f3288218c8e02a6772d24b068ab41f1da2daef2833",
+          "arguments": {
+            "p0": "80121adceba1683a4e0c327f08ae179a45f26e01f05e851d4580fa4a0c309a8e"
+          }
+        },
+        {
+          "id": "Q032",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "33e2d515928f7c15952107ec8bc36f72763a7f732a46917daf001106be9f9dc5",
+          "arguments": {
+            "p0": 9517334
+          }
+        },
+        {
+          "id": "Q033",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "d6ce33fcb15ae93c97ffaaa712d7a99eed406d78f1786240efac6d051aac4909",
+          "arguments": {
+            "p0": "polyester"
+          }
+        },
+        {
+          "id": "Q034",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "166b2e67aa7aa39a8ddb8fb08084973f4602a25f1e6cfc89fe30120540919417",
+          "arguments": {
+            "p0": "2026-09-07"
+          }
+        },
+        {
+          "id": "Q035",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "583fa3877ebdcf72f0213bb4e2372c7f6e43173f40c6bb83b44e4b6dd752c1d4",
+          "arguments": {
+            "p0": 17
+          }
+        },
+        {
+          "id": "Q036",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f5fab95dc90f0a13dab1798c79c64997d6be4cc6a80ddcb0fb7129c88a1c0295",
+          "arguments": {
+            "p0": "SKU-KINm-31688537"
+          }
+        },
+        {
+          "id": "Q037",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "7e0f33595753462516fe16c405134d76ba7497bd07ea92b7bf76930164c0963c",
+          "arguments": {
+            "p0": 10269945
+          }
+        },
+        {
+          "id": "Q038",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "4489b1e5abd05f186cf044261cb3f0695bba0ddf47262a694887fe1dd85ef72c",
+          "arguments": {
+            "p0": 6
+          }
+        },
+        {
+          "id": "Q039",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "e704a0959172924f42899a4292c0d1287021a59e2b96696390c6cd1557632367",
+          "arguments": {
+            "p0": 11725791
+          }
+        },
+        {
+          "id": "Q040",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "69fb8aaef8aa338c031be834d35b6fee77b5a5969db1fd5ae6902adbaf147d16",
+          "arguments": {
+            "p0": "Object-based bandwidth-monitored contingency"
+          }
+        },
+        {
+          "id": "Q041",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f66735e46810fc6d4901ae4fb5be22195eb6725447d511f8e84932d3b6d4f76f",
+          "arguments": {
+            "p0": "SKU-Zmip-90105888"
+          }
+        },
+        {
+          "id": "Q042",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "12665f8d4c9c2729c537293d345a23d0a51a208f023d26db4e8694c051a5a57e",
+          "arguments": {
+            "p0": 12284908
+          }
+        },
+        {
+          "id": "Q043",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "0d354925536781ec1ce1b7102c835b72bdd6613b3acc3658eafa2f33e56240ad",
+          "arguments": {
+            "p0": "all-in-one"
+          }
+        },
+        {
+          "id": "Q044",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6388dfea8bfa77178c85a83cb94531955f65faf95f46afe932cd7b51f9409b28",
+          "arguments": {
+            "p0": 242
+          }
+        },
+        {
+          "id": "Q045",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ab22e7be67535d4db7b422426019d8781ce58131c7f2f78d3708e6cb84d57d76",
+          "arguments": {
+            "p0": 13255741
+          }
+        },
+        {
+          "id": "Q046",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "4f85bb45820983b1a7d63a6048af31297d8a2ba1053b92630db09bcc121f1052",
+          "arguments": {
+            "p0": 16
+          }
+        },
+        {
+          "id": "Q047",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "199b5cb28d484af28296fcc6822656af0f329d6e8a94cc704433b5d2f1fc3d0e",
+          "arguments": {
+            "p0": 1213873
+          }
+        },
+        {
+          "id": "Q048",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5bc68544d301af1298c7d836fcde56ddf93a41a29d2a4034ac81d3b966625332",
+          "arguments": {
+            "p0": 4
+          }
+        },
+        {
+          "id": "Q049",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ae9384f32f4ed752d4cbe4e9f51776fd0981bf9aea1a7801468a9844e69f6638",
+          "arguments": {
+            "p0": "EU"
+          }
+        },
+        {
+          "id": "Q050",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "48a61249d44a6f1a80003c92d11395b32925cb5f8e8a7c8e32318256b5d69a88",
+          "arguments": {
+            "p0": "oversize"
+          }
+        },
+        {
+          "id": "Q051",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b22e2d3c0a5533c04a3a606ead487fda3a9a589e3aa6866d37026866e3822994",
+          "arguments": {
+            "p0": 11490727
+          }
+        },
+        {
+          "id": "Q052",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "02ec4a00c60b04627596d3e6865499ec8d422209dbcb1da635ec90d1457835e5",
+          "arguments": {
+            "p0": "SKU-eqJB-90041693"
+          }
+        },
+        {
+          "id": "Q053",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "344cf6a42187163d0bcbe02424624499d5ec6a37c4e4e5270376e49a299ff3fc",
+          "arguments": {
+            "p0": 10462920
+          }
+        },
+        {
+          "id": "Q054",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "8d77f9590eb74d4211b8e05d7d53244fbc9ee5c5ff81f950ee050360c8fdb753",
+          "arguments": {
+            "p0": 148
+          }
+        },
+        {
+          "id": "Q055",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "eb9e70594de5a87379aa20d55bbc2b6c3b287d7adf36efc905c6ccb522031245",
+          "arguments": {
+            "p0": "Object-based transitional portal"
+          }
+        },
+        {
+          "id": "Q056",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "1c99a273fc0f6775871212b3da0f8de60498bc91aba287325631d3c3bfdecb85",
+          "arguments": {
+            "p0": "EU"
+          }
+        },
+        {
+          "id": "Q057",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "eff213b4b78b25993c75bd9a33050e8be30676145101fa794173e9b901cd43e2",
+          "arguments": {
+            "p0": "medium"
+          }
+        },
+        {
+          "id": "Q058",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a7b5054e35cceee135da872160f6be401fb8428c2799319ffdf0de2b846185c6",
+          "arguments": {
+            "p0": "saramcdonald@example.org"
+          }
+        },
+        {
+          "id": "Q059",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "e0dfef8ce71d68f6910e745c8f692800243fabd299d82b97eb269cb646577c5c",
+          "arguments": {
+            "p0": 371
+          }
+        },
+        {
+          "id": "Q060",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5e4394f4d89d21044b093ef07d148dbf053e86c1927be3ebcbb0c3249a149528",
+          "arguments": {
+            "p0": "scontreras@example.net"
+          }
+        },
+        {
+          "id": "Q061",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "05db64c2dd291df3dc07cfb659fbefb12ec3849c716eb684cbf310ce90b86579",
+          "arguments": {
+            "p0": "UK"
+          }
+        },
+        {
+          "id": "Q062",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b630575bdaa42f6845f9c459a0531aaecc5e9e6932cc066497dba1d11e520d30",
+          "arguments": {
+            "p0": 243
+          }
+        },
+        {
+          "id": "Q063",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "5996869d32994dd058bee533a30a5c911f65c7f2f3616426b3d35f63dc542a26",
+          "arguments": {
+            "p0": 20
+          }
+        },
+        {
+          "id": "Q064",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "bbec290ebdd0fbf36842ed6c3dfae2c0a4988fe547fb9c007c5661818c466bb8",
+          "arguments": {
+            "p0": "klinevictoria@example.net"
+          }
+        },
+        {
+          "id": "Q065",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "f548d3b18e728309879bfbbd731e88c3c681ecfcafead360e8b0740a0fd724bf",
+          "arguments": {
+            "p0": 0
+          }
+        },
+        {
+          "id": "Q066",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9118c9041c5b5a53a7790eb3cc2f68fb5b9253254f7557633f9fc9f6ffae86cc",
+          "arguments": {
+            "p0": 153
+          }
+        },
+        {
+          "id": "Q067",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "dae620ea780909268e49195bd11fc3a717f0ab96c6c4ad85fa25248c83eaf9a5",
+          "arguments": {
+            "p0": 122
+          }
+        },
+        {
+          "id": "Q068",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b9db603b7936e4f7652b70d0c978c5beae1b22e2906c0ddabcc40384d1ec75a7",
+          "arguments": {
+            "p0": "bronze"
+          }
+        },
+        {
+          "id": "Q069",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "24a33f45456cbffa448f3db1b42b665a3a12aa45768e89cf68b1d46376692cea",
+          "arguments": {
+            "p0": 30
+          }
+        },
+        {
+          "id": "Q070",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "08c1344a2d6879b0df34063e7a9ee5a8a112f7210504edfbae8ceb233ce2d480",
+          "arguments": {
+            "p0": "kimberlyduffy@example.net"
+          }
+        },
+        {
+          "id": "Q071",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "4cde3a15b7aea49b8e22cb783fb22cae3edb90dbae4ed8fb9b63b182ee84a40e",
+          "arguments": {
+            "p0": 244
+          }
+        },
+        {
+          "id": "Q072",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "fa5436f5e834218e0917c13f18063459aa79960d6b296707ca38abb42c966fca",
+          "arguments": {
+            "p0": "large"
+          }
+        },
+        {
+          "id": "Q073",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9c465e9724c2d074460b2a6d8c219992fb1e06d346c8e333b67e0dff669f9f86",
+          "arguments": {
+            "p0": "medium"
+          }
+        },
+        {
+          "id": "Q074",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "50defa95aabe9bb4ae82ef7e60ae0b40bd317f74e52bfb73b335f25ca249d945",
+          "arguments": {
+            "p0": "SKU-AZVi-78639304"
+          }
+        },
+        {
+          "id": "Q075",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c4aef5ab98bdf3317d46a78957c07f1f521cec452be9d40c84b284f439a24b5c",
+          "arguments": {
+            "p0": "Ryzen 5"
+          }
+        },
+        {
+          "id": "Q076",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "7c6b65e3e1dd7fd3a532d6720ef49223c7f926e2cdadf045d57639df5d370910",
+          "arguments": {
+            "p0": "Integrated tertiary system engine"
+          }
+        },
+        {
+          "id": "Q077",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c49169f6b8e5532739a1537423cca6716ad376ed0cba2312cfaa37c8f9fded32",
+          "arguments": {
+            "p0": 12088872
+          }
+        },
+        {
+          "id": "Q078",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "60f55c74b94c72276cb0996f07233306092b1b4afcf2de0adfff4a037da79cab",
+          "arguments": {
+            "p0": 11908200
+          }
+        },
+        {
+          "id": "Q079",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ce46098b87fa41e393e3464027b0f67343e6bc0974855bf42c3f980bb4fd195d",
+          "arguments": {
+            "p0": "SKU-PprG-17406221"
+          }
+        },
+        {
+          "id": "Q080",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "cc74e7736bd46828302c4542a5bf4a6943b3584b30dc30faa2e95c36d66eea4c",
+          "arguments": {
+            "p0": "cd3532bab6fa3c35fb43b3dc77f7136fb6fbceb7e8876d7305ac0baab77a8468"
+          }
+        },
+        {
+          "id": "Q081",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a22ecc07fc14afc0bf49ff18b9a3eba5d8dfbe09b95744d4123ed242295c9e44",
+          "arguments": {
+            "p0": 14898778
+          }
+        },
+        {
+          "id": "Q082",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "6ca9bcd1ed82609bc004a57eda4e18e2a1f7a245cc3adb8dfa5a2a2f69917427",
+          "arguments": {
+            "p0": "Networked zero-defect core"
+          }
+        },
+        {
+          "id": "Q083",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b8deae43b87aa6a4d953f97aea172458dcda913a390e9c23fa87a8451de3814f",
+          "arguments": {
+            "p0": 15725246
+          }
+        },
+        {
+          "id": "Q084",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "a1c37d66b34bb8dfcc297c62bde74562d74da454e2c16f28895d5d69e0ce82a4",
+          "arguments": {
+            "p0": "Davis PLC"
+          }
+        },
+        {
+          "id": "Q085",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "411ad686f75b6cb33c4b04d2b24aa0379d33440bdf5b1b5b42af367ea42a79e1",
+          "arguments": {
+            "p0": "Core i7"
+          }
+        },
+        {
+          "id": "Q086",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3ac6417ab88f91b544c5c797577579ce84aaa69ef362af2a889071dd23c91b0b",
+          "arguments": {
+            "p0": 246
+          }
+        },
+        {
+          "id": "Q087",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "52a2f4eda57a36832abf3a997778b53a109d569ea47379da18facedea29c48dd",
+          "arguments": {
+            "p0": 56
+          }
+        },
+        {
+          "id": "Q088",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "fef0a8e91276e431b4a1726a7ab3a5eb72bd62f7cea8034e34acfc9b2826b941",
+          "arguments": {
+            "p0": "ebook"
+          }
+        },
+        {
+          "id": "Q089",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "946a6ef12cdfd9f2c9ca43c66cb41afe63a85ef9979868bb30300eacdd2a4efd",
+          "arguments": {
+            "p0": "Apple M3"
+          }
+        },
+        {
+          "id": "Q090",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "b033843b2cdffe9c183edf311eaaaed06a7e6bb21f075cf76a38d857e1817e21",
+          "arguments": {
+            "p0": 11246252
+          }
+        },
+        {
+          "id": "Q091",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "bd945bea0e2bb67887f618cc3d1b7187226feac5aeea8df382677c9042254793",
+          "arguments": {
+            "p0": "klindsey@example.org"
+          }
+        },
+        {
+          "id": "Q092",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "973bab5b4b891b563bdbb98d9fba31bebdd50837a23a86c72dcb667ad129a4c3",
+          "arguments": {
+            "p0": 36
+          }
+        },
+        {
+          "id": "Q093",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9e459d01729ce4815865a3e6742f8cae74f1b52986bd7d1b78b0eb0a48147e63",
+          "arguments": {
+            "p0": "Visionary asynchronous hardware"
+          }
+        },
+        {
+          "id": "Q094",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "ab7ba0ffbe0e3316a352d6bdce588bd7558711b21b67aa2d79a5cff9fa06951b",
+          "arguments": {
+            "p0": 269
+          }
+        },
+        {
+          "id": "Q095",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "2b634ace41f8409fcb9e1df4723c7064f991eab0223d8e47151ccc27398bd367",
+          "arguments": {
+            "p0": 187
+          }
+        },
+        {
+          "id": "Q096",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "3694517525f8a26baad692a1403d1d460b1c4690df5f8ee0d330de11ed5f8c1e",
+          "arguments": {
+            "p0": "brian79@example.net"
+          }
+        },
+        {
+          "id": "Q097",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "9525a5cda93b3dbd5a0382cd78260618031351c40e24743acdd300e53a5034c6",
+          "arguments": {
+            "p0": "Front-line foreground Local Area Network"
+          }
+        },
+        {
+          "id": "Q098",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "978a6c1e4f3014a5b564dda88a02fffa35f71ed15092d2956927f689f1479262",
+          "arguments": {
+            "p0": 15695838
+          }
+        },
+        {
+          "id": "Q099",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "19a61a64ac697d16c151f764e4e14d8232a18eb8d6c94f1208ba69df8a96e4bf",
+          "arguments": {
+            "p0": 85
+          }
+        },
+        {
+          "id": "Q100",
+          "category": "selection_projection",
+          "frequency": 1,
+          "canonical_template_hash": "c4873dfa4b08db208eb5420bbcf4d88bf6c6b1207b6baca2fc553f6024d13ef7",
+          "arguments": {
+            "p0": "stream"
+          }
+        }
+      ],
+      "input_workload": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/er_query_workloads-ms-subclass-only/er_query_workload_100_01.json",
+      "input_sha256": "852fcc3431947a5e7b1e4ea6498096ad13f8290ef17b5ec8c7f8f1bf645a6459",
+      "output_sql": "/home/hasara/CLionProjects/ErbiumDB-Query-Rewriter/prototype-3/explain_analyze_workloads-ms-subclass-only-ABI/rewritten_er_query_workload_100_01.sql",
+      "output_sha256": "29d21bed607cb09526c3b341b9128ae156656a3bad549f19a327c28323c1dd14"
+    }
+  ]
+}

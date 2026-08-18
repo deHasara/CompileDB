@@ -1,0 +1,1593 @@
+{
+  "create_entity_statements": [
+    "CREATE ENTITY Category (category_id INT PRIMARY KEY, category_name VARCHAR, parent INT);",
+    "CREATE ENTITY Product (product_id INT PRIMARY KEY, sku VARCHAR, product_name VARCHAR, base_price INT, is_active INT, quantity INT, mv_attributes VARCHAR[]) ;",
+    "CREATE ENTITY PhysicalProduct (dimensions VARCHAR) subclass of Product(total);",
+    "CREATE ENTITY DigitalProduct (delivery_type VARCHAR) subclass of Product(total);",
+    "CREATE ENTITY Electronics (warranty_months INT) subclass of PhysicalProduct;",
+    "CREATE ENTITY Computer (cpu VARCHAR, ram_gb INT) subclass of Electronics;",
+    "CREATE ENTITY Desktop (form_factor VARCHAR) subclass of Computer;",
+    "CREATE ENTITY Laptop (battery_wh INT) subclass of Computer;",
+    "CREATE ENTITY Tablet (screen_size_in INT) subclass of Electronics;",
+    "CREATE ENTITY Smartwatch (band_size VARCHAR) subclass of Electronics;",
+    "CREATE ENTITY Camera (sensor_mp INT) subclass of Electronics;",
+    "CREATE ENTITY Phone (carrier_lock VARCHAR) subclass of Electronics;",
+    "CREATE ENTITY Accessory (accessory_type VARCHAR) subclass of Electronics;",
+    "CREATE ENTITY Appliance (energy_rating VARCHAR) subclass of PhysicalProduct;",
+    "CREATE ENTITY KitchenAppliance (warranty_years INT) subclass of Appliance;",
+    "CREATE ENTITY Apparel (size_system VARCHAR) subclass of PhysicalProduct;",
+    "CREATE ENTITY Clothing (material VARCHAR) subclass of Apparel;",
+    "CREATE ENTITY MenClothing (fit_type_men VARCHAR) subclass of Clothing;",
+    "CREATE ENTITY WomenClothing (fit_type_women VARCHAR) subclass of Clothing;",
+    "CREATE ENTITY Footwear (sole_material VARCHAR) subclass of Apparel;",
+    "CREATE ENTITY Media (format VARCHAR) subclass of DigitalProduct;",
+    "CREATE ENTITY Software (license_type VARCHAR) subclass of DigitalProduct;",
+    "CREATE ENTITY User (user_id INT PRIMARY KEY, email VARCHAR, password_hash VARCHAR, mv_user VARCHAR[]);",
+    "CREATE ENTITY Customer (loyalty_tier VARCHAR, contact_no VARCHAR[]) subclass of User;",
+    "CREATE ENTITY PrimeCustomer (renewal_date VARCHAR, subscription_addons VARCHAR[]) subclass of Customer;",
+    "CREATE ENTITY BusinessCustomer (company_name VARCHAR) subclass of Customer;",
+    "CREATE ENTITY Employee (employee_no VARCHAR) subclass of User;",
+    "CREATE WEAK ENTITY ProductImage (image_id INT discriminator, url VARCHAR, alt_text VARCHAR, sort_order INT) DEPENDS ON Product;",
+    "CREATE WEAK ENTITY ProductVariant (variant_id INT discriminator, price_override INT, barcode VARCHAR, is_active_variant INT) DEPENDS ON Product;",
+    "CREATE WEAK ENTITY PriceHistory (price_id INT discriminator, starts_at VARCHAR, ends_at VARCHAR, price INT) DEPENDS ON Product;",
+    "CREATE ENTITY Tag (tag_id INT PRIMARY KEY, tag_name VARCHAR);",
+    "CREATE WEAK ENTITY Address (address_id INT discriminator, kind VARCHAR, line1 VARCHAR, city VARCHAR, state VARCHAR, country VARCHAR, postal_code VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY PaymentMethod (payment_method_id INT discriminator, brand VARCHAR, last4 VARCHAR, exp_month INT, exp_year INT, is_default VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY Cart (cart_id INT discriminator, updated_at VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY Wishlist (wishlist_id INT discriminator, wishlist_name VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY Review (review_id INT discriminator, rating INT, title VARCHAR, body VARCHAR, created_at VARCHAR) DEPENDS ON Customer;",
+    "CREATE WEAK ENTITY BrowsingSession (session_id INT discriminator, started_at VARCHAR, device VARCHAR) DEPENDS ON User;",
+    "CREATE ENTITY CustOrder (custorder_id INT PRIMARY KEY, placed_at VARCHAR, status VARCHAR);",
+    "CREATE WEAK ENTITY Shipment (shipment_id INT discriminator, carrier VARCHAR, tracking_no VARCHAR, shipped_at VARCHAR, delivered_at VARCHAR) DEPENDS ON CustOrder;",
+    "CREATE ENTITY Promotion (promo_id INT PRIMARY KEY, promo_name VARCHAR, starts_at VARCHAR, ends_at VARCHAR, discount_type VARCHAR, discount_value VARCHAR);",
+    "CREATE WEAK ENTITY Coupon (coupon_code INT discriminator, max_uses INT, per_user_limit INT) DEPENDS ON Promotion;",
+    "CREATE ENTITY Warehouse (warehouse_id INT PRIMARY KEY, warehouse_name VARCHAR, region VARCHAR);",
+    "CREATE WEAK ENTITY WarehouseBin (bin_id INT discriminator, code VARCHAR) DEPENDS ON Warehouse;",
+    "CREATE ENTITY Supplier (supplier_id INT PRIMARY KEY, supplier_name VARCHAR);",
+    "CREATE WEAK ENTITY SupplierContact (contact_id INT discriminator, email VARCHAR, phone VARCHAR) DEPENDS ON Supplier;",
+    "CREATE ENTITY PurchaseOrder (purchaseorder_id INT PRIMARY KEY, created_at VARCHAR, status VARCHAR);",
+    "CREATE ENTITY CourierPartner (courierpartner_id INT PRIMARY KEY, carrier_code VARCHAR, webhook_url VARCHAR);"
+  ],
+  "create_relationship_statements": [
+    "CREATE RELATIONSHIP category_products () between Category(one total) and Product(many total);",
+    "CREATE RELATIONSHIP product_tags () between Product(many total) and Tag(many total);",
+    "CREATE RELATIONSHIP bundle_components () between Product(product_id many total) and Product(bundle_product_id many total);",
+    "CREATE RELATIONSHIP bought_together () between Product(product_id many total) and Product(bought_together_product_id many total);",
+    "CREATE RELATIONSHIP cart_contains () between Cart(many total) and Product(many total);",
+    "CREATE RELATIONSHIP wishlist_contains () between Wishlist(many total) and Product(many total);",
+    "CREATE RELATIONSHIP reviews () between Product(one total) and Review(many total);",
+    "CREATE RELATIONSHIP customer_orders () between Customer(one total) and CustOrder(many total);",
+    "CREATE RELATIONSHIP order_items () between CustOrder(many total) and Product(many total);",
+    "CREATE RELATIONSHIP payment_order () between PaymentMethod(one total) and CustOrder(many total);",
+    "CREATE RELATIONSHIP order_returns () between CustOrder(many total) and Product(many total);",
+    "CREATE RELATIONSHIP order_coupons () between CustOrder(one total) and Coupon(many total);",
+    "CREATE RELATIONSHIP stock () between Product(many total) and WarehouseBin(many total);",
+    "CREATE RELATIONSHIP supplier_products () between Supplier(many total) and Product(many total);",
+    "CREATE RELATIONSHIP supplier_pos () between Supplier(one total) and PurchaseOrder(many total);",
+    "CREATE RELATIONSHIP po_items () between PurchaseOrder(many total) and Product(many total);",
+    "CREATE RELATIONSHIP courier_shipments () between CourierPartner(one total) and Shipment(many total);",
+    "CREATE RELATIONSHIP bundle_phones () between Phone(phone_id many total) and Phone(bundle_phone_id many total);",
+    "CREATE RELATIONSHIP bundled_phone_accessory () between Phone(many total) and Accessory(many total);",
+    "CREATE RELATIONSHIP software_downloads () between Software(many total) and Customer(many total);"
+  ],
+  "node_data": {
+    "category": {
+      "node_count": 139978,
+      "attribute_domains": {
+        "category_name": {
+          "distribution": "faker",
+          "provider": "word"
+        },
+        "parent": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 24195,
+          "null_probability": 0.08
+        }
+      }
+    },
+    "product": {
+      "node_count": 61999,
+      "avg_mv_attributes": 3,
+      "attribute_domains": {
+        "sku": {
+          "distribution": "faker",
+          "provider": "bothify",
+          "kwargs": {
+            "text": "SKU-????-########"
+          }
+        },
+        "product_name": {
+          "distribution": "faker",
+          "provider": "catch_phrase"
+        },
+        "base_price": {
+          "distribution": "lognormal_int",
+          "median": 120,
+          "sigma": 0.85,
+          "min": 5,
+          "max": 5000
+        },
+        "is_active": {
+          "distribution": "categorical",
+          "values": [
+            0,
+            1
+          ],
+          "weights": [
+            0.15,
+            0.85
+          ]
+        },
+        "quantity": {
+          "distribution": "mixture",
+          "components": [
+            {
+              "weight": 0.08,
+              "value": 0
+            },
+            {
+              "weight": 0.92,
+              "spec": {
+                "distribution": "lognormal_int",
+                "median": 25,
+                "sigma": 1.0,
+                "min": 1,
+                "max": 1000
+              }
+            }
+          ]
+        },
+        "mv_attributes": {
+          "distribution": "categorical",
+          "values": [
+            "eco",
+            "new",
+            "sale",
+            "premium",
+            "refurbished",
+            "limited",
+            "popular",
+            "imported"
+          ],
+          "weights": [
+            0.1,
+            0.16,
+            0.2,
+            0.12,
+            0.08,
+            0.07,
+            0.18,
+            0.09
+          ]
+        }
+      }
+    },
+    "physicalproduct": {
+      "node_count": 85865,
+      "attribute_domains": {
+        "dimensions": {
+          "distribution": "categorical",
+          "values": [
+            "small",
+            "medium",
+            "large",
+            "oversize"
+          ],
+          "weights": [
+            0.24,
+            0.46,
+            0.25,
+            0.05
+          ]
+        }
+      }
+    },
+    "digitalproduct": {
+      "node_count": 66709,
+      "attribute_domains": {
+        "delivery_type": {
+          "distribution": "categorical",
+          "values": [
+            "download",
+            "license_key",
+            "stream",
+            "account_activation"
+          ],
+          "weights": [
+            0.42,
+            0.31,
+            0.2,
+            0.07
+          ]
+        }
+      }
+    },
+    "electronics": {
+      "node_count": 9004045,
+      "attribute_domains": {
+        "warranty_months": {
+          "distribution": "categorical",
+          "values": [
+            0,
+            6,
+            12,
+            24,
+            36
+          ],
+          "weights": [
+            0.05,
+            0.1,
+            0.47,
+            0.3,
+            0.08
+          ]
+        }
+      }
+    },
+    "computer": {
+      "node_count": 107190,
+      "attribute_domains": {
+        "cpu": {
+          "distribution": "categorical",
+          "values": [
+            "Core i3",
+            "Core i5",
+            "Core i7",
+            "Core i9",
+            "Ryzen 5",
+            "Ryzen 7",
+            "Apple M3"
+          ],
+          "weights": [
+            0.08,
+            0.25,
+            0.23,
+            0.07,
+            0.16,
+            0.14,
+            0.07
+          ]
+        },
+        "ram_gb": {
+          "distribution": "categorical",
+          "values": [
+            4,
+            8,
+            16,
+            32,
+            64,
+            128
+          ],
+          "weights": [
+            0.04,
+            0.2,
+            0.38,
+            0.25,
+            0.1,
+            0.03
+          ]
+        }
+      }
+    },
+    "desktop": {
+      "node_count": 1877778,
+      "attribute_domains": {
+        "form_factor": {
+          "distribution": "categorical",
+          "values": [
+            "tower",
+            "mini",
+            "all-in-one",
+            "small-form"
+          ],
+          "weights": [
+            0.46,
+            0.15,
+            0.21,
+            0.18
+          ]
+        }
+      }
+    },
+    "laptop": {
+      "node_count": 139670,
+      "attribute_domains": {
+        "battery_wh": {
+          "distribution": "normal_int",
+          "mean": 65,
+          "stddev": 15,
+          "min": 30,
+          "max": 120
+        }
+      }
+    },
+    "tablet": {
+      "node_count": 100000,
+      "attribute_domains": {
+        "screen_size_in": {
+          "distribution": "categorical",
+          "values": [
+            8,
+            10,
+            11,
+            13
+          ],
+          "weights": [
+            0.12,
+            0.35,
+            0.4,
+            0.13
+          ]
+        }
+      }
+    },
+    "smartwatch": {
+      "node_count": 469445,
+      "attribute_domains": {
+        "band_size": {
+          "distribution": "categorical",
+          "values": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "weights": [
+            0.05,
+            0.18,
+            0.45,
+            0.25,
+            0.07
+          ]
+        }
+      }
+    },
+    "camera": {
+      "node_count": 169001,
+      "attribute_domains": {
+        "sensor_mp": {
+          "distribution": "categorical",
+          "values": [
+            12,
+            16,
+            20,
+            24,
+            32,
+            48,
+            64
+          ],
+          "weights": [
+            0.05,
+            0.09,
+            0.18,
+            0.28,
+            0.18,
+            0.15,
+            0.07
+          ]
+        }
+      }
+    },
+    "phone": {
+      "node_count": 676001,
+      "attribute_domains": {
+        "carrier_lock": {
+          "distribution": "categorical",
+          "values": [
+            "unlocked",
+            "locked"
+          ],
+          "weights": [
+            0.7,
+            0.3
+          ]
+        }
+      }
+    },
+    "accessory": {
+      "node_count": 144898,
+      "attribute_domains": {
+        "accessory_type": {
+          "distribution": "categorical",
+          "values": [
+            "case",
+            "charger",
+            "cable",
+            "adapter",
+            "stand",
+            "headset"
+          ],
+          "weights": [
+            0.25,
+            0.2,
+            0.2,
+            0.12,
+            0.08,
+            0.15
+          ]
+        }
+      }
+    },
+    "appliance": {
+      "node_count": 60120,
+      "attribute_domains": {
+        "energy_rating": {
+          "distribution": "categorical",
+          "values": [
+            "A++",
+            "A+",
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "weights": [
+            0.1,
+            0.22,
+            0.31,
+            0.21,
+            0.11,
+            0.05
+          ]
+        }
+      }
+    },
+    "kitchenappliance": {
+      "node_count": 264063,
+      "attribute_domains": {
+        "warranty_years": {
+          "distribution": "categorical",
+          "values": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "weights": [
+            0.35,
+            0.38,
+            0.2,
+            0.07
+          ]
+        }
+      }
+    },
+    "apparel": {
+      "node_count": 364762,
+      "attribute_domains": {
+        "size_system": {
+          "distribution": "categorical",
+          "values": [
+            "US",
+            "EU",
+            "UK",
+            "alpha"
+          ],
+          "weights": [
+            0.37,
+            0.28,
+            0.12,
+            0.23
+          ]
+        }
+      }
+    },
+    "clothing": {
+      "node_count": 297982,
+      "attribute_domains": {
+        "material": {
+          "distribution": "categorical",
+          "values": [
+            "cotton",
+            "polyester",
+            "wool",
+            "linen",
+            "denim",
+            "blend"
+          ],
+          "weights": [
+            0.31,
+            0.22,
+            0.1,
+            0.08,
+            0.12,
+            0.17
+          ]
+        }
+      }
+    },
+    "menclothing": {
+      "node_count": 1690000,
+      "attribute_domains": {
+        "fit_type_men": {
+          "distribution": "categorical",
+          "values": [
+            "slim",
+            "regular",
+            "relaxed",
+            "athletic"
+          ],
+          "weights": [
+            0.28,
+            0.43,
+            0.19,
+            0.1
+          ]
+        }
+      }
+    },
+    "womenclothing": {
+      "node_count": 117362,
+      "attribute_domains": {
+        "fit_type_women": {
+          "distribution": "categorical",
+          "values": [
+            "petite",
+            "regular",
+            "tall",
+            "plus"
+          ],
+          "weights": [
+            0.14,
+            0.56,
+            0.12,
+            0.18
+          ]
+        }
+      }
+    },
+    "footwear": {
+      "node_count": 28642,
+      "attribute_domains": {
+        "sole_material": {
+          "distribution": "categorical",
+          "values": [
+            "rubber",
+            "leather",
+            "EVA",
+            "TPU",
+            "synthetic"
+          ],
+          "weights": [
+            0.42,
+            0.14,
+            0.19,
+            0.1,
+            0.15
+          ]
+        }
+      }
+    },
+    "media": {
+      "node_count": 1056250,
+      "attribute_domains": {
+        "format": {
+          "distribution": "categorical",
+          "values": [
+            "ebook",
+            "audio",
+            "video",
+            "music",
+            "printable"
+          ],
+          "weights": [
+            0.28,
+            0.17,
+            0.25,
+            0.2,
+            0.1
+          ]
+        }
+      }
+    },
+    "software": {
+      "node_count": 15000,
+      "attribute_domains": {
+        "license_type": {
+          "distribution": "categorical",
+          "values": [
+            "subscription",
+            "perpetual",
+            "freemium",
+            "open_source"
+          ],
+          "weights": [
+            0.47,
+            0.24,
+            0.18,
+            0.11
+          ]
+        }
+      }
+    },
+    "user": {
+      "node_count": 278555,
+      "avg_mv_user": 2,
+      "attribute_domains": {
+        "email": {
+          "distribution": "faker",
+          "provider": "email"
+        },
+        "password_hash": {
+          "distribution": "faker",
+          "provider": "sha256"
+        },
+        "mv_user": {
+          "distribution": "categorical",
+          "values": [
+            "buyer",
+            "seller",
+            "reviewer",
+            "subscriber",
+            "admin"
+          ],
+          "weights": [
+            0.4,
+            0.12,
+            0.22,
+            0.23,
+            0.03
+          ]
+        }
+      }
+    },
+    "customer": {
+      "node_count": 36985,
+      "avg_contact_no": 1,
+      "attribute_domains": {
+        "loyalty_tier": {
+          "distribution": "categorical",
+          "values": [
+            "bronze",
+            "silver",
+            "gold",
+            "platinum"
+          ],
+          "weights": [
+            0.48,
+            0.29,
+            0.17,
+            0.06
+          ]
+        },
+        "contact_no": {
+          "distribution": "faker",
+          "provider": "phone_number"
+        }
+      }
+    },
+    "primecustomer": {
+      "node_count": 100000,
+      "avg_subscription_addons": 2,
+      "attribute_domains": {
+        "renewal_date": {
+          "distribution": "uniform_date",
+          "start": "2026-01-01",
+          "end": "2027-12-31",
+          "null_probability": 0.08
+        },
+        "subscription_addons": {
+          "distribution": "categorical",
+          "values": [
+            "video",
+            "music",
+            "cloud",
+            "delivery",
+            "support",
+            "family"
+          ],
+          "weights": [
+            0.23,
+            0.18,
+            0.13,
+            0.25,
+            0.08,
+            0.13
+          ]
+        }
+      }
+    },
+    "businesscustomer": {
+      "node_count": 900000,
+      "attribute_domains": {
+        "company_name": {
+          "distribution": "faker",
+          "provider": "company"
+        }
+      }
+    },
+    "employee": {
+      "node_count": 225000,
+      "attribute_domains": {
+        "employee_no": {
+          "distribution": "faker",
+          "provider": "bothify",
+          "kwargs": {
+            "text": "EMP-########"
+          }
+        }
+      }
+    },
+    "productimage": {
+      "node_count": 24195,
+      "attribute_domains": {
+        "image_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "url": {
+          "distribution": "faker",
+          "provider": "image_url"
+        },
+        "alt_text": {
+          "distribution": "faker",
+          "provider": "sentence",
+          "kwargs": {
+            "nb_words": 6
+          }
+        },
+        "sort_order": {
+          "distribution": "categorical",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "weights": [
+            0.3,
+            0.22,
+            0.16,
+            0.11,
+            0.08,
+            0.06,
+            0.04,
+            0.03
+          ]
+        }
+      }
+    },
+    "productvariant": {
+      "node_count": 37663,
+      "attribute_domains": {
+        "variant_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "price_override": {
+          "distribution": "lognormal_int",
+          "median": 130,
+          "sigma": 0.8,
+          "min": 5,
+          "max": 5000,
+          "null_probability": 0.35
+        },
+        "barcode": {
+          "distribution": "faker",
+          "provider": "ean13"
+        },
+        "is_active_variant": {
+          "distribution": "categorical",
+          "values": [
+            0,
+            1
+          ],
+          "weights": [
+            0.12,
+            0.88
+          ]
+        }
+      }
+    },
+    "pricehistory": {
+      "node_count": 11903,
+      "attribute_domains": {
+        "price_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "starts_at": {
+          "distribution": "uniform_date",
+          "start": "2021-01-01",
+          "end": "2026-08-01"
+        },
+        "ends_at": {
+          "distribution": "uniform_date",
+          "start": "2021-01-02",
+          "end": "2026-12-31",
+          "null_probability": 0.2
+        },
+        "price": {
+          "distribution": "lognormal_int",
+          "median": 110,
+          "sigma": 0.85,
+          "min": 5,
+          "max": 5000
+        }
+      }
+    },
+    "tag": {
+      "node_count": 119157,
+      "attribute_domains": {
+        "tag_name": {
+          "distribution": "categorical",
+          "values": [
+            "new",
+            "sale",
+            "popular",
+            "eco",
+            "premium",
+            "gift",
+            "seasonal",
+            "exclusive"
+          ],
+          "weights": [
+            0.15,
+            0.2,
+            0.18,
+            0.1,
+            0.12,
+            0.09,
+            0.09,
+            0.07
+          ]
+        }
+      }
+    },
+    "address": {
+      "node_count": 124528,
+      "attribute_domains": {
+        "address_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "kind": {
+          "distribution": "categorical",
+          "values": [
+            "home",
+            "work",
+            "billing",
+            "shipping",
+            "other"
+          ],
+          "weights": [
+            0.34,
+            0.12,
+            0.18,
+            0.31,
+            0.05
+          ]
+        },
+        "line1": {
+          "distribution": "faker",
+          "provider": "street_address"
+        },
+        "city": {
+          "distribution": "faker",
+          "provider": "city"
+        },
+        "state": {
+          "distribution": "faker",
+          "provider": "state_abbr"
+        },
+        "country": {
+          "distribution": "categorical",
+          "values": [
+            "US",
+            "CA",
+            "GB",
+            "DE",
+            "FR",
+            "AU",
+            "JP",
+            "IN"
+          ],
+          "weights": [
+            0.45,
+            0.1,
+            0.1,
+            0.08,
+            0.07,
+            0.06,
+            0.06,
+            0.08
+          ]
+        },
+        "postal_code": {
+          "distribution": "faker",
+          "provider": "postcode"
+        }
+      }
+    },
+    "paymentmethod": {
+      "node_count": 138697,
+      "attribute_domains": {
+        "payment_method_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "brand": {
+          "distribution": "categorical",
+          "values": [
+            "Visa",
+            "Mastercard",
+            "Amex",
+            "Discover",
+            "PayPal"
+          ],
+          "weights": [
+            0.43,
+            0.32,
+            0.11,
+            0.05,
+            0.09
+          ]
+        },
+        "last4": {
+          "distribution": "faker",
+          "provider": "numerify",
+          "kwargs": {
+            "text": "####"
+          }
+        },
+        "exp_month": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 12
+        },
+        "exp_year": {
+          "distribution": "uniform_int",
+          "min": 2026,
+          "max": 2032
+        },
+        "is_default": {
+          "distribution": "categorical",
+          "values": [
+            "true",
+            "false"
+          ],
+          "weights": [
+            0.22,
+            0.78
+          ]
+        }
+      }
+    },
+    "cart": {
+      "node_count": 42493,
+      "attribute_domains": {
+        "cart_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "updated_at": {
+          "distribution": "uniform_date",
+          "start": "2025-01-01",
+          "end": "2026-08-01"
+        }
+      }
+    },
+    "wishlist": {
+      "node_count": 46232,
+      "attribute_domains": {
+        "wishlist_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "wishlist_name": {
+          "distribution": "categorical",
+          "values": [
+            "default",
+            "birthday",
+            "holiday",
+            "later",
+            "favorites"
+          ],
+          "weights": [
+            0.43,
+            0.12,
+            0.14,
+            0.18,
+            0.13
+          ]
+        }
+      }
+    },
+    "review": {
+      "node_count": 25275,
+      "attribute_domains": {
+        "review_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "rating": {
+          "distribution": "categorical",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "weights": [
+            0.06,
+            0.08,
+            0.16,
+            0.31,
+            0.39
+          ]
+        },
+        "title": {
+          "distribution": "faker",
+          "provider": "sentence",
+          "kwargs": {
+            "nb_words": 6
+          }
+        },
+        "body": {
+          "distribution": "faker",
+          "provider": "text",
+          "kwargs": {
+            "max_nb_chars": 180
+          }
+        },
+        "created_at": {
+          "distribution": "uniform_date",
+          "start": "2022-01-01",
+          "end": "2026-08-01"
+        }
+      }
+    },
+    "browsingsession": {
+      "node_count": 32655,
+      "attribute_domains": {
+        "session_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "started_at": {
+          "distribution": "uniform_date",
+          "start": "2025-01-01",
+          "end": "2026-08-01"
+        },
+        "device": {
+          "distribution": "categorical",
+          "values": [
+            "mobile",
+            "desktop",
+            "tablet",
+            "other"
+          ],
+          "weights": [
+            0.57,
+            0.32,
+            0.09,
+            0.02
+          ]
+        }
+      }
+    },
+    "custorder": {
+      "node_count": 80260,
+      "attribute_domains": {
+        "placed_at": {
+          "distribution": "uniform_date",
+          "start": "2022-01-01",
+          "end": "2026-08-01"
+        },
+        "status": {
+          "distribution": "categorical",
+          "values": [
+            "pending",
+            "paid",
+            "processing",
+            "shipped",
+            "delivered",
+            "cancelled",
+            "returned"
+          ],
+          "weights": [
+            0.05,
+            0.07,
+            0.1,
+            0.14,
+            0.5,
+            0.08,
+            0.06
+          ]
+        }
+      }
+    },
+    "shipment": {
+      "node_count": 24338,
+      "attribute_domains": {
+        "shipment_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "carrier": {
+          "distribution": "categorical",
+          "values": [
+            "UPS",
+            "FedEx",
+            "USPS",
+            "DHL",
+            "local"
+          ],
+          "weights": [
+            0.28,
+            0.24,
+            0.25,
+            0.15,
+            0.08
+          ]
+        },
+        "tracking_no": {
+          "distribution": "faker",
+          "provider": "bothify",
+          "kwargs": {
+            "text": "??##########"
+          }
+        },
+        "shipped_at": {
+          "distribution": "uniform_date",
+          "start": "2022-01-01",
+          "end": "2026-08-01",
+          "null_probability": 0.08
+        },
+        "delivered_at": {
+          "distribution": "uniform_date",
+          "start": "2022-01-02",
+          "end": "2026-08-07",
+          "null_probability": 0.25
+        }
+      }
+    },
+    "promotion": {
+      "node_count": 149738,
+      "attribute_domains": {
+        "promo_name": {
+          "distribution": "faker",
+          "provider": "catch_phrase"
+        },
+        "starts_at": {
+          "distribution": "uniform_date",
+          "start": "2024-01-01",
+          "end": "2026-12-01"
+        },
+        "ends_at": {
+          "distribution": "uniform_date",
+          "start": "2024-01-02",
+          "end": "2027-03-31"
+        },
+        "discount_type": {
+          "distribution": "categorical",
+          "values": [
+            "percent",
+            "fixed",
+            "free_shipping"
+          ],
+          "weights": [
+            0.58,
+            0.29,
+            0.13
+          ]
+        },
+        "discount_value": {
+          "distribution": "categorical",
+          "values": [
+            "5",
+            "10",
+            "15",
+            "20",
+            "25",
+            "50"
+          ],
+          "weights": [
+            0.12,
+            0.26,
+            0.24,
+            0.2,
+            0.12,
+            0.06
+          ]
+        }
+      }
+    },
+    "coupon": {
+      "node_count": 40120,
+      "attribute_domains": {
+        "coupon_code": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "max_uses": {
+          "distribution": "lognormal_int",
+          "median": 500,
+          "sigma": 1.1,
+          "min": 1,
+          "max": 100000
+        },
+        "per_user_limit": {
+          "distribution": "categorical",
+          "values": [
+            1,
+            2,
+            3,
+            5,
+            10
+          ],
+          "weights": [
+            0.55,
+            0.2,
+            0.12,
+            0.09,
+            0.04
+          ]
+        }
+      }
+    },
+    "warehouse": {
+      "node_count": 87982,
+      "attribute_domains": {
+        "warehouse_name": {
+          "distribution": "faker",
+          "provider": "company"
+        },
+        "region": {
+          "distribution": "categorical",
+          "values": [
+            "Northeast",
+            "Southeast",
+            "Midwest",
+            "Southwest",
+            "West"
+          ],
+          "weights": [
+            0.2,
+            0.22,
+            0.19,
+            0.14,
+            0.25
+          ]
+        }
+      }
+    },
+    "warehousebin": {
+      "node_count": 11408,
+      "attribute_domains": {
+        "bin_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "code": {
+          "distribution": "faker",
+          "provider": "bothify",
+          "kwargs": {
+            "text": "??-###-??"
+          }
+        }
+      }
+    },
+    "supplier": {
+      "node_count": 104549,
+      "attribute_domains": {
+        "supplier_name": {
+          "distribution": "faker",
+          "provider": "company"
+        }
+      }
+    },
+    "suppliercontact": {
+      "node_count": 46467,
+      "attribute_domains": {
+        "contact_id": {
+          "distribution": "uniform_int",
+          "min": 1,
+          "max": 10000000
+        },
+        "email": {
+          "distribution": "faker",
+          "provider": "email",
+          "null_probability": 0.05
+        },
+        "phone": {
+          "distribution": "faker",
+          "provider": "phone_number",
+          "null_probability": 0.08
+        }
+      }
+    },
+    "purchaseorder": {
+      "node_count": 134186,
+      "attribute_domains": {
+        "created_at": {
+          "distribution": "uniform_date",
+          "start": "2022-01-01",
+          "end": "2026-08-01"
+        },
+        "status": {
+          "distribution": "categorical",
+          "values": [
+            "draft",
+            "submitted",
+            "approved",
+            "received",
+            "cancelled"
+          ],
+          "weights": [
+            0.07,
+            0.13,
+            0.18,
+            0.55,
+            0.07
+          ]
+        }
+      }
+    },
+    "courierpartner": {
+      "node_count": 63107,
+      "attribute_domains": {
+        "carrier_code": {
+          "distribution": "faker",
+          "provider": "bothify",
+          "kwargs": {
+            "text": "CAR-????"
+          }
+        },
+        "webhook_url": {
+          "distribution": "faker",
+          "provider": "url"
+        }
+      }
+    },
+    "category_products": {
+      "participation_factor": 0.04
+    },
+    "product_tags": {
+      "participation_factor": 0.93,
+      "product_to_tag": 3
+    },
+    "bundle_components": {
+      "participation_factor": 0.2,
+      "product_to_product": 1
+    },
+    "bought_together": {
+      "participation_factor": 0.65,
+      "product_to_product": 2
+    },
+    "cart_contains": {
+      "participation_factor": 0.95,
+      "cart_to_product": 1
+    },
+    "wishlist_contains": {
+      "participation_factor": 0.65,
+      "wishlist_to_product": 3
+    },
+    "reviews": {
+      "participation_factor": 0.01
+    },
+    "customer_orders": {
+      "participation_factor": 0.93
+    },
+    "order_items": {
+      "participation_factor": 0.86,
+      "custorder_to_product": 2
+    },
+    "payment_order": {
+      "participation_factor": 0.88
+    },
+    "order_returns": {
+      "participation_factor": 0.15,
+      "custorder_to_product": 2
+    },
+    "order_coupons": {
+      "participation_factor": 0.16
+    },
+    "stock": {
+      "participation_factor": 0.39,
+      "product_to_warehousebin": 3
+    },
+    "supplier_products": {
+      "participation_factor": 0.37,
+      "supplier_to_product": 1
+    },
+    "supplier_pos": {
+      "participation_factor": 0.96
+    },
+    "po_items": {
+      "participation_factor": 0.76,
+      "purchaseorder_to_product": 2
+    },
+    "courier_shipments": {
+      "participation_factor": 0.43
+    },
+    "bundle_phones": {
+      "participation_factor": 0.96,
+      "phone_to_phone": 3
+    },
+    "bundled_phone_accessory": {
+      "participation_factor": 0.65,
+      "phone_to_accessory": 3
+    },
+    "software_downloads": {
+      "participation_factor": 0.95,
+      "software_to_customer": 3
+    }
+  },
+  "select_all_frequencies": {
+    "category": 16,
+    "product": 30,
+    "physicalproduct": 22,
+    "digitalproduct": 27,
+    "electronics": 28,
+    "computer": 20,
+    "desktop": 26,
+    "laptop": 26,
+    "tablet": 17,
+    "smartwatch": 29,
+    "camera": 18,
+    "phone": 20,
+    "accessory": 27,
+    "appliance": 26,
+    "kitchenappliance": 30,
+    "apparel": 15,
+    "clothing": 30,
+    "menclothing": 16,
+    "womenclothing": 24,
+    "footwear": 27,
+    "media": 20,
+    "software": 20,
+    "user": 22,
+    "customer": 15,
+    "primecustomer": 21,
+    "businesscustomer": 22,
+    "employee": 27,
+    "productimage": 26,
+    "productvariant": 26,
+    "pricehistory": 29,
+    "tag": 23,
+    "address": 15,
+    "paymentmethod": 27,
+    "cart": 19,
+    "wishlist": 21,
+    "review": 28,
+    "browsingsession": 16,
+    "custorder": 30,
+    "shipment": 26,
+    "promotion": 21,
+    "coupon": 28,
+    "warehouse": 30,
+    "warehousebin": 26,
+    "supplier": 28,
+    "suppliercontact": 26,
+    "purchaseorder": 15,
+    "courierpartner": 25,
+    "category_products": 22,
+    "product_tags": 24,
+    "bundle_components": 15,
+    "bought_together": 18,
+    "cart_contains": 25,
+    "wishlist_contains": 17,
+    "reviews": 23,
+    "customer_orders": 24,
+    "order_items": 17,
+    "payment_order": 16,
+    "order_returns": 23,
+    "order_coupons": 19,
+    "stock": 15,
+    "supplier_products": 25,
+    "supplier_pos": 16,
+    "po_items": 16,
+    "courier_shipments": 15,
+    "bundle_phones": 22,
+    "bundled_phone_accessory": 15,
+    "software_downloads": 19
+  },
+  "insert_frequencies": {
+    "address": 17,
+    "wishlist": 17,
+    "kitchenappliance": 24,
+    "customer": 24,
+    "user": 20,
+    "womenclothing": 28,
+    "electronics": 23,
+    "camera": 19,
+    "stock": 15,
+    "clothing": 16,
+    "cart": 21,
+    "order_coupons": 24,
+    "warehousebin": 29,
+    "menclothing": 20,
+    "warehouse": 16,
+    "purchaseorder": 27,
+    "supplier_pos": 18,
+    "pricehistory": 26,
+    "suppliercontact": 18,
+    "media": 21,
+    "software_downloads": 24,
+    "tag": 28,
+    "laptop": 21,
+    "product": 30,
+    "footwear": 18,
+    "primecustomer": 27,
+    "software": 24,
+    "employee": 30,
+    "accessory": 15,
+    "order_returns": 20,
+    "desktop": 27,
+    "custorder": 24,
+    "paymentmethod": 15,
+    "appliance": 20,
+    "productimage": 21,
+    "supplier": 25,
+    "product_tags": 24,
+    "category": 19,
+    "shipment": 25,
+    "supplier_products": 21,
+    "courierpartner": 21,
+    "courier_shipments": 19,
+    "computer": 18,
+    "bundle_phones": 21,
+    "po_items": 23,
+    "review": 26,
+    "payment_order": 25,
+    "reviews": 23,
+    "cart_contains": 22,
+    "coupon": 22,
+    "businesscustomer": 17,
+    "bought_together": 15,
+    "tablet": 17,
+    "order_items": 17,
+    "bundle_components": 17,
+    "browsingsession": 20,
+    "category_products": 23,
+    "smartwatch": 21,
+    "wishlist_contains": 19,
+    "phone": 25,
+    "productvariant": 23,
+    "customer_orders": 20,
+    "physicalproduct": 25,
+    "promotion": 25,
+    "apparel": 18,
+    "bundled_phone_accessory": 19,
+    "digitalproduct": 22
+  },
+  "attribute_distribution_metadata": {
+    "version": 1,
+    "seed": 1,
+    "faker_locale": "en_US",
+    "predicate_independent": true,
+    "inheritance_policy": "store once at the declaring entity and resolve for descendants",
+    "primary_key_policy": "sequential generated identifiers; not sampled from attribute_domains",
+    "relationship_policy": "participation_factor and fanout remain in relationship node_data",
+    "supported_families": [
+      "categorical",
+      "constant",
+      "faker",
+      "lognormal_int",
+      "mixture",
+      "normal_int",
+      "uniform_date",
+      "uniform_int"
+    ]
+  }
+}

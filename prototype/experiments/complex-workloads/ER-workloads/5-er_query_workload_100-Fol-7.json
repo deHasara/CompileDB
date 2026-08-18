@@ -1,0 +1,2978 @@
+{
+  "format_version": 3,
+  "workload_name": "example2_schema_driven_selectivity_100_w10",
+  "query_language": "CompileDB E/R SPJG SQL",
+  "schema_source": "example2_small_with_distributions.json",
+  "schema_sha256": "572f5fc023a153dd5f043370b318b9fbf716edcc23c4e1bfc1249b1bc0eaa599",
+  "data_profile_source": "conceptual_data_profile.json",
+  "data_profile_sha256": "ecd5f6401fd6d4b618dfebf5c50e37c5b0ce9895a63e2f134a2b05a338d5c47c",
+  "shape_generation_method": "schema_graph_random_validated_unique",
+  "shape_seed": 10,
+  "workload_mode": "strong_subclass_selection_projection_only",
+  "sampling_policy": {
+    "subclass_weight": 1.0,
+    "leaf_subclass_weight": 8.0,
+    "leaf_relationship_weight": 1.0,
+    "endpoint_subclass_probability": 0.0,
+    "hub_penalty": 0.0,
+    "subclass_only": true,
+    "inferred_leaf_subclasses": [
+      "accessory",
+      "businesscustomer",
+      "camera",
+      "desktop",
+      "employee",
+      "footwear",
+      "kitchenappliance",
+      "laptop",
+      "media",
+      "menclothing",
+      "phone",
+      "primecustomer",
+      "smartwatch",
+      "software",
+      "tablet",
+      "womenclothing"
+    ],
+    "inferred_leaf_endpoint_relationships": [
+      "bundle_phones",
+      "bundled_phone_accessory",
+      "software_downloads"
+    ]
+  },
+  "structural_access_summary": {
+    "queries_with_leaf_entity": 94,
+    "leaf_entity_bindings": 94,
+    "queries_with_leaf_endpoint_relationship": 0,
+    "leaf_relationship_bindings": 0
+  },
+  "cross_workload_shape_reuse_allowed": false,
+  "selectivity_method": "initialization_time_conceptual_reservoir",
+  "selectivity_targets": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.99
+  ],
+  "enforced_estimated_selectivity_range": [
+    0.5,
+    0.99
+  ],
+  "selectivity_scope": "where_filter_over_join_input",
+  "category_counts": {
+    "aggregation": 0,
+    "complex_multi_join": 0,
+    "relationship_join": 0,
+    "selection_projection": 100,
+    "weak_owner": 0
+  },
+  "query_count": 100,
+  "total_frequency": 100,
+  "unique_canonical_shape_count": 100,
+  "mean_absolute_where_selectivity_error": 0.027662000000000006,
+  "contains_select_star": false,
+  "queries": [
+    {
+      "id": "Q001",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.fit_type_men, e.dimensions, e.quantity FROM MenClothing e WHERE e.product_id <= 15563858;",
+      "canonical_template_hash": "e6008b5fcdba61d8d43a8c958eeae81864a8f51098b4804ff21b1314a88791b4",
+      "literal_arguments": {
+        "p0": 15563858
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "product_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": 15563858,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q002",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.product_id, e.cpu, e.warranty_months, e.quantity FROM Desktop e WHERE e.ram_gb > 8;",
+      "canonical_template_hash": "144de6358856f7e9d0faa5fbde298b8a878c8b6fca0214f932eb62def09fe624",
+      "literal_arguments": {
+        "p0": 8
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.7659,
+        "absolute_error": 0.16590000000000005,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "ram_gb",
+            "operator": ">",
+            "estimated_selectivity": 0.7659,
+            "target_selectivity": 0.6,
+            "value": 8,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q003",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku, e.is_active, e.warranty_months FROM Phone e WHERE e.product_name <= 'Self-enabling 6thgeneration artificial intelligence';",
+      "canonical_template_hash": "5fb357973ded6baf6568580739cca63facbc74f697883cc9a2ebd2f472358fe0",
+      "literal_arguments": {
+        "p0": "Self-enabling 6thgeneration artificial intelligence"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "product_name",
+            "operator": "<=",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": "Self-enabling 6thgeneration artificial intelligence",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q004",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.is_active, e.base_price FROM KitchenAppliance e WHERE e.warranty_years <= 2;",
+      "canonical_template_hash": "551829e07f517145dc4f569561bfee3cfacd7d00448d1b636281970a5a66b985",
+      "literal_arguments": {
+        "p0": 2
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.7318,
+        "absolute_error": 0.06820000000000004,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "warranty_years",
+            "operator": "<=",
+            "estimated_selectivity": 0.7318,
+            "target_selectivity": 0.8,
+            "value": 2,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q005",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.product_id, e.warranty_months FROM Laptop e WHERE e.base_price >= 59;",
+      "canonical_template_hash": "00e2512b408998507e633afe35b67b2f414afb85ac05de23edd3eac84b1102bd",
+      "literal_arguments": {
+        "p0": 59
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8022,
+        "absolute_error": 0.0021999999999999797,
+        "predicates": [
+          {
+            "object": "laptop",
+            "attribute": "base_price",
+            "operator": ">=",
+            "estimated_selectivity": 0.8022,
+            "target_selectivity": 0.8,
+            "value": 59,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q006",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name FROM Accessory e WHERE e.dimensions <= 'medium';",
+      "canonical_template_hash": "f526349e66b7a7e00c7fd920fbdc5b52d029640a8f2a495343ff3c8097087e76",
+      "literal_arguments": {
+        "p0": "medium"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.7055,
+        "absolute_error": 0.20550000000000002,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "dimensions",
+            "operator": "<=",
+            "estimated_selectivity": 0.7055,
+            "target_selectivity": 0.5,
+            "value": "medium",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q007",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.employee_no, e.password_hash FROM Employee e WHERE e.employee_no < 'EMP-49995178';",
+      "canonical_template_hash": "48e6ef3cd839888c77de33891eeaf05eafafef4b40f4588ce84933ff2b2b0cf9",
+      "literal_arguments": {
+        "p0": "EMP-49995178"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "employee_no",
+            "operator": "<",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "EMP-49995178",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q008",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.email, e.user_id FROM Employee e WHERE e.password_hash <= 'fdf1aa44550352d5c2eb1369a2b93da819d08a6bbe86854d812d213213b44528';",
+      "canonical_template_hash": "64fa5ec4bcbfdd00bc72bf799d2694cf2b0366ee50510cc3ecf0c4cd2c7f3821",
+      "literal_arguments": {
+        "p0": "fdf1aa44550352d5c2eb1369a2b93da819d08a6bbe86854d812d213213b44528"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "password_hash",
+            "operator": "<=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": "fdf1aa44550352d5c2eb1369a2b93da819d08a6bbe86854d812d213213b44528",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q009",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.quantity, e.dimensions FROM Footwear e WHERE e.sku >= 'SKU-Zigv-53703687';",
+      "canonical_template_hash": "1dc0bbd31c658e6f54a0720eb6f499a88267ed265f89398c50a52e05b9d4e866",
+      "literal_arguments": {
+        "p0": "SKU-Zigv-53703687"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "footwear",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "SKU-Zigv-53703687",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q010",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions, e.is_active FROM Camera e WHERE e.product_name >= 'Distributed national model';",
+      "canonical_template_hash": "a184491df6b5536b0c8665c182f2b59638218df7e98dedc22a0fc034b1108c2a",
+      "literal_arguments": {
+        "p0": "Distributed national model"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "camera",
+            "attribute": "product_name",
+            "operator": ">=",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": "Distributed national model",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q011",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name FROM Smartwatch e WHERE e.product_id < 11679217;",
+      "canonical_template_hash": "150929a346c6e7ab8e8bf67aa8a2f8481dc92530ac882f5dcf03dad93134e7b1",
+      "literal_arguments": {
+        "p0": 11679217
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 11679217,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q012",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions, e.base_price, e.is_active, e.product_id FROM Smartwatch e WHERE e.product_id > 11447969;",
+      "canonical_template_hash": "78e4bdbdbdd5bebaeb738ee4fa3e82a9959202807bad31a2c10ac6193ee1fc15",
+      "literal_arguments": {
+        "p0": 11447969
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "product_id",
+            "operator": ">",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": 11447969,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q013",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.size_system, e.dimensions, e.product_id, e.product_name FROM Clothing e WHERE e.base_price <= 120;",
+      "canonical_template_hash": "deb8ab09bc93a7977a8ae0007f3608f3d4e54e04ae3775fbd5ad8f45f771dd6e",
+      "literal_arguments": {
+        "p0": 120
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5009,
+        "absolute_error": 0.0009000000000000119,
+        "predicates": [
+          {
+            "object": "clothing",
+            "attribute": "base_price",
+            "operator": "<=",
+            "estimated_selectivity": 0.5009,
+            "target_selectivity": 0.5,
+            "value": 120,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q014",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.quantity, e.base_price, e.product_id FROM Accessory e WHERE e.quantity >= 13;",
+      "canonical_template_hash": "527ebe597b6397784edc89e40f02bb0ee496dcbd9f895b25433f9ff6f50fd41c",
+      "literal_arguments": {
+        "p0": 13
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.6953,
+        "absolute_error": 0.0046999999999999265,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "quantity",
+            "operator": ">=",
+            "estimated_selectivity": 0.6953,
+            "target_selectivity": 0.7,
+            "value": 13,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q015",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.battery_wh, e.quantity, e.product_name, e.cpu FROM Laptop e WHERE e.cpu <= 'Ryzen 5';",
+      "canonical_template_hash": "b2a3edf470635aad3b060b3cb59a7c9282b726c2a6257e9fbd8a78074823ece6",
+      "literal_arguments": {
+        "p0": "Ryzen 5"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8605,
+        "absolute_error": 0.0605,
+        "predicates": [
+          {
+            "object": "laptop",
+            "attribute": "cpu",
+            "operator": "<=",
+            "estimated_selectivity": 0.8605,
+            "target_selectivity": 0.8,
+            "value": "Ryzen 5",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q016",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name, e.ram_gb, e.quantity, e.sku FROM Laptop e WHERE e.product_name > 'Diverse directional strategy';",
+      "canonical_template_hash": "d20ae3c6504cf5afbda9340f2488083f8d746a10df933e0b678eef43f7459457",
+      "literal_arguments": {
+        "p0": "Diverse directional strategy"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "laptop",
+            "attribute": "product_name",
+            "operator": ">",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": "Diverse directional strategy",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q017",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.product_id, e.base_price, e.product_name FROM Media e WHERE e.product_id <= 16364312;",
+      "canonical_template_hash": "7d06ba164696ed439817275fe4c09a3aa3db9ba2cf4d47d8a6ab115245be91ff",
+      "literal_arguments": {
+        "p0": 16364312
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "media",
+            "attribute": "product_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": 16364312,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q018",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.quantity, e.delivery_type FROM Software e WHERE e.delivery_type < 'stream';",
+      "canonical_template_hash": "93769b5855ec4f283976afb3efbe6ff58d0955f15bc80d18d352818f228dc1e7",
+      "literal_arguments": {
+        "p0": "stream"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7986,
+        "absolute_error": 0.09860000000000002,
+        "predicates": [
+          {
+            "object": "software",
+            "attribute": "delivery_type",
+            "operator": "<",
+            "estimated_selectivity": 0.7986,
+            "target_selectivity": 0.7,
+            "value": "stream",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q019",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id FROM WomenClothing e WHERE e.base_price <= 144;",
+      "canonical_template_hash": "a245aa6ae8fd99d5d1b16c398d2dcefb3f77363018d24608196cc3b38d5d8ee7",
+      "literal_arguments": {
+        "p0": 144
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6006,
+        "absolute_error": 0.0006000000000000449,
+        "predicates": [
+          {
+            "object": "womenclothing",
+            "attribute": "base_price",
+            "operator": "<=",
+            "estimated_selectivity": 0.6006,
+            "target_selectivity": 0.6,
+            "value": 144,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q020",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id, e.product_name, e.warranty_months, e.carrier_lock FROM Phone e WHERE e.base_price <= 883;",
+      "canonical_template_hash": "838628bd994a807fd8ac03b3f6bdbcb1b3526b2262e51f083de9badf00c9cdf2",
+      "literal_arguments": {
+        "p0": 883
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "base_price",
+            "operator": "<=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": 883,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q021",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash, e.email, e.user_id FROM Employee e WHERE e.user_id > 1360680;",
+      "canonical_template_hash": "13e796cc60ee3586e846227ac2c4c28da0740f12b9c5cb48660e71519c4dcbb2",
+      "literal_arguments": {
+        "p0": 1360680
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "user_id",
+            "operator": ">",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": 1360680,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q022",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.fit_type_women FROM WomenClothing e WHERE e.quantity >= 4;",
+      "canonical_template_hash": "5680b66b8ec0815cd2f29c6f26e77a7298d742ef53f329330f9946c6aa253101",
+      "literal_arguments": {
+        "p0": 4
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.8983,
+        "absolute_error": 0.0017000000000000348,
+        "predicates": [
+          {
+            "object": "womenclothing",
+            "attribute": "quantity",
+            "operator": ">=",
+            "estimated_selectivity": 0.8983,
+            "target_selectivity": 0.9,
+            "value": 4,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q023",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.renewal_date, e.email FROM PrimeCustomer e WHERE e.renewal_date > '2026-04-04';",
+      "canonical_template_hash": "02908ca682e0ba9d0c07244cecda0b6720a7c0bfdeee0251cf1022ce0f9b2e92",
+      "literal_arguments": {
+        "p0": "2026-04-04"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.7998,
+        "absolute_error": 0.000200000000000089,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "renewal_date",
+            "operator": ">",
+            "estimated_selectivity": 0.7998,
+            "target_selectivity": 0.8,
+            "value": "2026-04-04",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q024",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.product_id, e.product_name, e.quantity FROM Smartwatch e WHERE e.sku >= 'SKU-AaFi-92012341';",
+      "canonical_template_hash": "2bf510b6420157add887b713ec3320edd159c36fafa1a4f2989443bf4e90d88a",
+      "literal_arguments": {
+        "p0": "SKU-AaFi-92012341"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": "SKU-AaFi-92012341",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q025",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.sku, e.base_price FROM Apparel e WHERE e.product_name >= 'Compatible systemic middleware';",
+      "canonical_template_hash": "4628148f469a2092c691e3a6e10b51bafcf54fcf165348dd51b954939b80334d",
+      "literal_arguments": {
+        "p0": "Compatible systemic middleware"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "apparel",
+            "attribute": "product_name",
+            "operator": ">=",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": "Compatible systemic middleware",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q026",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash, e.email, e.company_name, e.loyalty_tier FROM BusinessCustomer e WHERE e.email <= 'kimberlyduffy@example.net';",
+      "canonical_template_hash": "da7c7cd5c9979e055aa65aecb6b58c38acc07e1dd998cea2b6728bb54f9b64df",
+      "literal_arguments": {
+        "p0": "kimberlyduffy@example.net"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "businesscustomer",
+            "attribute": "email",
+            "operator": "<=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "kimberlyduffy@example.net",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q027",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.employee_no, e.email, e.user_id, e.password_hash FROM Employee e WHERE e.email < 'klinevictoria@example.net';",
+      "canonical_template_hash": "ff974bd9a261376520bff5c640364bc06502903605c4f3e018ed6f884682d853",
+      "literal_arguments": {
+        "p0": "klinevictoria@example.net"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "email",
+            "operator": "<",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "klinevictoria@example.net",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q028",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions FROM MenClothing e WHERE e.material >= 'cotton';",
+      "canonical_template_hash": "9e0e24ee4e7954e53d509e06cff5b6fad814e9eac3b7c879a4c9e464983cb5f7",
+      "literal_arguments": {
+        "p0": "cotton"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.8298,
+        "absolute_error": 0.07020000000000004,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "material",
+            "operator": ">=",
+            "estimated_selectivity": 0.8298,
+            "target_selectivity": 0.9,
+            "value": "cotton",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q029",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.screen_size_in, e.base_price, e.warranty_months, e.dimensions FROM Tablet e WHERE e.product_id > 11384081;",
+      "canonical_template_hash": "58db3dc0ec20fc57f890b9627ccd074d2f19082606d8bde12d93712c4b532999",
+      "literal_arguments": {
+        "p0": 11384081
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "product_id",
+            "operator": ">",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": 11384081,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q030",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.renewal_date FROM PrimeCustomer e WHERE e.email > 'jeffreyhill@example.net';",
+      "canonical_template_hash": "8404b947f0759b51ce6563c5195963670d71f58d6fae1bf6da03048168122385",
+      "literal_arguments": {
+        "p0": "jeffreyhill@example.net"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "email",
+            "operator": ">",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "jeffreyhill@example.net",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q031",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.size_system, e.material FROM WomenClothing e WHERE e.sku <= 'SKU-ZsSo-15977333';",
+      "canonical_template_hash": "992721591432eea0de343a76b9e30a0bdff1a5d9b5fe2b1538d9fbe2df7921bc",
+      "literal_arguments": {
+        "p0": "SKU-ZsSo-15977333"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "womenclothing",
+            "attribute": "sku",
+            "operator": "<=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "SKU-ZsSo-15977333",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q032",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.cpu, e.sku, e.product_name FROM Desktop e WHERE e.product_id < 10638105;",
+      "canonical_template_hash": "43b31f90b0e731617a9e95666e57517b78a5e9d46d45c1f34e0298a7d8431738",
+      "literal_arguments": {
+        "p0": 10638105
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": 10638105,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q033",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name, e.is_active, e.quantity, e.base_price FROM Laptop e WHERE e.ram_gb > 8;",
+      "canonical_template_hash": "bc70a3ab4261cc3f4b926bc3436cc5e3e4bb2a75bda3dd8c3cea7482f633aa3c",
+      "literal_arguments": {
+        "p0": 8
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.7702,
+        "absolute_error": 0.17020000000000002,
+        "predicates": [
+          {
+            "object": "laptop",
+            "attribute": "ram_gb",
+            "operator": ">",
+            "estimated_selectivity": 0.7702,
+            "target_selectivity": 0.6,
+            "value": 8,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q034",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash, e.email, e.loyalty_tier FROM PrimeCustomer e WHERE e.email <= 'ujohnson@example.com';",
+      "canonical_template_hash": "343f90133d9a0a2d6dcb986e69da0a82d268d81d585a453b1b9184d6c604f886",
+      "literal_arguments": {
+        "p0": "ujohnson@example.com"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "email",
+            "operator": "<=",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": "ujohnson@example.com",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q035",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.quantity, e.warranty_months FROM Desktop e WHERE e.product_id >= 9901239;",
+      "canonical_template_hash": "3108c6ea80914ca1550c586aba470c2285c21758b7749d61f9659a46d69a7704",
+      "literal_arguments": {
+        "p0": 9901239
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "product_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": 9901239,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q036",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.user_id FROM Employee e WHERE e.user_id < 1472293;",
+      "canonical_template_hash": "10cf9117cf81e3cdafc5783fdea0a752617d379816d683f992ef77965ca7891c",
+      "literal_arguments": {
+        "p0": 1472293
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "user_id",
+            "operator": "<",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": 1472293,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q037",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.quantity FROM MenClothing e WHERE e.size_system > 'UK';",
+      "canonical_template_hash": "1941270e225b84b78ccf475d598c56c43c950bc5b801accd9f0f2514e564215e",
+      "literal_arguments": {
+        "p0": "UK"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6008,
+        "absolute_error": 0.0008000000000000229,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "size_system",
+            "operator": ">",
+            "estimated_selectivity": 0.6008,
+            "target_selectivity": 0.6,
+            "value": "UK",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q038",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash FROM Employee e WHERE e.password_hash < 'fdf23350bebe7b46ba6ed722980f14fdb83dc70b02a223f8693e700ca08caab9';",
+      "canonical_template_hash": "4508f05ce8d288edfac60d80bb2f837311cd8694e329d5cbf6356fba92bf3373",
+      "literal_arguments": {
+        "p0": "fdf23350bebe7b46ba6ed722980f14fdb83dc70b02a223f8693e700ca08caab9"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "password_hash",
+            "operator": "<",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": "fdf23350bebe7b46ba6ed722980f14fdb83dc70b02a223f8693e700ca08caab9",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q039",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.dimensions FROM Phone e WHERE e.is_active > 0;",
+      "canonical_template_hash": "d11bbafb5fc961de5da7674155e51e302c06045bb75e8891eea49d1d4e586e2b",
+      "literal_arguments": {
+        "p0": 0
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.85,
+        "absolute_error": 0.14,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "is_active",
+            "operator": ">",
+            "estimated_selectivity": 0.85,
+            "target_selectivity": 0.99,
+            "value": 0,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q040",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.loyalty_tier, e.email FROM PrimeCustomer e WHERE e.email < 'kimberlyscott@example.com';",
+      "canonical_template_hash": "53cac90be6b5014c7bd1f4c4396ca08cbb99916080241cad3a88892822d5c865",
+      "literal_arguments": {
+        "p0": "kimberlyscott@example.com"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "email",
+            "operator": "<",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "kimberlyscott@example.com",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q041",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.product_id FROM Accessory e WHERE e.sku > 'SKU-UYkC-98748374';",
+      "canonical_template_hash": "b8fa5f4d1b194babc91e700a656f50ab41c20f5dbfcb2dab569c19bbdd600bd6",
+      "literal_arguments": {
+        "p0": "SKU-UYkC-98748374"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "sku",
+            "operator": ">",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "SKU-UYkC-98748374",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q042",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku FROM MenClothing e WHERE e.is_active >= 1;",
+      "canonical_template_hash": "6b57a10e661e067e811c34df32b5183b5a3af2d341d8abb30a22b9517481d214",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8489,
+        "absolute_error": 0.048899999999999944,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8489,
+            "target_selectivity": 0.8,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q043",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.fit_type_women, e.size_system, e.product_name FROM WomenClothing e WHERE e.material >= 'cotton';",
+      "canonical_template_hash": "0fd3d54056fd1fecb3c0a183b306b1f12989ecdc50bc7aab08d3e51857ca5e16",
+      "literal_arguments": {
+        "p0": "cotton"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8297,
+        "absolute_error": 0.02969999999999995,
+        "predicates": [
+          {
+            "object": "womenclothing",
+            "attribute": "material",
+            "operator": ">=",
+            "estimated_selectivity": 0.8297,
+            "target_selectivity": 0.8,
+            "value": "cotton",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q044",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.is_active, e.warranty_months, e.dimensions, e.product_id FROM Laptop e WHERE e.warranty_months < 36;",
+      "canonical_template_hash": "013288e9957fbccac9807e5e8d72a52d96947793add1cc2ed654f0600b01ece5",
+      "literal_arguments": {
+        "p0": 36
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.9181,
+        "absolute_error": 0.11809999999999998,
+        "predicates": [
+          {
+            "object": "laptop",
+            "attribute": "warranty_months",
+            "operator": "<",
+            "estimated_selectivity": 0.9181,
+            "target_selectivity": 0.8,
+            "value": 36,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q045",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.form_factor FROM Desktop e WHERE e.sku > 'SKU-KZwS-86397790';",
+      "canonical_template_hash": "bffc244559d7c59f4427c5096e627ece72a981777ef2189a51e50ba415a37a78",
+      "literal_arguments": {
+        "p0": "SKU-KZwS-86397790"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "sku",
+            "operator": ">",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": "SKU-KZwS-86397790",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q046",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.renewal_date, e.user_id FROM PrimeCustomer e WHERE e.email <= 'schneidersophia@example.com';",
+      "canonical_template_hash": "d71c120d39e9493c86df05aaba11bc0e23f9e73c7a93490a5d239be8e71e9f4a",
+      "literal_arguments": {
+        "p0": "schneidersophia@example.com"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "email",
+            "operator": "<=",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": "schneidersophia@example.com",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q047",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name, e.is_active FROM Electronics e WHERE e.sku >= 'SKU-AXln-03395574';",
+      "canonical_template_hash": "0e8ad1663c5187f495a57d2a53051c80fa0ca8326155ac74c4640a3e396a8a63",
+      "literal_arguments": {
+        "p0": "SKU-AXln-03395574"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "electronics",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": "SKU-AXln-03395574",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q048",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.cpu, e.battery_wh, e.sku, e.ram_gb FROM Laptop e WHERE e.battery_wh <= 65;",
+      "canonical_template_hash": "20cc2a2e9e9776919ec387cf2cd4736704c3bdfa617d7bf98fdd72c91dd18d61",
+      "literal_arguments": {
+        "p0": 65
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5098,
+        "absolute_error": 0.009800000000000031,
+        "predicates": [
+          {
+            "object": "laptop",
+            "attribute": "battery_wh",
+            "operator": "<=",
+            "estimated_selectivity": 0.5098,
+            "target_selectivity": 0.5,
+            "value": 65,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q049",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.product_name, e.quantity, e.product_id FROM Desktop e WHERE e.sku >= 'SKU-PqiO-90741416';",
+      "canonical_template_hash": "cf4ce7a5e192871e48ee09fa8ccdc0b7f98e5fa75f9b569a6675127889d15e19",
+      "literal_arguments": {
+        "p0": "SKU-PqiO-90741416"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": "SKU-PqiO-90741416",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q050",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sensor_mp, e.sku, e.product_name FROM Camera e WHERE e.quantity >= 23;",
+      "canonical_template_hash": "85092f28c8cc1b806fdc07c4d939f553199a16aacc94b1860e98f98f8eb6bb99",
+      "literal_arguments": {
+        "p0": 23
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5013,
+        "absolute_error": 0.0012999999999999678,
+        "predicates": [
+          {
+            "object": "camera",
+            "attribute": "quantity",
+            "operator": ">=",
+            "estimated_selectivity": 0.5013,
+            "target_selectivity": 0.5,
+            "value": 23,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q051",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.renewal_date, e.password_hash FROM PrimeCustomer e WHERE e.loyalty_tier < 'silver';",
+      "canonical_template_hash": "f60489759d1fc77fa0fa54ab8d44c3f908eb9b2693748b38df6410c64781eb2e",
+      "literal_arguments": {
+        "p0": "silver"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7051,
+        "absolute_error": 0.005099999999999993,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "loyalty_tier",
+            "operator": "<",
+            "estimated_selectivity": 0.7051,
+            "target_selectivity": 0.7,
+            "value": "silver",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q052",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.base_price, e.dimensions, e.quantity FROM Smartwatch e WHERE e.quantity < 23;",
+      "canonical_template_hash": "317bac856bb5e0508da966b59b4845bdcbe9dbcbd921cc1f125528943f1812d5",
+      "literal_arguments": {
+        "p0": 23
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5004,
+        "absolute_error": 0.00039999999999995595,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "quantity",
+            "operator": "<",
+            "estimated_selectivity": 0.5004,
+            "target_selectivity": 0.5,
+            "value": 23,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q053",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.is_active, e.dimensions, e.product_name, e.energy_rating FROM KitchenAppliance e WHERE e.dimensions >= 'medium';",
+      "canonical_template_hash": "10ceccf402f735ff5a770459be3f1a7c169d2a75b813e7a0c55a34a21f124ace",
+      "literal_arguments": {
+        "p0": "medium"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7463,
+        "absolute_error": 0.04630000000000001,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "dimensions",
+            "operator": ">=",
+            "estimated_selectivity": 0.7463,
+            "target_selectivity": 0.7,
+            "value": "medium",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q054",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name, e.is_active FROM Footwear e WHERE e.is_active >= 1;",
+      "canonical_template_hash": "3d6aa087193d961a90a1ed325757583fae93c260ec7b6994be4851ad351265e6",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.8523,
+        "absolute_error": 0.1523,
+        "predicates": [
+          {
+            "object": "footwear",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8523,
+            "target_selectivity": 0.7,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q055",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id, e.is_active, e.sku FROM Tablet e WHERE e.quantity >= 17;",
+      "canonical_template_hash": "a2ae68324d58db73d349cda5d1614608716a7c447a3e5caead3b494a1598ee7d",
+      "literal_arguments": {
+        "p0": 17
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6094,
+        "absolute_error": 0.009400000000000075,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "quantity",
+            "operator": ">=",
+            "estimated_selectivity": 0.6094,
+            "target_selectivity": 0.6,
+            "value": 17,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q056",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name, e.dimensions, e.screen_size_in FROM Tablet e WHERE e.product_name < 'Triple-buffered 6thgeneration website';",
+      "canonical_template_hash": "41696d57f5f413322079d62e8776bcf4ad7dbab4cc45c49da55e159479253b5b",
+      "literal_arguments": {
+        "p0": "Triple-buffered 6thgeneration website"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "product_name",
+            "operator": "<",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": "Triple-buffered 6thgeneration website",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q057",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.carrier_lock FROM Phone e WHERE e.carrier_lock > 'locked';",
+      "canonical_template_hash": "834bc73cb5156b260714438f279c83573b1ed9fdf613acf9ed419a83df25acb7",
+      "literal_arguments": {
+        "p0": "locked"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7012,
+        "absolute_error": 0.0012000000000000899,
+        "predicates": [
+          {
+            "object": "phone",
+            "attribute": "carrier_lock",
+            "operator": ">",
+            "estimated_selectivity": 0.7012,
+            "target_selectivity": 0.7,
+            "value": "locked",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q058",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.warranty_months, e.quantity, e.accessory_type, e.dimensions FROM Accessory e WHERE e.base_price > 77;",
+      "canonical_template_hash": "a82f097471640502490047ce296e2dc921c376aa25bb468523322322e368a04f",
+      "literal_arguments": {
+        "p0": 77
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7025,
+        "absolute_error": 0.0025000000000000577,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "base_price",
+            "operator": ">",
+            "estimated_selectivity": 0.7025,
+            "target_selectivity": 0.7,
+            "value": 77,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q059",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.product_id FROM Tablet e WHERE e.product_id <= 11433232;",
+      "canonical_template_hash": "5efe7247a033f6ba38c92f6396baf5650792e3591f4d9780868b5c5676040add",
+      "literal_arguments": {
+        "p0": 11433232
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "product_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": 11433232,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q060",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash, e.email FROM PrimeCustomer e WHERE e.email <= 'perezrodney@example.com';",
+      "canonical_template_hash": "8c8833791744520aae327e3810f3753296be2ced7f48bb7334d2c565b5b42064",
+      "literal_arguments": {
+        "p0": "perezrodney@example.com"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "email",
+            "operator": "<=",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": "perezrodney@example.com",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q061",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.user_id, e.employee_no FROM Employee e WHERE e.password_hash < '97e1c0109b06eef14bad86e4c22d04498b32a4e2223c50cf53f8f814130bad76';",
+      "canonical_template_hash": "9cab29cfd21dc0badd4d98b7e3c0ac90a38157614c00a7edc7de8387b54ae03d",
+      "literal_arguments": {
+        "p0": "97e1c0109b06eef14bad86e4c22d04498b32a4e2223c50cf53f8f814130bad76"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "password_hash",
+            "operator": "<",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "97e1c0109b06eef14bad86e4c22d04498b32a4e2223c50cf53f8f814130bad76",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q062",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.renewal_date, e.email FROM PrimeCustomer e WHERE e.loyalty_tier > 'bronze';",
+      "canonical_template_hash": "f5e53276a3f35fde6555d1d80704ed3602cd5c2968d876e85828302f3ee4b966",
+      "literal_arguments": {
+        "p0": "bronze"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5245,
+        "absolute_error": 0.024499999999999966,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "loyalty_tier",
+            "operator": ">",
+            "estimated_selectivity": 0.5245,
+            "target_selectivity": 0.5,
+            "value": "bronze",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q063",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id, e.product_name FROM Accessory e WHERE e.sku <= 'SKU-pcuo-72050177';",
+      "canonical_template_hash": "fefd0e98882e3b9b46f762fa752edd54f620bd4c64eece6d61ebc68bf7baeaf6",
+      "literal_arguments": {
+        "p0": "SKU-pcuo-72050177"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "sku",
+            "operator": "<=",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": "SKU-pcuo-72050177",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q064",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id, e.quantity, e.form_factor, e.is_active FROM Desktop e WHERE e.base_price < 355;",
+      "canonical_template_hash": "0bd2befb8d49e2fa0f422e95a060e8c7f1fb56837a4216124c2acc1ab80f180b",
+      "literal_arguments": {
+        "p0": 355
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.8998,
+        "absolute_error": 0.00019999999999997797,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "base_price",
+            "operator": "<",
+            "estimated_selectivity": 0.8998,
+            "target_selectivity": 0.9,
+            "value": 355,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q065",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.dimensions, e.base_price FROM Accessory e WHERE e.base_price >= 121;",
+      "canonical_template_hash": "229fff2f5b242ac08401f8b1783a44a9111bb6435732fa1f85197700f5f38b34",
+      "literal_arguments": {
+        "p0": 121
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5007,
+        "absolute_error": 0.0007000000000000339,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "base_price",
+            "operator": ">=",
+            "estimated_selectivity": 0.5007,
+            "target_selectivity": 0.5,
+            "value": 121,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q066",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.password_hash FROM Employee e WHERE e.employee_no >= 'EMP-39733584';",
+      "canonical_template_hash": "169f3b68dede3e3896ebfe2ae223ee04138eacba15d94e4f68ba0e698e160f24",
+      "literal_arguments": {
+        "p0": "EMP-39733584"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "employee",
+            "attribute": "employee_no",
+            "operator": ">=",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "EMP-39733584",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q067",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active FROM MenClothing e WHERE e.is_active > 0;",
+      "canonical_template_hash": "cba6d8992cb3f71e14ce6cde0bd48a34a67ff205abde9d9dc3b3ee8a5210b0d6",
+      "literal_arguments": {
+        "p0": 0
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.8489,
+        "absolute_error": 0.051100000000000034,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "is_active",
+            "operator": ">",
+            "estimated_selectivity": 0.8489,
+            "target_selectivity": 0.9,
+            "value": 0,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q068",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name FROM MenClothing e WHERE e.product_name >= 'Compatible solution-oriented conglomeration';",
+      "canonical_template_hash": "5c661bfc19fa507f1ba096db5af11a40c7a6ea30517e0a0040f7f49288336b90",
+      "literal_arguments": {
+        "p0": "Compatible solution-oriented conglomeration"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "product_name",
+            "operator": ">=",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": "Compatible solution-oriented conglomeration",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q069",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.license_type, e.sku, e.is_active, e.product_name FROM Software e WHERE e.is_active > 0;",
+      "canonical_template_hash": "72af306b5ddf95fd766181b67084b8ced71c55863bccef6bdd1f4b4d2c4f5ab4",
+      "literal_arguments": {
+        "p0": 0
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.8454,
+        "absolute_error": 0.14459999999999995,
+        "predicates": [
+          {
+            "object": "software",
+            "attribute": "is_active",
+            "operator": ">",
+            "estimated_selectivity": 0.8454,
+            "target_selectivity": 0.99,
+            "value": 0,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q070",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.size_system FROM MenClothing e WHERE e.base_price >= 79;",
+      "canonical_template_hash": "a8ced829cb8a3a6d5c7a26bb4c635f073c99b10e26478ca6326c532900669f81",
+      "literal_arguments": {
+        "p0": 79
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.699,
+        "absolute_error": 0.0010000000000000009,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "base_price",
+            "operator": ">=",
+            "estimated_selectivity": 0.699,
+            "target_selectivity": 0.7,
+            "value": 79,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q071",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.accessory_type, e.product_name, e.is_active, e.base_price FROM Accessory e WHERE e.sku <= 'SKU-fJiA-52653806';",
+      "canonical_template_hash": "cb5d006c0ec1c5e07c96aad5a923a09f1e31eaadaaab8b0ae25c09d1a521182a",
+      "literal_arguments": {
+        "p0": "SKU-fJiA-52653806"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "sku",
+            "operator": "<=",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "SKU-fJiA-52653806",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q072",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions, e.band_size, e.sku FROM Smartwatch e WHERE e.band_size < 'XL';",
+      "canonical_template_hash": "d4a9b14dc98ea28d439edf157e39e215e4eea804c0a71a8abf0e31ee50ab75cc",
+      "literal_arguments": {
+        "p0": "XL"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8775,
+        "absolute_error": 0.0774999999999999,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "band_size",
+            "operator": "<",
+            "estimated_selectivity": 0.8775,
+            "target_selectivity": 0.8,
+            "value": "XL",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q073",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions, e.product_id, e.screen_size_in FROM Tablet e WHERE e.product_name < 'Phased systematic Graphic Interface';",
+      "canonical_template_hash": "e209c8f60deefb207e1050d7b3970ea2d31a3d023c74d056e397d4804466c9dd",
+      "literal_arguments": {
+        "p0": "Phased systematic Graphic Interface"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "product_name",
+            "operator": "<",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "Phased systematic Graphic Interface",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q074",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.warranty_years FROM KitchenAppliance e WHERE e.is_active >= 1;",
+      "canonical_template_hash": "b1aed95ef301dbc9e4284abf656cd4a9cd12c5940ba4cda9dae75d7ff248e26f",
+      "literal_arguments": {
+        "p0": 1
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.8507,
+        "absolute_error": 0.15070000000000006,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "is_active",
+            "operator": ">=",
+            "estimated_selectivity": 0.8507,
+            "target_selectivity": 0.7,
+            "value": 1,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q075",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active FROM Software e WHERE e.base_price > 40;",
+      "canonical_template_hash": "6a00ced25814efc7ea4acc61592a9a24b517042e976af4bd84ac97f211b84c96",
+      "literal_arguments": {
+        "p0": 40
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.899,
+        "absolute_error": 0.0010000000000000009,
+        "predicates": [
+          {
+            "object": "software",
+            "attribute": "base_price",
+            "operator": ">",
+            "estimated_selectivity": 0.899,
+            "target_selectivity": 0.9,
+            "value": 40,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q076",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.warranty_months, e.dimensions, e.base_price FROM Electronics e WHERE e.sku < 'SKU-uqeC-89650482';",
+      "canonical_template_hash": "1c93e1c6a710e26cf14deba87f4001841c1a518001ad92c15c37aa2ab40dadcf",
+      "literal_arguments": {
+        "p0": "SKU-uqeC-89650482"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "electronics",
+            "attribute": "sku",
+            "operator": "<",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": "SKU-uqeC-89650482",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q077",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku, e.product_name, e.dimensions, e.quantity FROM Clothing e WHERE e.product_name > 'Integrated empowering solution';",
+      "canonical_template_hash": "d05ec4c592334268c4ccccac5926d4600f9f210dc8cf14a38258e737ef7b996f",
+      "literal_arguments": {
+        "p0": "Integrated empowering solution"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "clothing",
+            "attribute": "product_name",
+            "operator": ">",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "Integrated empowering solution",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q078",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active FROM Accessory e WHERE e.product_name >= 'Advanced 3rdgeneration task-force';",
+      "canonical_template_hash": "c3c92b49c7fa1e008a409ecf5a6994f49721077dfba519da86c023c1ddd29e79",
+      "literal_arguments": {
+        "p0": "Advanced 3rdgeneration task-force"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "product_name",
+            "operator": ">=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": "Advanced 3rdgeneration task-force",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q079",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.format, e.delivery_type, e.product_name FROM Media e WHERE e.base_price > 40;",
+      "canonical_template_hash": "8637e8b9465fcc9509a35dc6d5dd07e4b876b71cd37a3e68e6c044c55c313880",
+      "literal_arguments": {
+        "p0": 40
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.8984,
+        "absolute_error": 0.0016000000000000458,
+        "predicates": [
+          {
+            "object": "media",
+            "attribute": "base_price",
+            "operator": ">",
+            "estimated_selectivity": 0.8984,
+            "target_selectivity": 0.9,
+            "value": 40,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q080",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.warranty_months, e.is_active FROM Smartwatch e WHERE e.band_size > 'L';",
+      "canonical_template_hash": "fbcca8cfd209a897a1da2766f306ad1666048dec5fa8c017549fa0660ea67577",
+      "literal_arguments": {
+        "p0": "L"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.7529,
+        "absolute_error": 0.15290000000000004,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "band_size",
+            "operator": ">",
+            "estimated_selectivity": 0.7529,
+            "target_selectivity": 0.6,
+            "value": "L",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q081",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id FROM KitchenAppliance e WHERE e.dimensions <= 'medium';",
+      "canonical_template_hash": "04b2f1ba802c3d3d3d05fbc89f905b39f1e1fab8b6d7c9b45ce294a5eb6acb46",
+      "literal_arguments": {
+        "p0": "medium"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.7105,
+        "absolute_error": 0.21050000000000002,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "dimensions",
+            "operator": "<=",
+            "estimated_selectivity": 0.7105,
+            "target_selectivity": 0.5,
+            "value": "medium",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q082",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.product_id FROM KitchenAppliance e WHERE e.product_id <= 13224232;",
+      "canonical_template_hash": "b210404033818a69a4e65a3b0501e93101766ac78663615d52e36a8ff256322e",
+      "literal_arguments": {
+        "p0": 13224232
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "product_id",
+            "operator": "<=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": 13224232,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q083",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.quantity, e.is_active, e.base_price FROM Media e WHERE e.sku < 'SKU-vDVA-32710668';",
+      "canonical_template_hash": "09186ce2ddde610c7547c2ead4c2d9023811f24f144c9abfd42bbec74950c387",
+      "literal_arguments": {
+        "p0": "SKU-vDVA-32710668"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "media",
+            "attribute": "sku",
+            "operator": "<",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": "SKU-vDVA-32710668",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q084",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku, e.format FROM Media e WHERE e.format <= 'music';",
+      "canonical_template_hash": "ef00edc434aad69c7527e4f566f28fba42b15260f4eff720d99ffe4f132a32f4",
+      "literal_arguments": {
+        "p0": "music"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6488,
+        "absolute_error": 0.048800000000000066,
+        "predicates": [
+          {
+            "object": "media",
+            "attribute": "format",
+            "operator": "<=",
+            "estimated_selectivity": 0.6488,
+            "target_selectivity": 0.6,
+            "value": "music",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q085",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.is_active, e.sku FROM Software e WHERE e.product_id >= 16784796;",
+      "canonical_template_hash": "e7ec5de2ae116d65cd9e432ee51fe1a373e66eff6ccbf6a63c628291636a57cb",
+      "literal_arguments": {
+        "p0": 16784796
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "software",
+            "attribute": "product_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": 16784796,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q086",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.dimensions FROM Desktop e WHERE e.product_id > 9345322;",
+      "canonical_template_hash": "2cf32f54fded3149d1c1a9b219fb0052f2024ecf037f8d7d97b134bd87daed3c",
+      "literal_arguments": {
+        "p0": 9345322
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "product_id",
+            "operator": ">",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": 9345322,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q087",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.sku, e.size_system FROM MenClothing e WHERE e.fit_type_men >= 'regular';",
+      "canonical_template_hash": "2a8e0288241d138211ffcffb626329ef787153c69b3172c59a6704932821d683",
+      "literal_arguments": {
+        "p0": "regular"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.8972,
+        "absolute_error": 0.0028000000000000247,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "fit_type_men",
+            "operator": ">=",
+            "estimated_selectivity": 0.8972,
+            "target_selectivity": 0.9,
+            "value": "regular",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q088",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.quantity, e.sku, e.product_id FROM MenClothing e WHERE e.base_price > 17;",
+      "canonical_template_hash": "2f16016dbcbf7a3ddd66fcc1cae4c1a1ad6c3cef7bf8b332c06d549f2b3b1395",
+      "literal_arguments": {
+        "p0": 17
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.9892,
+        "absolute_error": 0.0008000000000000229,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "base_price",
+            "operator": ">",
+            "estimated_selectivity": 0.9892,
+            "target_selectivity": 0.99,
+            "value": 17,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q089",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.company_name, e.email FROM BusinessCustomer e WHERE e.user_id >= 867793;",
+      "canonical_template_hash": "45d9628eb1e13027040032af37b04c33d3f5b297c68d7c4c7231c143e27718a7",
+      "literal_arguments": {
+        "p0": 867793
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "businesscustomer",
+            "attribute": "user_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": 867793,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q090",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.user_id, e.loyalty_tier FROM PrimeCustomer e WHERE e.loyalty_tier < 'silver';",
+      "canonical_template_hash": "da2f7e2192f1bd3750e0028e200650f0e8f497fa113d9ea800318fb9753b9127",
+      "literal_arguments": {
+        "p0": "silver"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.7051,
+        "absolute_error": 0.19490000000000007,
+        "predicates": [
+          {
+            "object": "primecustomer",
+            "attribute": "loyalty_tier",
+            "operator": "<",
+            "estimated_selectivity": 0.7051,
+            "target_selectivity": 0.9,
+            "value": "silver",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q091",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.base_price FROM Desktop e WHERE e.ram_gb < 128;",
+      "canonical_template_hash": "72b0ff084f7e01fdb7a5dad509c51e6ae7fc0ebe49ef11dc51a6852ba64b4f06",
+      "literal_arguments": {
+        "p0": 128
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.9683,
+        "absolute_error": 0.02169999999999994,
+        "predicates": [
+          {
+            "object": "desktop",
+            "attribute": "ram_gb",
+            "operator": "<",
+            "estimated_selectivity": 0.9683,
+            "target_selectivity": 0.99,
+            "value": 128,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q092",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.base_price, e.sku, e.product_id FROM MenClothing e WHERE e.product_id < 15416832;",
+      "canonical_template_hash": "f19d08858065195838eae78c499a4d9709638d4f7f5a8bcf4639e532908e3bf9",
+      "literal_arguments": {
+        "p0": 15416832
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.9,
+        "estimated_selectivity": 0.9,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "product_id",
+            "operator": "<",
+            "estimated_selectivity": 0.9,
+            "target_selectivity": 0.9,
+            "value": 15416832,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q093",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active, e.product_id, e.fit_type_men FROM MenClothing e WHERE e.product_name > 'Focused optimizing complexity';",
+      "canonical_template_hash": "44de46cec5d89af101b218018bafb145fe4f500f3f460da5ef19e30c902a3063",
+      "literal_arguments": {
+        "p0": "Focused optimizing complexity"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "menclothing",
+            "attribute": "product_name",
+            "operator": ">",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": "Focused optimizing complexity",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q094",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_name FROM KitchenAppliance e WHERE e.is_active > 0;",
+      "canonical_template_hash": "45330c7a5b06ec200dcb9d55874324ad266f2f8bbce2b800da78246f2a43d18c",
+      "literal_arguments": {
+        "p0": 0
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.8507,
+        "absolute_error": 0.15070000000000006,
+        "predicates": [
+          {
+            "object": "kitchenappliance",
+            "attribute": "is_active",
+            "operator": ">",
+            "estimated_selectivity": 0.8507,
+            "target_selectivity": 0.7,
+            "value": 0,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q095",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT DISTINCT e.warranty_months, e.product_name, e.accessory_type FROM Accessory e WHERE e.sku >= 'SKU-AYRN-67057161';",
+      "canonical_template_hash": "c29ef45d5063d9bb321ba5eb268248c12f51b65690d809208225056c513387fc",
+      "literal_arguments": {
+        "p0": "SKU-AYRN-67057161"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.99,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.99,
+            "target_selectivity": 0.99,
+            "value": "SKU-AYRN-67057161",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q096",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.band_size, e.sku FROM Smartwatch e WHERE e.product_name <= 'Re-contextualized clear-thinking utilization';",
+      "canonical_template_hash": "d7abaac9182d2077e4ec15e5cc57e78da47c13e318fa017d21d359c5b8e9a4c6",
+      "literal_arguments": {
+        "p0": "Re-contextualized clear-thinking utilization"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.7,
+        "estimated_selectivity": 0.7,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "smartwatch",
+            "attribute": "product_name",
+            "operator": "<=",
+            "estimated_selectivity": 0.7,
+            "target_selectivity": 0.7,
+            "value": "Re-contextualized clear-thinking utilization",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q097",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.loyalty_tier FROM BusinessCustomer e WHERE e.user_id >= 594890;",
+      "canonical_template_hash": "f59ebf3da2d46cca2db91aef84aca4bfe3a214474888361508940ae0146fc916",
+      "literal_arguments": {
+        "p0": 594890
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.8,
+        "estimated_selectivity": 0.8,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "businesscustomer",
+            "attribute": "user_id",
+            "operator": ">=",
+            "estimated_selectivity": 0.8,
+            "target_selectivity": 0.8,
+            "value": 594890,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q098",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.is_active FROM Tablet e WHERE e.screen_size_in > 8;",
+      "canonical_template_hash": "415e9fa0a278737d6d5ce22f589a430cb1a118ef59eba5e79f32d23986b0ee00",
+      "literal_arguments": {
+        "p0": 8
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.99,
+        "estimated_selectivity": 0.875,
+        "absolute_error": 0.11499999999999999,
+        "predicates": [
+          {
+            "object": "tablet",
+            "attribute": "screen_size_in",
+            "operator": ">",
+            "estimated_selectivity": 0.875,
+            "target_selectivity": 0.99,
+            "value": 8,
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q099",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.product_id FROM Apparel e WHERE e.product_name > 'Integrated transitional time-frame';",
+      "canonical_template_hash": "bb7d773049e7ad7cfc535fa8752a1663eaa38f5fffd372eac0b09bb277ae9b1e",
+      "literal_arguments": {
+        "p0": "Integrated transitional time-frame"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.6,
+        "estimated_selectivity": 0.6,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "apparel",
+            "attribute": "product_name",
+            "operator": ">",
+            "estimated_selectivity": 0.6,
+            "target_selectivity": 0.6,
+            "value": "Integrated transitional time-frame",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    },
+    {
+      "id": "Q100",
+      "category": "selection_projection",
+      "frequency": 1,
+      "sql": "SELECT e.accessory_type, e.quantity, e.base_price, e.sku FROM Accessory e WHERE e.sku >= 'SKU-Zmjn-31499847';",
+      "canonical_template_hash": "5c58cfc35d1a7ddb99832c94e405f0c39803957ab1ce84511889be3d21a334d4",
+      "literal_arguments": {
+        "p0": "SKU-Zmjn-31499847"
+      },
+      "selectivity": {
+        "scope": "where_filter_over_join_input",
+        "target_selectivity": 0.5,
+        "estimated_selectivity": 0.5,
+        "absolute_error": 0.0,
+        "predicates": [
+          {
+            "object": "accessory",
+            "attribute": "sku",
+            "operator": ">=",
+            "estimated_selectivity": 0.5,
+            "target_selectivity": 0.5,
+            "value": "SKU-Zmjn-31499847",
+            "sample_size": 10000
+          }
+        ],
+        "assumption": "generated attributes are independent and relationship endpoints are sampled uniformly",
+        "requires_result_calibration": false
+      }
+    }
+  ]
+}
