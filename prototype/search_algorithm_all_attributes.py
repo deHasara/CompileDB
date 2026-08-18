@@ -91,7 +91,7 @@ materialized_options = {
 default_options = {
     "entity": ["all_by_itself"],
     "weak_entity": ["all_by_itself"],
-    "sub_class": ["all_by_itself"],  #["contained_in_parent"],
+    "sub_class": ["contained_in_parent"],  #["contained_in_parent"],
     "1_N_relationship": ["folded_to_many_side"],#folded_to_many_side
     "M_N_relationship": ["all_by_itself"],
     "multi_valued_attribute": ["contained_in_parent"],  #["all_by_itself"]
@@ -3416,7 +3416,7 @@ def do_step(graph, graph_components, config, cost):
     return best_config, best_cost, best_nodes_individual_cost
 
 
-def greedy_search(graph, iterations=1000):
+def greedy_search(graph, iterations=0):#1000
     reset_partitioning_options_for_node(graph)
     initialize_partitioning_options_for_node(graph)
 
