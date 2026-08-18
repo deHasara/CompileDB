@@ -1,0 +1,10 @@
+## Dataset
+
+The synthetic e-commerce schema contains:
+
+- 34 entity sets;
+- one 21-entity hierarchy of maximum depth 5;
+- one 5-entity hierarchy of maximum depth 3;
+- 13 weak entity sets;
+- 20 M:1 or M:N relationship sets;
+- approximately 11 GB of relational data.
