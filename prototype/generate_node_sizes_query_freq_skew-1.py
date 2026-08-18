@@ -1,10 +1,38 @@
+import argparse
+from collections import Counter, defaultdict
+import importlib.util
+import json
+import logging
 import math
+from pathlib import Path
 import random
+import sys
 
 import numpy as np
 
-from helper_functions import *
-from helper_functions_extended import *
+try:
+    from compiledb_query_adapter import prepare_er_query
+except ModuleNotFoundError:
+    # Uploaded scratch files live one directory below the compiler modules.
+    # Normal project installations keep them together and do not use this.
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from compiledb_query_adapter import prepare_er_query
+
+try:
+    import sql_analyzer
+except ModuleNotFoundError:
+    analyzer_path = Path(__file__).with_name("sql_analyzer(1).py")
+    specification = importlib.util.spec_from_file_location(
+        "sql_analyzer", analyzer_path
+    )
+    if specification is None or specification.loader is None:
+        raise RuntimeError(f"cannot load {analyzer_path}")
+    sql_analyzer = importlib.util.module_from_spec(specification)
+    sys.modules["sql_analyzer"] = sql_analyzer
+    specification.loader.exec_module(sql_analyzer)
+
+from er_graph import Graph
+from sql_analyzer import parse_and_analyze
 
 random.seed(1)
 np.random.seed(1)
@@ -31,7 +59,7 @@ def check_if_relationship_is_1_N(node):
 def generate_entity1_to_entity2_value_for_many_to_many_relationships(graph):
     for node in graph.nodes:
         if node.is_relationship() and not check_if_relationship_is_1_N(node):
-            entity1_to_entity2_value = random.randint(1, 10)#(1,3)
+            entity1_to_entity2_value = random.randint(1, 3)#(1,3)
             entity1_to_entity2_value_for_many_to_many_relationships[node.unique_name] = entity1_to_entity2_value
 
 #participation factor is defined for entity1
@@ -56,15 +84,15 @@ def generate_node_sizes_for_non_hierarchical_entity_nodes(graph):
     for node in graph.nodes:
         if node.is_entity() and (not len(node.children)>0) and (not node.is_subclass):
             if node.is_weak_entity:
-                node_sizes[node.unique_name] = random.randint(100000, 150000)#(10000, 50000)
+                node_sizes[node.unique_name] = random.randint(10000, 50000)#(100000, 150000)#(10000, 50000)
             else:
-                node_sizes[node.unique_name] = random.randint(100000, 250000)#(50000, 150000)#(500000, 900000)#(5000, 50000)
+                node_sizes[node.unique_name] = random.randint(10000, 50000)#(100000, 250000)#(50000, 150000)#(500000, 900000)#(5000, 50000)
 
 
 def generate_node_sizes_hierarchical_nodes(zipf_probabilities_for_hierarchy):
     sorted_keys = sorted(zipf_probabilities_for_hierarchy, key=lambda k: zipf_probabilities_for_hierarchy[k])
     minimum_probability_node = sorted_keys[0]
-    node_sizes[minimum_probability_node] = 10**5#10**6 #set node with smallest size to 10^6
+    node_sizes[minimum_probability_node] = 10**4#10**6 #set node with smallest size to 10^6
     all_nodes_sizes = node_sizes[minimum_probability_node] * 1/zipf_probabilities_for_hierarchy[minimum_probability_node] #determine total size based on that
     for node in zipf_probabilities_for_hierarchy:
         if node != minimum_probability_node:
@@ -203,7 +231,7 @@ def generate_zipf_for_leaves(root):
     leaf_nodes = get_leaf_nodes_for_hierarchy(root)
     random.shuffle(leaf_nodes)#randomly set order for zipf distribution
     k = len(leaf_nodes)
-    alpha = 2#3
+    alpha = 2#2#3
     weights = [1.0/(r**alpha) for r in range(1, k+1)]
     sum_weights = sum(weights)
     for i in range(len(weights)):
@@ -306,7 +334,159 @@ def write_query_frequencies_to_load_file(load_file, query_frequencies, queries_t
         json.dump(schema_json, f, indent=2)
 
 
-def init_node_sizes_and_query_frequencies(load_file):
+def build_graph_from_schema(schema_file):
+    """Parse the conceptual schema needed to bind workload SQL to E/R nodes."""
+    with open(schema_file, "r") as file:
+        data = json.load(file)
+    graph = Graph()
+    for statement in data["create_entity_statements"]:
+        graph.add_entity(parse_and_analyze(statement))
+    for statement in data["create_relationship_statements"]:
+        graph.add_relationship(parse_and_analyze(statement))
+    return graph
+
+
+def count_workload_object_reads(graph, workload_file, include_zero=True):
+    """Count conceptual scans in a workload using its bound E/R AST.
+
+    Each binding is one logical read.  Consequently a self-join of Product has
+    two Product reads.  Every count is multiplied by the query's ``frequency``.
+    The original AST, projections, predicates, and join conditions are not
+    simplified or changed.
+    """
+    with open(workload_file, "r") as file:
+        workload = json.load(file)
+    queries = workload.get("queries")
+    if not isinstance(queries, list):
+        raise ValueError("workload JSON must contain a queries array")
+    declared_count = workload.get("query_count")
+    if declared_count is not None and int(declared_count) != len(queries):
+        raise ValueError(
+            f"workload query_count is {declared_count}, but queries has "
+            f"{len(queries)} entries"
+        )
+
+    all_object_nodes = {
+        node.unique_name: node
+        for node in graph.nodes
+        if node.is_entity() or node.is_relationship()
+    }
+    total_reads = Counter()
+    reads_by_kind = defaultdict(Counter)
+    query_report = []
+    total_frequency = 0
+
+    for position, query in enumerate(queries, 1):
+        if not isinstance(query, dict):
+            raise ValueError(f"workload query {position} must be an object")
+        query_id = str(query.get("id", f"Q{position:03d}"))
+        sql = query.get("sql")
+        if not isinstance(sql, str) or not sql.strip():
+            raise ValueError(f"{query_id} has no E/R SQL text")
+        frequency = int(query.get("frequency", 1))
+        if frequency < 1:
+            raise ValueError(f"{query_id} frequency must be positive")
+
+        prepared = prepare_er_query(sql, graph)
+        expected_hash = query.get("canonical_template_hash")
+        if expected_hash:
+            from er_query_rewriter import template_fingerprint
+
+            actual_hash = template_fingerprint(prepared.template)
+            if str(expected_hash) != actual_hash:
+                raise ValueError(
+                    f"{query_id} canonical template hash changed: "
+                    f"expected {expected_hash}, got {actual_hash}"
+                )
+
+        query_counts = Counter(binding.object_id for binding in prepared.template.bindings)
+        kind_counts = defaultdict(Counter)
+        for binding in prepared.template.bindings:
+            if binding.object_id not in all_object_nodes:
+                raise ValueError(
+                    f"{query_id} references unknown object {binding.object_id!r}"
+                )
+            total_reads[binding.object_id] += frequency
+            reads_by_kind[binding.kind][binding.object_id] += frequency
+            kind_counts[binding.kind][binding.object_id] += 1
+        total_frequency += frequency
+        query_report.append(
+            {
+                "id": query_id,
+                "frequency": frequency,
+                "object_reads_per_occurrence": dict(sorted(query_counts.items())),
+                "object_reads_by_kind_per_occurrence": {
+                    kind: dict(sorted(counts.items()))
+                    for kind, counts in sorted(kind_counts.items())
+                },
+            }
+        )
+
+    declared_frequency = workload.get("total_frequency")
+    if declared_frequency is not None and int(declared_frequency) != total_frequency:
+        raise ValueError(
+            f"workload total_frequency is {declared_frequency}, but query "
+            f"frequencies sum to {total_frequency}"
+        )
+
+    frequencies = {
+        object_id: int(total_reads.get(object_id, 0))
+        for object_id in sorted(all_object_nodes)
+        if include_zero or total_reads.get(object_id, 0) > 0
+    }
+    report = {
+        "workload_file": str(workload_file),
+        "query_shape_count": len(queries),
+        "total_query_frequency": total_frequency,
+        "total_conceptual_object_reads": sum(total_reads.values()),
+        "select_all_frequencies": frequencies,
+        "object_reads_by_kind": {
+            kind: dict(sorted(counts.items()))
+            for kind, counts in sorted(reads_by_kind.items())
+        },
+        "queries": query_report,
+    }
+    return frequencies, report
+
+
+def rewrite_select_all_frequencies(
+        schema_file,
+        workload_file,
+        output_file=None,
+        report_file=None,
+        include_zero=True,
+):
+    """Write a schema copy whose select frequencies come from the workload."""
+    graph = build_graph_from_schema(schema_file)
+    frequencies, report = count_workload_object_reads(
+        graph,
+        workload_file,
+        include_zero=include_zero,
+    )
+    with open(schema_file, "r") as file:
+        schema = json.load(file)
+    schema["select_all_frequencies"] = frequencies
+
+    destination = Path(output_file) if output_file else Path(schema_file)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_suffix(destination.suffix + ".tmp")
+    with temporary.open("w") as file:
+        json.dump(schema, file, indent=2)
+        file.write("\n")
+    temporary.replace(destination)
+
+    if report_file:
+        report_destination = Path(report_file)
+        report_destination.parent.mkdir(parents=True, exist_ok=True)
+        report_temporary = report_destination.with_suffix(report_destination.suffix + ".tmp")
+        with report_temporary.open("w") as file:
+            json.dump(report, file, indent=2)
+            file.write("\n")
+        report_temporary.replace(report_destination)
+    return destination, report
+
+
+def init_node_sizes_and_query_frequencies(load_file, workload_file=None):
     reset_dictionaries()
     graph = Graph()
 
@@ -337,7 +517,6 @@ def init_node_sizes_and_query_frequencies(load_file):
         hierarchy_root = graph.get_node_by_name(hierarchy[0])
         #generate_zipf_distribution_for_hierarchy_method_1(hierarchy_root)
         generate_zipf_distribution_for_hierarchy_method_2(hierarchy_root)
-    
     print(node_sizes)
     logging.debug(f"--------------generating non-hierarchical entity node sizes")
     generate_node_sizes_for_non_hierarchical_entity_nodes(graph)
@@ -350,8 +529,17 @@ def init_node_sizes_and_query_frequencies(load_file):
     logging.debug(f"--------------writing node data to load file")
     write_node_data_to_load_file(load_file, node_data)
     logging.debug(f"--------------generating query frequencies")
-    logging.debug(f"--------------generating select * query frequencies")
-    query_frequencies = generate_select_all_query_frequencies(graph)
+    if workload_file is not None:
+        logging.debug(
+            "--------------deriving select frequencies from E/R workload ASTs"
+        )
+        query_frequencies, _ = count_workload_object_reads(
+            graph, workload_file, include_zero=True
+        )
+    else:
+        # Compatibility path for the original synthetic frequency generator.
+        logging.debug(f"--------------generating random select * query frequencies")
+        query_frequencies = generate_select_all_query_frequencies(graph)
     logging.debug(f"--------------writing select * query frequencies to load file")
     write_query_frequencies_to_load_file(load_file, query_frequencies, queries_type="select_all_frequencies")
     logging.debug(f"--------------generating insert query frequencies")
@@ -360,5 +548,46 @@ def init_node_sizes_and_query_frequencies(load_file):
     write_query_frequencies_to_load_file(load_file, query_frequencies, queries_type="insert_frequencies")
 
 
-load_file = "example2_e_com_small.json"
-init_node_sizes_and_query_frequencies(load_file)
+def main():
+    parser = argparse.ArgumentParser(
+        description=(
+            "Read an E/R workload, count bound entity/relationship scans, and "
+            "rewrite select_all_frequencies in a schema copy."
+        )
+    )
+    parser.add_argument("schema", type=Path)
+    parser.add_argument("workload", type=Path)
+    output_group = parser.add_mutually_exclusive_group(required=True)
+    output_group.add_argument("--output", type=Path)
+    output_group.add_argument("--in-place", action="store_true")
+    parser.add_argument("--report", type=Path)
+    parser.add_argument(
+        "--only-accessed",
+        action="store_true",
+        help="omit zero-frequency conceptual objects from select_all_frequencies",
+    )
+    arguments = parser.parse_args()
+
+    destination = arguments.schema if arguments.in_place else arguments.output
+    written, report = rewrite_select_all_frequencies(
+        arguments.schema,
+        arguments.workload,
+        destination,
+        arguments.report,
+        include_zero=not arguments.only_accessed,
+    )
+    print(f"Updated schema: {written}")
+    print(f"Query occurrences: {report['total_query_frequency']}")
+    print(f"Conceptual object reads: {report['total_conceptual_object_reads']}")
+    for object_id, count in report["select_all_frequencies"].items():
+        if count:
+            print(f"  {object_id}: {count}")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+#load_file = "example2_e_com_small.json"
+#init_node_sizes_and_query_frequencies(load_file)
