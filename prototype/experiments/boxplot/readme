@@ -8,3 +8,82 @@ The synthetic e-commerce schema contains:
 - 13 weak entity sets;
 - 20 M:1 or M:N relationship sets;
 - approximately 11 GB of relational data.
+
+- With the first run, need to create the database
+- In test_file-1 init_database run with insert_data_in_batches_with_csv_with_templatization_parallelized if running in a memory-constraint env or 
+- otherwise run with option insert_data_in_batches_with_templatization_parallelized
+- 6 configurations
+- Set iterations to 0 in method greedy_search
+- For runs 1-4 - run with option greedy_search in start_search_for_schema_for_generated_workload method inside helper_functions.py
+- For run 5 - run with option greedy_search_with_random_starts in start_search_for_schema_for_generated_workload method inside helper_functions.py
+- For run 6 - run with option greedy_search_with_random_starts_for_obj_of_optimizing_for_normalized_costs method inside helper_functions.py
+1. Run 1 - ABI+FIE
+In search_algorithm_all_attributes.py keep default options as 
+default_options = {
+    "entity": ["all_by_itself"],
+    "weak_entity": ["all_by_itself"],
+    "sub_class": ["all_by_itself"],
+    "1_N_relationship": ["folded_to_many_side"],
+    "M_N_relationship": ["all_by_itself"],
+    "multi_valued_attribute": ["contained_in_parent"],
+}
+Then run
+python3 test_file-1.py init test_db example2_e_commerce.json
+Output is printed to output.csv
+
+From the second run onwards, no need to create the data for db initialization. Relational schema will be restructured to new mapping and data will be inserted accrodingly
+2. Run 2 - ABI
+In search_algorithm_all_attributes.py keep default options as 
+default_options = {
+    "entity": ["all_by_itself"],
+    "weak_entity": ["all_by_itself"],
+    "sub_class": ["all_by_itself"],
+    "1_N_relationship": ["all_by_itself"],
+    "M_N_relationship": ["all_by_itself"],
+    "multi_valued_attribute": ["contained_in_parent"],
+}
+Then run
+python3 test_file-1.py test_config test_db example2_e_commerce.json
+Output is printed to output.csv
+
+3. Run 3 - CIP+FIE
+In search_algorithm_all_attributes.py keep default options as 
+default_options = {
+    "entity": ["all_by_itself"],
+    "weak_entity": ["all_by_itself"],
+    "sub_class": ["contained_in_parent"],
+    "1_N_relationship": ["folded_to_many_side"],
+    "M_N_relationship": ["all_by_itself"],
+    "multi_valued_attribute": ["contained_in_parent"],
+}
+Then run
+python3 test_file-1.py test_config test_db example2_e_commerce.json
+Output is printed to output.csv
+
+4. Run 4 - CIP
+In search_algorithm_all_attributes.py keep default options as 
+default_options = {
+    "entity": ["all_by_itself"],
+    "weak_entity": ["all_by_itself"],
+    "sub_class": ["contained_in_parent"],
+    "1_N_relationship": ["all_by_itself"],
+    "M_N_relationship": ["all_by_itself"],
+    "multi_valued_attribute": ["contained_in_parent"],
+}
+Then run
+python3 test_file-1.py test_config test_db example2_e_commerce.json
+Output is printed to output.csv
+
+5. Run 5 - greedy-1
+
+Run
+python3 test_file-1.py test_config test_db example2_e_commerce.json
+Output is printed to output.csv
+
+6. Run 6 - greedy-2
+
+Run
+python3 test_file-1.py test_config test_db example2_e_commerce.json
+Output is printed to output.csv
+
+
