@@ -63,7 +63,7 @@ The script adds or replaces the following top-level fields in
 - `select_all_frequencies`; and
 - `insert_frequencies`.
 
-To change only query frequencies, comment out  write_node_data_to_load_file(load_file, node_data) in method `init_node_sizes_and_query_frequencies` of `generate_node_sizes_query_freq_skew.py` and run the file.
+To change only query frequencies, comment out  `write_node_data_to_load_file(load_file, node_data)` in method `init_node_sizes_and_query_frequencies` of `generate_node_sizes_query_freq_skew.py` and run the file.
 
 ## 3. Run the validation experiment
 
