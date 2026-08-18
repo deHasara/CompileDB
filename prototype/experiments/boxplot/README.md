@@ -191,5 +191,8 @@ results/
 |-- cip.csv
 |-- greedy_1.csv
 `-- greedy_2.csv
+
+For each of the six configurations - save execution time for each entity/relationship node as shown in ER-experiments - boxplot-opt_obj_2.csv and ER-experiments-boxplot.csv. Use boxplot_e_commerce_expt.py to draw the boxplot graph.
+
 ```
 
