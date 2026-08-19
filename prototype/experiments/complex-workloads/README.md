@@ -28,8 +28,8 @@ projection, join, and aggregation patterns. Predicate selectivity targets span
 | `generate_schema_driven_selectivity_workloads_subclass_biased.py` | Optional sensitivity generator that increases subclass use and reduces repeated hub selection. |
 | `generate_schema_driven_selectivity_workloads_leaf_biased.py` | Optional leaf/subclass stress-workload generator. |
 | `generate_node_sizes_query_freq_skew-1.py` | Converts one query workload into the component-frequency input used by mapping search. |
-| `example2_small.json` | Base E/R schema. |
-| `example2_small_with_distributions.json` | Distribution-annotated E/R schema produced in Step 1. |
+| `example2_e_commerce.json` | Base E/R schema. |
+| `example2_e_commerce_with_distributions.json` | Distribution-annotated E/R schema produced in Step 1. |
 
 
 
@@ -37,8 +37,8 @@ projection, join, and aggregation patterns. Predicate selectivity targets span
 
 ```bash
 python3 build_attribute_distribution_schema.py \
-  example2_small.json \
-  example2_small_with_distributions.json
+  example2_e_commerce.json \
+  example2_e_commerce_with_distributions.json
 ```
 
 The output records the domain of every non-primary attribute and includes
@@ -50,7 +50,7 @@ the same logical data can be generated for every mapping under comparison.
 
 ```bash
 python3 generate_db_initialization_workload.py \
-  --schema example2_small_with_distributions.json \
+  --schema example2_e_commerce_with_distributions.json \
   --output-dir db_initialization_workload \
   --seed 1 \
   --profile-sample-size 10000
@@ -72,7 +72,7 @@ Use the schema-driven generator for the paper experiment:
 
 ```bash
 python3 generate_schema_driven_selectivity_workloads.py \
-  --schema example2_small_with_distributions.json \
+  --schema example2_e_commerce_with_distributions.json \
   --profile db_initialization_workload/conceptual_data_profile.json \
   --output-dir er_query_workloads \
   --workload-count 10 \
@@ -115,7 +115,7 @@ for workload in er_query_workloads/er_query_workload_100_*.json; do
   python3 generate_node_sizes_query_freq_skew.py \
     example2_small_with_distributions.json \
     "$workload" \
-    --output "mapping_inputs/example2_small_with_distributions_${workload_id}.json"
+    --output "mapping_inputs/example2_e_commerce_with_distributions_${workload_id}.json"
 done
 ```
 
@@ -129,7 +129,7 @@ the mapping/search process for each workload.
 
 ```bash
 python3 generate_schema_driven_selectivity_workloads_subclass_biased.py \
-  --schema example2_small_with_distributions.json \
+  --schema example2_e_commerce_with_distributions.json \
   --profile db_initialization_workload/conceptual_data_profile.json \
   --output-dir er_query_workloads_subclass_biased \
   --workload-count 10 \
@@ -154,7 +154,7 @@ from the fixed-template artifacts, as expected.
 
 ```bash
 python3 generate_schema_driven_selectivity_workloads_leaf_biased.py \
-  --schema example2_small_with_distributions.json \
+  --schema example2_e_commerce_with_distributions.json \
   --profile db_initialization_workload/conceptual_data_profile.json \
   --output-dir er_query_workloads_subclass_only \
   --workload-count 10 \
