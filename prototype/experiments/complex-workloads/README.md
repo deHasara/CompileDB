@@ -27,7 +27,7 @@ projection, join, and aggregation patterns. Predicate selectivity targets span
 | `generate_selectivity_aligned_query_workloads.py` | Recalibrates literals in a fixed template workload; useful for controls, but not for creating new query shapes. |
 | `generate_schema_driven_selectivity_workloads_subclass_biased.py` | Optional sensitivity generator that increases subclass use and reduces repeated hub selection. |
 | `generate_schema_driven_selectivity_workloads_leaf_biased.py` | Optional leaf/subclass stress-workload generator. |
-| `generate_node_sizes_query_freq_skew.py` | Converts one query workload into the component-frequency input used by mapping search. |
+| `generate_node_sizes_query_freq_skew-1.py` | Converts one query workload into the component-frequency input used by mapping search. |
 | `example2_small.json` | Base E/R schema. |
 | `example2_small_with_distributions.json` | Distribution-annotated E/R schema produced in Step 1. |
 
