@@ -71,8 +71,6 @@ The system is implemented as a lightweight Python layer on top of an existing re
    ```
    
    This command starts an interactive shell that accepts SQL queries over the conceptual schema.
-
-    Currently supported:
     
       - ```SELECT * FROM <entity_or_relationship>```
       - ```INSERT INTO <entity_or_relationship>```
