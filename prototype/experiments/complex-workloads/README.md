@@ -205,7 +205,7 @@ overwritten.
 
 ## 7. Execute and summarize
 
-Initialize the database with the shared insertion workload, then collect fresh
+Initialize the database with the workload, then collect fresh
 optimizer statistics before executing the rewritten queries:
 
 ```bash
