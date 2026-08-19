@@ -37,10 +37,6 @@ Experiment 4 in the paper uses the 49 M:N relationships. The six workload
 files must therefore assign nonzero weights only to the applicable entities
 and `RM_` relationships. 
 
-The supplied JSON currently assigns select and insert frequency `1` to all 112
-components, so it is a schema-and-statistics template, not any one of the six
-paper workloads.
-
 ## Relevant files
 
 | File | Purpose |
