@@ -177,8 +177,7 @@ file from `mapping_inputs/`. The paper compares:
 - Greedy
 
 Use the same initialization workload and PostgreSQL settings for every mapping.
-Record the workload number, mapping strategy, selected physical mapping, random
-seed, compiler revision, and database configuration for each run.
+
 
 ## 6. Rewrite the E/R workloads
 
