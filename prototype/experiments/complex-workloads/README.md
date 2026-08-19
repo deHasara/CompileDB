@@ -150,7 +150,7 @@ python3 generate_schema_driven_selectivity_workloads_subclass_biased.py \
 The supplied subclass-biased weight-vector artifact is structurally different
 from the fixed-template artifacts, as expected.
 
-### Leaf/subclass-only workloads
+### Leaf-biased workloads
 
 ```bash
 python3 generate_schema_driven_selectivity_workloads_leaf_biased.py \
