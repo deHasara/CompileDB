@@ -587,7 +587,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-
-#load_file = "example2_e_com_small.json"
-#init_node_sizes_and_query_frequencies(load_file)
