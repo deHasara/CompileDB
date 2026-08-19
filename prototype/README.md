@@ -1,1 +1,1 @@
-- Refer to the README.md file in the experiment folder.
+See the experiment folder’s README.md for detailed setup and execution instructions.
