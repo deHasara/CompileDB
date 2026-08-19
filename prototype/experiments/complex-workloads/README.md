@@ -4,9 +4,9 @@ The pipeline creates ten structurally distinct query workloads,
 derives workload-specific mapping weights, rewrites the E/R queries for each
 candidate mapping, and measures their PostgreSQL execution time.
 
-Each canonical workload contains **100 E/R queries** drawn from selection,
+Each canonical workload contains 100 E/R queries drawn from selection,
 projection, join, and aggregation patterns. Predicate selectivity targets span
-**0.10 through 0.90**.
+0.10 through 0.90.
 
 ## Pipeline at a glance
 
