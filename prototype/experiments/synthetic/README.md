@@ -260,8 +260,6 @@ The script produces:
 boxplots_all_workloads_1.png
 ```
 
-Expected result:
-
 ![Normalized component-cost distributions for RR, RL, LR, IL, LI, and LL workloads](boxplots_all_workloads_1.png)
 
 For every workload component `c` and configuration `s`, the script computes:
