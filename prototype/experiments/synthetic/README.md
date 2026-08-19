@@ -50,8 +50,25 @@ Set iterations to 0 in greedy_search in search_algorithm_all_attributes.py
 Run each workload with setting greedy_search in method start_search_for_schema_for_generated_workload of helper_functions.py
 Get the estimated cost for each workload
 10. (ABI,CIP,ABI) - Root mapped with ABI, internal nodes mapped with CIP, and leaf nodes mapped with ABI
-    
+    Run scripts-1.py with option level_mapping_1 and
+    Run each workload with the greedy_search in search_algorithm_all_attributes.py with 0 iterations with the generated config.
+    python3 test_file-1.py init test_db example2_synthetic.json
+    Get the estimated cost for each workload
 12. (ABI,PBI,ABI) - Root mapped with ABI, internal nodes mapped with PBI, and leaf nodes mapped with ABI
-13. (ABI,ABI,CIP) - Root mapped with ABI, internal nodes mapped with ABI, and leaf nodes mapped with CIP
-14. (ABI,ABI,PBI) - Root mapped with ABI, internal nodes mapped with ABI, and leaf nodes mapped with PBI
+    Run scripts-1.py with option level_mapping_2 and
+    Run each workload with the greedy_search in search_algorithm_all_attributes.py with 0 iterations with the generated config.
+    python3 test_file-1.py init test_db example2_synthetic.json
+    Get the estimated cost for each workload
+14. (ABI,ABI,CIP) - Root mapped with ABI, internal nodes mapped with ABI, and leaf nodes mapped with CIP
+    Run scripts-1.py with option level_mapping_3 and
+    Run each workload with the greedy_search in search_algorithm_all_attributes.py with 0 iterations with the generated config.
+    python3 test_file-1.py init test_db example2_synthetic.json
+    Get the estimated cost for each workload
+16. (ABI,ABI,PBI) - Root mapped with ABI, internal nodes mapped with ABI, and leaf nodes mapped with PBI
+    Run scripts-1.py with option level_mapping_4 and
+    Run each workload with the greedy_search in search_algorithm_all_attributes.py with 0 iterations with the generated config.
+    python3 test_file-1.py init test_db example2_synthetic.json
+    Get the estimated cost for each workload
+
+Aggregate results so that on csv it contains 9 columns. The number of rows depend on number of components in each workload. Get the boxplot by running with boxplot-costs-1.py.
 
