@@ -229,7 +229,7 @@ psql -X \
 Summarize the PostgreSQL log:
 
 ```bash
-python3 explain_analyze_workloads/results/summarize_explain_analyze.py \
+python3 summarize_explain_analyze.py \
   results/explain_analyze_workload_01.log
 ```
 
