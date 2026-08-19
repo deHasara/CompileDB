@@ -22,9 +22,8 @@ import logging
 import sys
 from pathlib import Path
 
-PROTOTYPE_DIR = Path(__file__).resolve().parents[2]
-if str(PROTOTYPE_DIR) not in sys.path:
-    sys.path.insert(0, str(PROTOTYPE_DIR))
+SRC_DIR = Path(__file__).resolve().parents[2] / "src"
+sys.path.insert(0, str(SRC_DIR))
 
 from er_graph import Graph
 from sql_analyzer import parse_and_analyze

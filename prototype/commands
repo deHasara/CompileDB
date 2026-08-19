@@ -1,9 +1,0 @@
-#Generate the schema with distributions - Readme file is README_workload_gen.md
-python3 build_attribute_distribution_schema.py \
-  example2_e_commerce.json \
-  example2_e_commerce_with_distributions.json
-
-#Generate conceptual_data_profile.json required to generate query workloads - default sample size is 10000
-python3 generate_db_initialization_workload.py \
-  --schema example2_e_commerce_with_distributions.json \
-  --seed 1

@@ -1084,8 +1084,8 @@ def start_search_for_schema(graph, load_file):
 
 def start_search_for_schema_for_generated_workload(graph):
     #exhaustive_search(graph)
-    #greedy_search(graph)
-    greedy_search_with_random_starts(graph)
+    greedy_search(graph)
+    #greedy_search_with_random_starts(graph)
     #greedy_search_with_random_starts_for_obj_of_optimizing_for_normalized_costs(graph)
 
 def write_output_to_csv_for_cost_model_validation_for_configs(cost, total_time):
