@@ -9,10 +9,10 @@ The system is implemented as a lightweight Python layer on top of an existing re
 
 ## Repository Structure
 
-- `prototype/` — Core implementation
-   - `prototype/test_file-1.py` — Entry point
+- `prototype/src/` — Core implementation
+   - `prototype/src/test_file-1.py` — Entry point
 - `prototype/dist/test_file-1` — Main executable  
-- `prototype/example2_e_commerce.json` — Example input schema and workload
+- `prototype/src/example2_e_commerce.json` — Example input schema and workload
 
 ---
 
