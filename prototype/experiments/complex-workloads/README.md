@@ -112,7 +112,7 @@ mkdir -p mapping_inputs
 
 for workload in er_query_workloads/er_query_workload_100_*.json; do
   workload_id=$(basename "$workload" .json)
-  python3 generate_node_sizes_query_freq_skew.py \
+  python3 generate_node_sizes_query_freq_skew-1.py \
     example2_small_with_distributions.json \
     "$workload" \
     --output "mapping_inputs/example2_e_commerce_with_distributions_${workload_id}.json"
