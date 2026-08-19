@@ -188,7 +188,7 @@ database. It does not need the original E/R JSON schema at rewrite time.
 Example from the query-rewriter prototype:
 
 ```bash
-cd /path/to/CompileDB/prototype
+cd /path/to/CompileDB/prototype/src
 
 python3 rewrite_er_query_workloads.py \
   --db test_db \
