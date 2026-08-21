@@ -22,7 +22,7 @@ The schema definition used by the commands below is
 - PostgreSQL 16;
 - a Python environment containing the CompileDB dependencies;
 
-Run all commands from the directory containing `test_file-1.py`,
+Run all commands from the directory `/prototype/src/` containing `test_file-1.py`,
 `helper_functions.py`, `search_algorithm_all_attributes.py`, and
 `example2_e_commerce.json`.
 
