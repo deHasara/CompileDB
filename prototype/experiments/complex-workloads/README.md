@@ -83,7 +83,9 @@ python3 generate_schema_driven_selectivity_workloads.py \
 ```
 
 The command writes `er_query_workload_100_01.json` through
-`er_query_workload_100_10.json`. With the default category mix, each 100-query
+`er_query_workload_100_10.json`. 
+<!--
+With the default category mix, each 100-query
 workload contains:
 
 | Query category | Count |
@@ -93,6 +95,7 @@ workload contains:
 | Relationship join | 20 |
 | Aggregation | 15 |
 | Complex multi-join | 15 |
+ -->
 
 For each candidate query, the generator:
 
