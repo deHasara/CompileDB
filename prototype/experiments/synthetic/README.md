@@ -20,7 +20,7 @@ Level 0:              R                         S
                      / \                       / \
 Level 1:          R1     R2                 S1     S2
                   / \    / \                 / \    / \
-Level 2:        R3 R4  R5 R6              S3 S4  S5 S6 S7
+Level 2:        R3  R4  R5  R6              S3 S4  S5  S6 
 ```
 
 Each hierarchy therefore contains seven entity sets. The paper creates an M:N
