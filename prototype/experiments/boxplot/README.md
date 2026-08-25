@@ -3,19 +3,19 @@
 This procedure runs six configurations: four fixed mappings and the two greedy
 optimization objectives.
 
+
 ## Dataset
 
-The synthetic e-commerce E/R schema contains:
+The synthetic e-commerce E/R schema contains 67 conceptual object sets:
 
-- 34 entity sets;
-- one 21-entity inheritance hierarchy with maximum depth 5;
-- one 5-entity inheritance hierarchy with maximum depth 3;
-- 13 weak entity sets;
-- 20 M:1 or M:N relationship sets; and
+- 47 entity sets, comprising 34 strong entity sets and 13 weak entity sets;
+- two inheritance hierarchies among the strong entity sets:
+  - a 21-entity hierarchy spanning five levels; and
+  - a 5-entity hierarchy spanning three levels;
+- 20 relationship sets, comprising seven one-to-many (1:N) and 13 many-to-many (M:N) relationships; 
+  - Of the 20 relationship sets, three are recursive unary relationships, and 17 are binary relationships; and
 - approximately 11 GB of relational data.
 
-The schema definition used by the commands below is
-`example2_e_commerce.json`.
 
 ## Prerequisites
 
