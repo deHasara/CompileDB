@@ -11,7 +11,7 @@ The system is implemented as a lightweight Python layer on top of an existing re
 
 - `prototype/src/` — Core implementation
    - `prototype/src/test_file-1.py` — Entry point
-- `prototype/dist/test_file-1` — Main executable  
+- `prototype/src/dist/test_file-1` — Main executable  
 - `prototype/src/example2_e_commerce.json` — Example input schema and workload
 
 ---
@@ -30,7 +30,7 @@ The system is implemented as a lightweight Python layer on top of an existing re
 
 1. **Input E/R Schema**
 
-   The input E/R schema is provided through a JSON file, for example: `prototype/example2_e_commerce.json`.
+   The input E/R schema is provided through a JSON file, for example: `prototype/src/example2_e_commerce.json`.
    
    This file contains:
     - The input E/R schema in schema DDL  
